@@ -1,14 +1,14 @@
 package me.creepinson.creepinoutils.api.util.data;
 
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 
 /**
  * @author creepinson https://gitlab.com/creepinson
  */
 public class MongoConfig {
     private MongoClient mongoClient;
-    private DB db;
+    private MongoDatabase db;
     private String database;
 
     public MongoConfig(String database) {
@@ -21,7 +21,7 @@ public class MongoConfig {
         } catch (Exception e) {
             System.out.println("Couldn't connect to database!.");
         }
-        db = getMongoClient().getDB(database);
+        db = client().getDatabase(database);
     }
 
     public void reset() {
@@ -33,11 +33,11 @@ public class MongoConfig {
     }
 
 
-    public MongoClient getMongoClient() {
+    public MongoClient client() {
         return (mongoClient);
     }
 
-    public DB getMongoDB() {
+    public MongoDatabase db() {
         return (db);
     }
 
