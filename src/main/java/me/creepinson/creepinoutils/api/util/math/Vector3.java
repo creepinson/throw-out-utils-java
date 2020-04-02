@@ -1,8 +1,8 @@
 package me.creepinson.creepinoutils.api.util.math;
 
-import java.io.Serializable;
+import me.creepinson.creepinoutils.api.util.SerializableString;
 
-public class Vector3 implements Serializable, Cloneable {
+public class Vector3 implements SerializableString, Cloneable {
 
     private static final long serialVersionUID = 4709144018768849633L;
     public static final Vector3 X_AXIS = new Vector3(1, 0, 0);
@@ -24,8 +24,7 @@ public class Vector3 implements Serializable, Cloneable {
      */
     public Vector3 offset(Facing facing, int n) {
         return n == 0 ? this
-                : new Vector3(this.x + facing.getXOffset() * n, this.y + facing.getYOffset() * n,
-                this.z + facing.getZOffset() * n);
+                : clone().add(facing.getDirectionVec());
     }
 
     /**
@@ -377,5 +376,10 @@ public class Vector3 implements Serializable, Cloneable {
 
     public boolean isInAABB(Vector3 min, Vector3 max) {
         return this.x >= min.x && this.x <= max.x && this.y >= min.y && this.y <= max.y && this.z >= min.z && this.z <= max.z;
+    }
+
+    @Override
+    public String getName() {
+        return this.toString();
     }
 }

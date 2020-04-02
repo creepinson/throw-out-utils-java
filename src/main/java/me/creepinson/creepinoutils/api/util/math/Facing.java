@@ -5,21 +5,18 @@
 
 package me.creepinson.creepinoutils.api.util.math;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Maps;
+import me.creepinson.creepinoutils.api.util.SerializableString;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @author mojang https://minecraft.net
  */
-public enum Facing implements Serializable {
+public enum Facing implements SerializableString {
     DOWN(0, 1, -1, "down", Facing.AxisDirection.NEGATIVE, Facing.Axis.Y, new Vector3(0, -1, 0)),
     UP(1, 0, -1, "up", Facing.AxisDirection.POSITIVE, Facing.Axis.Y, new Vector3(0, 1, 0)),
     NORTH(2, 3, 2, "north", Facing.AxisDirection.NEGATIVE, Facing.Axis.Z, new Vector3(0, 0, -1)),
@@ -33,19 +30,24 @@ public enum Facing implements Serializable {
     private final String name;
     private final Facing.Axis axis;
     private final Facing.AxisDirection axisDirection;
-    private final Vector3 directionVec;
-    public static final Facing[] VALUES = new Facing[6];
-    public static final Facing[] HORIZONTALS = new Facing[4];
-    private static final Map<String, Facing> NAME_LOOKUP = Maps.newHashMap();
+    private final Vector3 FacingVec;
+    private static final Facing[] VALUES = values();
+    private static final Map<String, Facing> NAME_LOOKUP = Arrays.stream(VALUES).collect(Collectors.toMap(Facing::getName2, (p_199787_0_) -> p_199787_0_));
+    private static final Facing[] BY_INDEX = Arrays.stream(VALUES).sorted(Comparator.comparingInt((p_199790_0_) -> p_199790_0_.index)).toArray((p_199788_0_) -> new Facing[p_199788_0_]);
+    private static final Facing[] BY_HORIZONTAL_INDEX = Arrays.stream(VALUES).filter((p_199786_0_) -> p_199786_0_.getAxis().isHorizontal()).sorted(Comparator.comparingInt((p_199789_0_) -> p_199789_0_.horizontalIndex)).toArray((p_199791_0_) -> new Facing[p_199791_0_]);
 
-    private Facing(int indexIn, int oppositeIn, int horizontalIndexIn, String nameIn, Facing.AxisDirection axisDirectionIn, Facing.Axis axisIn, Vector3 directionVecIn) {
+    Facing(int indexIn, int oppositeIn, int horizontalIndexIn, String nameIn, Facing.AxisDirection AxisDirectionIn, Facing.Axis axisIn, Vector3 FacingVecIn) {
         this.index = indexIn;
         this.horizontalIndex = horizontalIndexIn;
         this.opposite = oppositeIn;
         this.name = nameIn;
         this.axis = axisIn;
-        this.axisDirection = axisDirectionIn;
-        this.directionVec = directionVecIn;
+        this.axisDirection = AxisDirectionIn;
+        this.FacingVec = FacingVecIn;
+    }
+
+    private static Facing[] compose(Facing first, Facing second, Facing third) {
+        return new Facing[]{first, second, third, third.getOpposite(), second.getOpposite(), first.getOpposite()};
     }
 
     public int getIndex() {
@@ -64,76 +66,18 @@ public enum Facing implements Serializable {
         return byIndex(this.opposite);
     }
 
-    public Facing rotateAround(Facing.Axis axis) {
-        switch (axis) {
-            case X:
-                if (this != WEST && this != EAST) {
-                    return this.rotateX();
-                }
-
-                return this;
-            case Y:
-                if (this != UP && this != DOWN) {
-                    return this.rotateY();
-                }
-
-                return this;
-            case Z:
-                if (this != NORTH && this != SOUTH) {
-                    return this.rotateZ();
-                }
-
-                return this;
-            default:
-                throw new IllegalStateException("Unable to get CW facing for axis " + axis);
-        }
-    }
-
     public Facing rotateY() {
         switch (this) {
             case NORTH:
                 return EAST;
-            case EAST:
-                return SOUTH;
             case SOUTH:
                 return WEST;
             case WEST:
                 return NORTH;
+            case EAST:
+                return SOUTH;
             default:
                 throw new IllegalStateException("Unable to get Y-rotated facing of " + this);
-        }
-    }
-
-    private Facing rotateX() {
-        switch (this) {
-            case NORTH:
-                return DOWN;
-            case EAST:
-            case WEST:
-            default:
-                throw new IllegalStateException("Unable to get X-rotated facing of " + this);
-            case SOUTH:
-                return UP;
-            case UP:
-                return NORTH;
-            case DOWN:
-                return SOUTH;
-        }
-    }
-
-    private Facing rotateZ() {
-        switch (this) {
-            case EAST:
-                return DOWN;
-            case SOUTH:
-            default:
-                throw new IllegalStateException("Unable to get Z-rotated facing of " + this);
-            case WEST:
-                return UP;
-            case UP:
-                return EAST;
-            case DOWN:
-                return WEST;
         }
     }
 
@@ -141,27 +85,31 @@ public enum Facing implements Serializable {
         switch (this) {
             case NORTH:
                 return WEST;
-            case EAST:
-                return NORTH;
             case SOUTH:
                 return EAST;
             case WEST:
                 return SOUTH;
+            case EAST:
+                return NORTH;
             default:
                 throw new IllegalStateException("Unable to get CCW facing of " + this);
         }
     }
 
-    public int getXOffset() {
-        return this.axis == Facing.Axis.X ? this.axisDirection.getOffset() : 0;
+    public int intXOffset() {
+        return this.FacingVec.intX();
     }
 
-    public int getYOffset() {
-        return this.axis == Facing.Axis.Y ? this.axisDirection.getOffset() : 0;
+    public int intYOffset() {
+        return this.FacingVec.intY();
     }
 
-    public int getZOffset() {
-        return this.axis == Facing.Axis.Z ? this.axisDirection.getOffset() : 0;
+    public int intZOffset() {
+        return this.FacingVec.intZ();
+    }
+
+    public Vector3 getDirectionVec() {
+        return new Vector3((float) this.intXOffset(), (float) this.intYOffset(), (float) this.intZOffset());
     }
 
     public String getName2() {
@@ -173,20 +121,32 @@ public enum Facing implements Serializable {
     }
 
     @Nullable
-    public static Facing byName(String name) {
-        return name == null ? null : (Facing) NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
+    public static Facing byName(@Nullable String name) {
+        return name == null ? null : NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
     }
 
     public static Facing byIndex(int index) {
-        return VALUES[MathUtils.abs(index % VALUES.length)];
+        return BY_INDEX[MathUtils.abs(index % BY_INDEX.length)];
     }
 
     public static Facing byHorizontalIndex(int horizontalIndexIn) {
-        return HORIZONTALS[MathUtils.abs(horizontalIndexIn % HORIZONTALS.length)];
+        return BY_HORIZONTAL_INDEX[MathUtils.abs(horizontalIndexIn % BY_HORIZONTAL_INDEX.length)];
     }
 
     public static Facing fromAngle(double angle) {
         return byHorizontalIndex(MathUtils.floor(angle / 90.0D + 0.5D) & 3);
+    }
+
+    public static Facing getFacingFromAxisDirection(Facing.Axis axisIn, Facing.AxisDirection AxisDirectionIn) {
+        switch (axisIn) {
+            case X:
+                return AxisDirectionIn == Facing.AxisDirection.POSITIVE ? EAST : WEST;
+            case Y:
+                return AxisDirectionIn == Facing.AxisDirection.POSITIVE ? UP : DOWN;
+            case Z:
+            default:
+                return AxisDirectionIn == Facing.AxisDirection.POSITIVE ? SOUTH : NORTH;
+        }
     }
 
     public float getHorizontalAngle() {
@@ -197,22 +157,23 @@ public enum Facing implements Serializable {
         return values()[rand.nextInt(values().length)];
     }
 
-    public static Facing getFacingFromVector(float x, float y, float z) {
-        Facing enumfacing = NORTH;
-        float f = 1.4E-45F;
-        Facing[] var5 = values();
-        int var6 = var5.length;
+    public static Facing getFacingFromVector(double x, double y, double z) {
+        return getFacingFromVector((float) x, (float) y, (float) z);
+    }
 
-        for (int var7 = 0; var7 < var6; ++var7) {
-            Facing enumfacing1 = var5[var7];
-            float f1 = x * (float) enumfacing1.directionVec.x + y * (float) enumfacing1.directionVec.y + z * (float) enumfacing1.directionVec.z;
+    public static Facing getFacingFromVector(float x, float y, float z) {
+        Facing Facing = NORTH;
+        float f = Float.MIN_VALUE;
+
+        for (Facing Facing1 : VALUES) {
+            float f1 = x * (float) Facing1.FacingVec.intX() + y * (float) Facing1.FacingVec.intY() + z * (float) Facing1.FacingVec.intZ();
             if (f1 > f) {
                 f = f1;
-                enumfacing = enumfacing1;
+                Facing = Facing1;
             }
         }
 
-        return enumfacing;
+        return Facing;
     }
 
     public String toString() {
@@ -223,71 +184,108 @@ public enum Facing implements Serializable {
         return this.name;
     }
 
-    public static Facing getFacingFromAxis(Facing.AxisDirection axisDirectionIn, Facing.Axis axisIn) {
-        Facing[] var2 = values();
-        int var3 = var2.length;
-
-        for (int var4 = 0; var4 < var3; ++var4) {
-            Facing enumfacing = var2[var4];
-            if (enumfacing.getAxisDirection() == axisDirectionIn && enumfacing.getAxis() == axisIn) {
-                return enumfacing;
+    public static Facing getFacingFromAxis(Facing.AxisDirection AxisDirectionIn, Facing.Axis axisIn) {
+        for (Facing Facing : values()) {
+            if (Facing.getAxisDirection() == AxisDirectionIn && Facing.getAxis() == axisIn) {
+                return Facing;
             }
         }
 
-        throw new IllegalArgumentException("No such direction: " + axisDirectionIn + " " + axisIn);
+        throw new IllegalArgumentException("No such Facing: " + AxisDirectionIn + " " + axisIn);
     }
 
-    public Vector3 getDirectionVec() {
-        return this.directionVec;
+    public Vector3 getFacingVec() {
+        return this.FacingVec;
     }
 
-    static {
-        Facing[] var0 = values();
-        int var1 = var0.length;
-
-        for (int var2 = 0; var2 < var1; ++var2) {
-            Facing enumfacing = var0[var2];
-            VALUES[enumfacing.index] = enumfacing;
-            if (enumfacing.getAxis().isHorizontal()) {
-                HORIZONTALS[enumfacing.horizontalIndex] = enumfacing;
+    public static enum Axis implements SerializableString, java.util.function.Predicate<Facing> {
+        X("x") {
+            public int getCoordinate(int x, int y, int z) {
+                return x;
             }
 
-            NAME_LOOKUP.put(enumfacing.getName2().toLowerCase(Locale.ROOT), enumfacing);
+            public double getCoordinate(double x, double y, double z) {
+                return x;
+            }
+        },
+        Y("y") {
+            public int getCoordinate(int x, int y, int z) {
+                return y;
+            }
+
+            public double getCoordinate(double x, double y, double z) {
+                return y;
+            }
+        },
+        Z("z") {
+            public int getCoordinate(int x, int y, int z) {
+                return z;
+            }
+
+            public double getCoordinate(double x, double y, double z) {
+                return z;
+            }
+        };
+
+        private static final Map<String, Facing.Axis> NAME_LOOKUP = Arrays.stream(values()).collect(Collectors.toMap(Facing.Axis::getName2, (p_199785_0_) -> {
+            return p_199785_0_;
+        }));
+        private final String name;
+
+        private Axis(String nameIn) {
+            this.name = nameIn;
         }
 
-    }
-
-    public static enum Plane implements Predicate<Facing>, Iterable<Facing> {
-        HORIZONTAL,
-        VERTICAL;
-
-        private Plane() {
+        @Nullable
+        public static Facing.Axis byName(String name) {
+            return NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
         }
 
-        public Facing[] facings() {
+        public String getName2() {
+            return this.name;
+        }
+
+        public boolean isVertical() {
+            return this == Y;
+        }
+
+        public boolean isHorizontal() {
+            return this == X || this == Z;
+        }
+
+        public String toString() {
+            return this.name;
+        }
+
+        public static Facing.Axis random(Random p_218393_0_) {
+            return values()[p_218393_0_.nextInt(values().length)];
+        }
+
+        public boolean test(@Nullable Facing p_test_1_) {
+            return p_test_1_ != null && p_test_1_.getAxis() == this;
+        }
+
+        public Facing.Plane getPlane() {
             switch (this) {
-                case HORIZONTAL:
-                    return new Facing[]{Facing.NORTH, Facing.EAST, Facing.SOUTH, Facing.WEST};
-                case VERTICAL:
-                    return new Facing[]{Facing.UP, Facing.DOWN};
+                case X:
+                case Z:
+                    return Facing.Plane.HORIZONTAL;
+                case Y:
+                    return Facing.Plane.VERTICAL;
                 default:
                     throw new Error("Someone's been tampering with the universe!");
             }
         }
 
-        public Facing random(Random rand) {
-            Facing[] aenumfacing = this.facings();
-            return aenumfacing[rand.nextInt(aenumfacing.length)];
+        public String getName() {
+            return this.name;
         }
 
-        public boolean apply(@Nullable Facing p_apply_1_) {
-            return p_apply_1_ != null && p_apply_1_.getAxis().getPlane() == this;
-        }
+        public abstract int getCoordinate(int x, int y, int z);
 
-        public Iterator<Facing> iterator() {
-            return Iterators.forArray(this.facings());
-        }
+        public abstract double getCoordinate(double x, double y, double z);
     }
+
 
     public static enum AxisDirection {
         POSITIVE(1, "Towards positive"),
@@ -310,62 +308,28 @@ public enum Facing implements Serializable {
         }
     }
 
-    public static enum Axis implements Predicate<Facing>, Serializable {
-        X("x", Facing.Plane.HORIZONTAL),
-        Y("y", Facing.Plane.VERTICAL),
-        Z("z", Facing.Plane.HORIZONTAL);
+    public static enum Plane implements Iterable<Facing>, Predicate<Facing> {
+        HORIZONTAL(new Facing[]{Facing.NORTH, Facing.EAST, Facing.SOUTH, Facing.WEST}, new Facing.Axis[]{Facing.Axis.X, Facing.Axis.Z}),
+        VERTICAL(new Facing[]{Facing.UP, Facing.DOWN}, new Facing.Axis[]{Facing.Axis.Y});
 
-        private static final Map<String, Axis> NAME_LOOKUP = Maps.newHashMap();
-        private final String name;
-        private final Facing.Plane plane;
+        private final Facing[] facingValues;
+        private final Facing.Axis[] axisValues;
 
-        private Axis(String name, Facing.Plane plane) {
-            this.name = name;
-            this.plane = plane;
+        private Plane(Facing[] facingValuesIn, Facing.Axis[] axisValuesIn) {
+            this.facingValues = facingValuesIn;
+            this.axisValues = axisValuesIn;
         }
 
-        @Nullable
-        public static Facing.Axis byName(String name) {
-            return name == null ? null : (Facing.Axis) NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
+        public Facing random(Random rand) {
+            return this.facingValues[rand.nextInt(this.facingValues.length)];
         }
 
-        public String getName2() {
-            return this.name;
+        public boolean test(@Nullable Facing p_test_1_) {
+            return p_test_1_ != null && p_test_1_.getAxis().getPlane() == this;
         }
 
-        public boolean isVertical() {
-            return this.plane == Facing.Plane.VERTICAL;
-        }
-
-        public boolean isHorizontal() {
-            return this.plane == Facing.Plane.HORIZONTAL;
-        }
-
-        public String toString() {
-            return this.name;
-        }
-
-        public boolean apply(@Nullable Facing p_apply_1_) {
-            return p_apply_1_ != null && p_apply_1_.getAxis() == this;
-        }
-
-        public Facing.Plane getPlane() {
-            return this.plane;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        static {
-            Facing.Axis[] var0 = values();
-            int var1 = var0.length;
-
-            for (int var2 = 0; var2 < var1; ++var2) {
-                Facing.Axis enumfacing$axis = var0[var2];
-                NAME_LOOKUP.put(enumfacing$axis.getName2().toLowerCase(Locale.ROOT), enumfacing$axis);
-            }
-
+        public Iterator<Facing> iterator() {
+            return Iterators.forArray(this.facingValues);
         }
     }
 }

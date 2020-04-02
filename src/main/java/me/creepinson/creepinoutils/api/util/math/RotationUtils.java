@@ -4,6 +4,7 @@ import com.sun.javafx.geom.Vec3d;
 import me.creepinson.creepinoutils.api.util.math.Facing.Axis;
 import me.creepinson.creepinoutils.api.util.math.Facing.AxisDirection;
 
+
 public class RotationUtils {
 
     private static String[] facingNames;
@@ -205,7 +206,7 @@ public class RotationUtils {
 
     public static Facing rotate(Facing facing, Rotation rotation) {
         Vector3 rotatedNormal = new Vector3(rotation.getMatrix().getX(facing.getDirectionVec()), rotation.getMatrix().getY(facing.getDirectionVec()), rotation.getMatrix().getZ(facing.getDirectionVec()));
-        for (Facing rotated : Facing.VALUES) {
+        for (Facing rotated : Facing.values()) {
             if (rotated.getDirectionVec().equals(rotatedNormal))
                 return rotated;
         }

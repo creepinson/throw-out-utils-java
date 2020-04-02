@@ -2,8 +2,10 @@ package me.creepinson.creepinoutils.api.util;
 
 public interface Module {
 
-    public void onEnable();
+    void onEnable();
 
-    public void onDisable();
+    void onReload();
+
+    void onDisable();
 
 }

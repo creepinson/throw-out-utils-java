@@ -14,11 +14,11 @@ public interface FileFindHandler {
 	 *
 	 * @param file the File which was found
 	 */
-	abstract public void handleFile(File file);
+	void handleFile(File file);
 
 	/**
 	 * Should be called by the client when no more files will be fed to the FileFindHandler
 	 */
-	abstract public void onComplete();
+	void onComplete();
 
 }
