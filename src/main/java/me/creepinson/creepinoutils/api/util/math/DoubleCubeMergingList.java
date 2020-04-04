@@ -1,6 +1,5 @@
 package me.creepinson.creepinoutils.api.util.math;
 
-import com.google.common.math.IntMath;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import me.creepinson.creepinoutils.api.util.math.shape.VoxelShapes;
 
@@ -14,7 +13,7 @@ public final class DoubleCubeMergingList implements IDoubleListMerger {
         this.field_212436_a = new DoubleRangeList((int) VoxelShapes.lcm(firstSize, secondSize));
         this.firstSize = firstSize;
         this.secondSize = secondSize;
-        this.gcd = IntMath.gcd(firstSize, secondSize);
+        this.gcd = MathUtils.gcd(firstSize, secondSize);
     }
 
     public boolean forMergedIndexes(IDoubleListMerger.IConsumer consumer) {

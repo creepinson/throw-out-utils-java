@@ -1,8 +1,5 @@
 package me.creepinson.creepinoutils.api.util.math.shape;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.math.DoubleMath;
-import com.google.common.math.IntMath;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import me.creepinson.creepinoutils.api.util.TransformUtil;
@@ -87,7 +84,7 @@ public final class VoxelShapes {
     }
 
     public static long lcm(int aa, int bb) {
-        return (long) aa * (long) (bb / IntMath.gcd(aa, bb));
+        return (long) aa * (long) (bb / MathUtils.gcd(aa, bb));
     }
 
     public static VoxelShape or(VoxelShape shape1, VoxelShape shape2) {
@@ -189,7 +186,7 @@ public final class VoxelShapes {
             VoxelShape Voxelshape = Facing$AxisDirection == Facing.AxisDirection.POSITIVE ? shape : adjacentShape;
             VoxelShape Voxelshape1 = Facing$AxisDirection == Facing.AxisDirection.POSITIVE ? adjacentShape : shape;
             IBooleanFunction ibooleanfunction = Facing$AxisDirection == Facing.AxisDirection.POSITIVE ? IBooleanFunction.ONLY_FIRST : IBooleanFunction.ONLY_SECOND;
-            return DoubleMath.fuzzyEquals(Voxelshape.getEnd(Facing$axis), 1.0D, 1.0E-7D) && DoubleMath.fuzzyEquals(Voxelshape1.getStart(Facing$axis), 0.0D, 1.0E-7D) && !compare(new SplitVoxelShape(Voxelshape, Facing$axis, Voxelshape.part.getSize(Facing$axis) - 1), new SplitVoxelShape(Voxelshape1, Facing$axis, 0), ibooleanfunction);
+            return MathUtils.fuzzyEquals(Voxelshape.getEnd(Facing$axis), 1.0D, 1.0E-7D) && MathUtils.fuzzyEquals(Voxelshape1.getStart(Facing$axis), 0.0D, 1.0E-7D) && !compare(new SplitVoxelShape(Voxelshape, Facing$axis, Voxelshape.part.getSize(Facing$axis) - 1), new SplitVoxelShape(Voxelshape1, Facing$axis, 0), ibooleanfunction);
         }
     }
 
@@ -201,10 +198,10 @@ public final class VoxelShapes {
             boolean flag;
             int i;
             if (p_216387_1_.getAxisDirection() == Facing.AxisDirection.POSITIVE) {
-                flag = DoubleMath.fuzzyEquals(p_216387_0_.getEnd(Facing$axis), 1.0D, 1.0E-7D);
+                flag = MathUtils.fuzzyEquals(p_216387_0_.getEnd(Facing$axis), 1.0D, 1.0E-7D);
                 i = p_216387_0_.part.getSize(Facing$axis) - 1;
             } else {
-                flag = DoubleMath.fuzzyEquals(p_216387_0_.getStart(Facing$axis), 0.0D, 1.0E-7D);
+                flag = MathUtils.fuzzyEquals(p_216387_0_.getStart(Facing$axis), 0.0D, 1.0E-7D);
                 i = 0;
             }
 
@@ -218,11 +215,11 @@ public final class VoxelShapes {
             Facing.AxisDirection Facing$AxisDirection = side.getAxisDirection();
             VoxelShape Voxelshape = Facing$AxisDirection == Facing.AxisDirection.POSITIVE ? shape : adjacentShape;
             VoxelShape Voxelshape1 = Facing$AxisDirection == Facing.AxisDirection.POSITIVE ? adjacentShape : shape;
-            if (!DoubleMath.fuzzyEquals(Voxelshape.getEnd(Facing$axis), 1.0D, 1.0E-7D)) {
+            if (!MathUtils.fuzzyEquals(Voxelshape.getEnd(Facing$axis), 1.0D, 1.0E-7D)) {
                 Voxelshape = empty();
             }
 
-            if (!DoubleMath.fuzzyEquals(Voxelshape1.getStart(Facing$axis), 0.0D, 1.0E-7D)) {
+            if (!MathUtils.fuzzyEquals(Voxelshape1.getStart(Facing$axis), 0.0D, 1.0E-7D)) {
                 Voxelshape1 = empty();
             }
 
@@ -244,7 +241,6 @@ public final class VoxelShapes {
         }
     }
 
-    @VisibleForTesting
     protected static IDoubleListMerger makeListMerger(int p_199410_0_, DoubleList list1, DoubleList list2, boolean p_199410_3_, boolean p_199410_4_) {
         int i = list1.size() - 1;
         int j = list2.size() - 1;

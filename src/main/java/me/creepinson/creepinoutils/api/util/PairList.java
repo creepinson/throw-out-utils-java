@@ -1,7 +1,5 @@
 package me.creepinson.creepinoutils.api.util;
 
-import com.google.common.collect.ImmutableList;
-
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -199,7 +197,7 @@ public class PairList<K, V> extends ArrayList<Pair<K, V>> {
     }
 
     public List<V> values() {
-        return ImmutableList.copyOf(values);
+        return new ArrayList<>(values);
     }
 
     public Set<K> keys() {

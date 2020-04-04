@@ -1,11 +1,9 @@
 package me.creepinson.creepinoutils.api.util.math.shape;
 
-import com.google.common.collect.Lists;
-import com.google.common.math.DoubleMath;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import me.creepinson.creepinoutils.api.util.math.*;
 
-import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +12,7 @@ import java.util.List;
 
 public abstract class VoxelShape {
     protected final VoxelShapePart part;
-    @Nullable
+
     private VoxelShape[] projectionCache;
 
     VoxelShape(VoxelShapePart part) {
@@ -77,7 +75,7 @@ public abstract class VoxelShape {
     }
 
     public List<BoundingBox> toBoundingBoxList() {
-        List<BoundingBox> list = Lists.newArrayList();
+        List<BoundingBox> list = new ArrayList<>();
         this.forEachBox((p_203431_1_, p_203431_3_, p_203431_5_, p_203431_7_, p_203431_9_, p_203431_11_) -> {
             list.add(new BoundingBox(p_203431_1_, p_203431_3_, p_203431_5_, p_203431_7_, p_203431_9_, p_203431_11_));
         });
@@ -141,7 +139,7 @@ public abstract class VoxelShape {
         Facing.Axis Facing$axis = side.getAxis();
         Facing.AxisDirection Facing$AxisDirection = side.getAxisDirection();
         DoubleList doublelist = this.getValues(Facing$axis);
-        if (doublelist.size() == 2 && DoubleMath.fuzzyEquals(doublelist.getDouble(0), 0.0D, 1.0E-7D) && DoubleMath.fuzzyEquals(doublelist.getDouble(1), 1.0D, 1.0E-7D)) {
+        if (doublelist.size() == 2 && MathUtils.fuzzyEquals(doublelist.getDouble(0), 0.0D, 1.0E-7D) && MathUtils.fuzzyEquals(doublelist.getDouble(1), 1.0D, 1.0E-7D)) {
             return this;
         } else {
             int i = this.getClosestIndex(Facing$axis, Facing$AxisDirection == Facing.AxisDirection.POSITIVE ? 0.9999999D : 1.0E-7D);

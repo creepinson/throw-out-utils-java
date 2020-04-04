@@ -1,13 +1,68 @@
 package me.creepinson.creepinoutils.api.util.math;
 
+import me.creepinson.creepinoutils.api.util.ConditionUtil;
+
 import java.util.Random;
 import java.util.function.IntPredicate;
+
+import static java.lang.Integer.min;
 
 /**
  * @author Creepinson
  */
 public class MathUtils {
     private static final float[] SIN_TABLE = new float[65536];
+
+    /**
+     * Returns the greatest common divisor of {@code a, b}. Returns {@code 0} if {@code a == 0 && b ==
+     * 0}.
+     *
+     * @throws IllegalArgumentException if {@code a < 0} or {@code b < 0}
+     */
+    public static int gcd(int a, int b) {
+        /*
+         * The reason we require both arguments to be >= 0 is because otherwise, what do you return on
+         * gcd(0, Integer.MIN_VALUE)? BigInteger.gcd would return positive 2^31, but positive 2^31 isn't
+         * an int.
+         */
+        ConditionUtil.checkNonNegative("a", a);
+        ConditionUtil.checkNonNegative("b", b);
+        if (a == 0) {
+            // 0 % b == 0, so b divides a, but the converse doesn't hold.
+            // BigInteger.gcd is consistent with this decision.
+            return b;
+        } else if (b == 0) {
+            return a; // similar logic
+        }
+        /*
+         * Uses the binary GCD algorithm; see http://en.wikipedia.org/wiki/Binary_GCD_algorithm. This is
+         * >40% faster than the Euclidean algorithm in benchmarks.
+         */
+        int aTwos = Integer.numberOfTrailingZeros(a);
+        a >>= aTwos; // divide out all 2s
+        int bTwos = Integer.numberOfTrailingZeros(b);
+        b >>= bTwos; // divide out all 2s
+        while (a != b) { // both a, b are odd
+            // The key to the binary GCD algorithm is as follows:
+            // Both a and b are odd. Assume a > b; then gcd(a - b, b) = gcd(a, b).
+            // But in gcd(a - b, b), a - b is even and b is odd, so we can divide out powers of two.
+
+            // We bend over backwards to avoid branching, adapting a technique from
+            // http://graphics.stanford.edu/~seander/bithacks.html#IntegerMinOrMax
+
+            int delta = a - b; // can't overflow, since a and b are nonnegative
+
+            int minDeltaOrZero = delta & (delta >> (Integer.SIZE - 1));
+            // equivalent to Math.min(delta, 0)
+
+            a = delta - minDeltaOrZero - minDeltaOrZero; // sets a to Math.abs(a - b)
+            // a is now nonnegative and even
+
+            b += minDeltaOrZero; // sets b to min(old a, b)
+            a >>= Integer.numberOfTrailingZeros(a); // divide out all 2s, since 2 doesn't divide b
+        }
+        return a << min(aTwos, bTwos);
+    }
 
     static {
         int j;
@@ -91,6 +146,40 @@ public class MathUtils {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Returns {@code true} if {@code a} and {@code b} are within {@code tolerance} of each other.
+     *
+     * <p>Technically speaking, this is equivalent to {@code Math.abs(a - b) <= tolerance ||
+     * Double.valueOf(a).equals(Double.valueOf(b))}.
+     *
+     * <p>Notable special cases include:
+     *
+     * <ul>
+     *   <li>All NaNs are fuzzily equal.
+     *   <li>If {@code a == b}, then {@code a} and {@code b} are always fuzzily equal.
+     *   <li>Positive and negative zero are always fuzzily equal.
+     *   <li>If {@code tolerance} is zero, and neither {@code a} nor {@code b} is NaN, then {@code a}
+     *       and {@code b} are fuzzily equal if and only if {@code a == b}.
+     *   <li>With {@link Double#POSITIVE_INFINITY} tolerance, all non-NaN values are fuzzily equal.
+     *   <li>With finite tolerance, {@code Double.POSITIVE_INFINITY} and {@code
+     *       Double.NEGATIVE_INFINITY} are fuzzily equal only to themselves.
+     * </ul>
+     *
+     * <p>This is reflexive and symmetric, but <em>not</em> transitive, so it is <em>not</em> an
+     * equivalence relation and <em>not</em> suitable for use in {@link Object#equals}
+     * implementations.
+     *
+     * @throws IllegalArgumentException if {@code tolerance} is {@code < 0} or NaN
+     * @since 13.0
+     */
+    public static boolean fuzzyEquals(double a, double b, double tolerance) {
+        ConditionUtil.checkNonNegative("tolerance", tolerance);
+        return Math.copySign(a - b, 1.0) <= tolerance
+                // copySign(x, 1.0) is a branch-free version of abs(x), but with different NaN semantics
+                || (a == b) // needed to ensure that infinities equal themselves
+                || (Double.isNaN(a) && Double.isNaN(b));
     }
 
     public static float abs(float value) {

@@ -1,5 +1,7 @@
 package com.eztech.util;
 
+import me.creepinson.creepinoutils.api.util.StringUtil;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;

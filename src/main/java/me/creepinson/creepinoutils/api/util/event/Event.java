@@ -1,9 +1,7 @@
 package me.creepinson.creepinoutils.api.util.event;
 
-import com.google.common.base.Preconditions;
+import me.creepinson.creepinoutils.api.util.ConditionUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -58,15 +56,14 @@ public class Event {
         return listeners;
     }
 
-    @Nullable
     public EventPriority getPhase() {
         return this.phase;
     }
 
-    public void setPhase(@Nonnull EventPriority value) {
-        Preconditions.checkNotNull(value, "setPhase argument must not be null");
+    public void setPhase(EventPriority value) {
+        ConditionUtil.checkNotNull(value, "setPhase argument must not be null");
         int prev = this.phase == null ? -1 : this.phase.ordinal();
-        Preconditions.checkArgument(prev < value.ordinal(), "Attempted to set event phase to %s when already %s", value, this.phase);
+        ConditionUtil.checkArgument(prev < value.ordinal(), "Attempted to set event phase to %s when already %s", value, this.phase);
         this.phase = value;
     }
 

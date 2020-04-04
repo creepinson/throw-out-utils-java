@@ -5,10 +5,9 @@
 
 package me.creepinson.creepinoutils.api.util.math;
 
-import com.google.common.collect.Iterators;
+import me.creepinson.creepinoutils.api.util.IteratorUtil;
 import me.creepinson.creepinoutils.api.util.SerializableString;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -120,8 +119,7 @@ public enum Facing implements SerializableString {
         return this.axis;
     }
 
-    @Nullable
-    public static Facing byName(@Nullable String name) {
+    public static Facing byName(String name) {
         return name == null ? null : NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
     }
 
@@ -236,7 +234,6 @@ public enum Facing implements SerializableString {
             this.name = nameIn;
         }
 
-        @Nullable
         public static Facing.Axis byName(String name) {
             return NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
         }
@@ -261,7 +258,7 @@ public enum Facing implements SerializableString {
             return values()[p_218393_0_.nextInt(values().length)];
         }
 
-        public boolean test(@Nullable Facing p_test_1_) {
+        public boolean test(Facing p_test_1_) {
             return p_test_1_ != null && p_test_1_.getAxis() == this;
         }
 
@@ -324,12 +321,12 @@ public enum Facing implements SerializableString {
             return this.facingValues[rand.nextInt(this.facingValues.length)];
         }
 
-        public boolean test(@Nullable Facing p_test_1_) {
+        public boolean test(Facing p_test_1_) {
             return p_test_1_ != null && p_test_1_.getAxis().getPlane() == this;
         }
 
         public Iterator<Facing> iterator() {
-            return Iterators.forArray(this.facingValues);
+            return IteratorUtil.forArray(this.facingValues);
         }
     }
 }
