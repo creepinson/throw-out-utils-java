@@ -29,11 +29,11 @@ public abstract class VoxelShape {
         return i <= 0 ? Double.NEGATIVE_INFINITY : this.getValueUnchecked(axis, i);
     }
 
-    public BoundingBox getBoundingBox() {
+    public Cuboid getBoundingBox() {
         if (this.isEmpty()) {
             throw new UnsupportedOperationException("No bounds for empty shape.");
         } else {
-            return new BoundingBox(this.getStart(Facing.Axis.X), this.getStart(Facing.Axis.Y), this.getStart(Facing.Axis.Z), this.getEnd(Facing.Axis.X), this.getEnd(Facing.Axis.Y), this.getEnd(Facing.Axis.Z));
+            return new Cuboid(this.getStart(Facing.Axis.X), this.getStart(Facing.Axis.Y), this.getStart(Facing.Axis.Z), this.getEnd(Facing.Axis.X), this.getEnd(Facing.Axis.Y), this.getEnd(Facing.Axis.Z));
         }
     }
 
@@ -48,7 +48,7 @@ public abstract class VoxelShape {
     }
 
     public VoxelShape withOffset(double xOffset, double yOffset, double zOffset) {
-        return (VoxelShape) (this.isEmpty() ? VoxelShapes.empty() : new VoxelShapeArray(this.part, (DoubleList) (new OffsetDoubleList(this.getValues(Facing.Axis.X), xOffset)), (DoubleList) (new OffsetDoubleList(this.getValues(Facing.Axis.Y), yOffset)), (DoubleList) (new OffsetDoubleList(this.getValues(Facing.Axis.Z), zOffset))));
+        return this.isEmpty() ? VoxelShapes.empty() : new VoxelShapeArray(this.part, new OffsetDoubleList(this.getValues(Facing.Axis.X), xOffset), new OffsetDoubleList(this.getValues(Facing.Axis.Y), yOffset), new OffsetDoubleList(this.getValues(Facing.Axis.Z), zOffset));
     }
 
     public VoxelShape simplify() {
@@ -74,10 +74,10 @@ public abstract class VoxelShape {
         }, true);
     }
 
-    public List<BoundingBox> toBoundingBoxList() {
-        List<BoundingBox> list = new ArrayList<>();
+    public List<Cuboid> toBoundingBoxList() {
+        List<Cuboid> list = new ArrayList<>();
         this.forEachBox((p_203431_1_, p_203431_3_, p_203431_5_, p_203431_7_, p_203431_9_, p_203431_11_) -> {
-            list.add(new BoundingBox(p_203431_1_, p_203431_3_, p_203431_5_, p_203431_7_, p_203431_9_, p_203431_11_));
+            list.add(new Cuboid(p_203431_1_, p_203431_3_, p_203431_5_, p_203431_7_, p_203431_9_, p_203431_11_));
         });
         return list;
     }
@@ -147,11 +147,11 @@ public abstract class VoxelShape {
         }
     }
 
-    public double getAllowedOffset(Facing.Axis movementAxis, BoundingBox collisionBox, double desiredOffset) {
+    public double getAllowedOffset(Facing.Axis movementAxis, Cuboid collisionBox, double desiredOffset) {
         return this.getAllowedOffset(AxisRotation.from(movementAxis, Facing.Axis.X), collisionBox, desiredOffset);
     }
 
-    protected double getAllowedOffset(AxisRotation movementAxis, BoundingBox collisionBox, double desiredOffset) {
+    protected double getAllowedOffset(AxisRotation movementAxis, Cuboid collisionBox, double desiredOffset) {
         if (this.isEmpty()) {
             return desiredOffset;
         } else if (Math.abs(desiredOffset) < 1.0E-7D) {
@@ -161,14 +161,14 @@ public abstract class VoxelShape {
             Facing.Axis Facing$axis = axisrotation.rotate(Facing.Axis.X);
             Facing.Axis Facing$axis1 = axisrotation.rotate(Facing.Axis.Y);
             Facing.Axis Facing$axis2 = axisrotation.rotate(Facing.Axis.Z);
-            double d0 = collisionBox.getMax(Facing$axis);
-            double d1 = collisionBox.getMin(Facing$axis);
+            double d0 = axisrotation.getCoordinate(collisionBox.maxX(), collisionBox.maxY(), collisionBox.maxZ(), Facing$axis);
+            double d1 = Facing$axis.getCoordinate(collisionBox.minX(), collisionBox.minY(), collisionBox.minZ());
             int i = this.getClosestIndex(Facing$axis, d1 + 1.0E-7D);
             int j = this.getClosestIndex(Facing$axis, d0 - 1.0E-7D);
-            int k = Math.max(0, this.getClosestIndex(Facing$axis1, collisionBox.getMin(Facing$axis1) + 1.0E-7D));
-            int l = Math.min(this.part.getSize(Facing$axis1), this.getClosestIndex(Facing$axis1, collisionBox.getMax(Facing$axis1) - 1.0E-7D) + 1);
-            int i1 = Math.max(0, this.getClosestIndex(Facing$axis2, collisionBox.getMin(Facing$axis2) + 1.0E-7D));
-            int j1 = Math.min(this.part.getSize(Facing$axis2), this.getClosestIndex(Facing$axis2, collisionBox.getMax(Facing$axis2) - 1.0E-7D) + 1);
+            int k = Math.max(0, this.getClosestIndex(Facing$axis1, Facing$axis1.getCoordinate(collisionBox.minX(), collisionBox.minY(), collisionBox.minZ()) + 1.0E-7D));
+            int l = Math.min(this.part.getSize(Facing$axis1), this.getClosestIndex(Facing$axis1, Facing$axis1.getCoordinate(collisionBox.maxX(), collisionBox.maxY(), collisionBox.maxZ()) - 1.0E-7D) + 1);
+            int i1 = Math.max(0, this.getClosestIndex(Facing$axis2, Facing$axis2.getCoordinate(collisionBox.minX(), collisionBox.minY(), collisionBox.minZ()) + 1.0E-7D));
+            int j1 = Math.min(this.part.getSize(Facing$axis2), this.getClosestIndex(Facing$axis2, Facing$axis2.getCoordinate(collisionBox.maxX(), collisionBox.maxY(), collisionBox.maxZ()) - 1.0E-7D) + 1);
             int k1 = this.part.getSize(Facing$axis);
             if (desiredOffset > 0.0D) {
                 for (int l1 = j + 1; l1 < k1; ++l1) {

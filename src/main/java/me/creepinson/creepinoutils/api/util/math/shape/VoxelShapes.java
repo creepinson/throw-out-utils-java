@@ -28,13 +28,13 @@ public final class VoxelShapes {
     }
 
     public static VoxelShape create(double x1, double y1, double z1, double x2, double y2, double z2) {
-        return create(new BoundingBox(x1, y1, z1, x2, y2, z2));
+        return create(new Cuboid(x1, y1, z1, x2, y2, z2));
     }
 
-    public static VoxelShape create(BoundingBox aabb) {
-        int i = getPrecisionBits(aabb.minX, aabb.maxX);
-        int j = getPrecisionBits(aabb.minY, aabb.maxY);
-        int k = getPrecisionBits(aabb.minZ, aabb.maxZ);
+    public static VoxelShape create(Cuboid aabb) {
+        int i = getPrecisionBits(aabb.minX(), aabb.maxX());
+        int j = getPrecisionBits(aabb.minY(), aabb.maxY());
+        int k = getPrecisionBits(aabb.minZ(), aabb.maxZ());
         if (i >= 0 && j >= 0 && k >= 0) {
             if (i == 0 && j == 0 && k == 0) {
                 return aabb.contains(0.5D, 0.5D, 0.5D) ? fullCube() : empty();
@@ -42,12 +42,12 @@ public final class VoxelShapes {
                 int l = 1 << i;
                 int i1 = 1 << j;
                 int j1 = 1 << k;
-                int k1 = (int) Math.round(aabb.minX * (double) l);
-                int l1 = (int) Math.round(aabb.maxX * (double) l);
-                int i2 = (int) Math.round(aabb.minY * (double) i1);
-                int j2 = (int) Math.round(aabb.maxY * (double) i1);
-                int k2 = (int) Math.round(aabb.minZ * (double) j1);
-                int l2 = (int) Math.round(aabb.maxZ * (double) j1);
+                int k1 = (int) Math.round(aabb.minX() * (double) l);
+                int l1 = (int) Math.round(aabb.maxX() * (double) l);
+                int i2 = (int) Math.round(aabb.minY() * (double) i1);
+                int j2 = (int) Math.round(aabb.maxY() * (double) i1);
+                int k2 = (int) Math.round(aabb.minZ() * (double) j1);
+                int l2 = (int) Math.round(aabb.maxZ() * (double) j1);
                 BitSetVoxelShapePart bitsetVoxelshapepart = new BitSetVoxelShapePart(l, i1, j1, k1, i2, k2, l1, j2, l2);
 
                 for (long i3 = (long) k1; i3 < (long) l1; ++i3) {
@@ -61,7 +61,7 @@ public final class VoxelShapes {
                 return new VoxelShapeCube(bitsetVoxelshapepart);
             }
         } else {
-            return new VoxelShapeArray(FULL_CUBE.part, new double[]{aabb.minX, aabb.maxX}, new double[]{aabb.minY, aabb.maxY}, new double[]{aabb.minZ, aabb.maxZ});
+            return new VoxelShapeArray(FULL_CUBE.part, new double[]{aabb.minX(), aabb.maxX()}, new double[]{aabb.minY(), aabb.maxY()}, new double[]{aabb.minZ(), aabb.maxZ()});
         }
     }
 
@@ -116,7 +116,7 @@ public final class VoxelShapes {
                 IDoubleListMerger idoublelistmerger1 = makeListMerger(idoublelistmerger.func_212435_a().size() - 1, shape1.getValues(Facing.Axis.Y), shape2.getValues(Facing.Axis.Y), flag, flag1);
                 IDoubleListMerger idoublelistmerger2 = makeListMerger((idoublelistmerger.func_212435_a().size() - 1) * (idoublelistmerger1.func_212435_a().size() - 1), shape1.getValues(Facing.Axis.Z), shape2.getValues(Facing.Axis.Z), flag, flag1);
                 BitSetVoxelShapePart bitsetVoxelshapepart = BitSetVoxelShapePart.func_197852_a(shape1.part, shape2.part, idoublelistmerger, idoublelistmerger1, idoublelistmerger2, function);
-                return (VoxelShape) (idoublelistmerger instanceof DoubleCubeMergingList && idoublelistmerger1 instanceof DoubleCubeMergingList && idoublelistmerger2 instanceof DoubleCubeMergingList ? new VoxelShapeCube(bitsetVoxelshapepart) : new VoxelShapeArray(bitsetVoxelshapepart, idoublelistmerger.func_212435_a(), idoublelistmerger1.func_212435_a(), idoublelistmerger2.func_212435_a()));
+                return idoublelistmerger instanceof DoubleCubeMergingList && idoublelistmerger1 instanceof DoubleCubeMergingList && idoublelistmerger2 instanceof DoubleCubeMergingList ? new VoxelShapeCube(bitsetVoxelshapepart) : new VoxelShapeArray(bitsetVoxelshapepart, idoublelistmerger.func_212435_a(), idoublelistmerger1.func_212435_a(), idoublelistmerger2.func_212435_a());
             }
         }
     }
@@ -152,16 +152,10 @@ public final class VoxelShapes {
     }
 
     private static boolean func_197874_a(IDoubleListMerger p_197874_0_, IDoubleListMerger p_197874_1_, IDoubleListMerger p_197874_2_, VoxelShapePart p_197874_3_, VoxelShapePart p_197874_4_, IBooleanFunction p_197874_5_) {
-        return !p_197874_0_.forMergedIndexes((p_199861_5_, p_199861_6_, p_199861_7_) -> {
-            return p_197874_1_.forMergedIndexes((p_199860_6_, p_199860_7_, p_199860_8_) -> {
-                return p_197874_2_.forMergedIndexes((p_199862_7_, p_199862_8_, p_199862_9_) -> {
-                    return !p_197874_5_.apply(p_197874_3_.contains(p_199861_5_, p_199860_6_, p_199862_7_), p_197874_4_.contains(p_199861_6_, p_199860_7_, p_199862_8_));
-                });
-            });
-        });
+        return !p_197874_0_.forMergedIndexes((p_199861_5_, p_199861_6_, p_199861_7_) -> p_197874_1_.forMergedIndexes((p_199860_6_, p_199860_7_, p_199860_8_) -> p_197874_2_.forMergedIndexes((p_199862_7_, p_199862_8_, p_199862_9_) -> !p_197874_5_.apply(p_197874_3_.contains(p_199861_5_, p_199860_6_, p_199862_7_), p_197874_4_.contains(p_199861_6_, p_199860_7_, p_199862_8_)))));
     }
 
-    public static double getAllowedOffset(Facing.Axis movementAxis, BoundingBox collisionVoxel, Stream<VoxelShape> possibleHits, double desiredOffset) {
+    public static double getAllowedOffset(Facing.Axis movementAxis, Cuboid collisionVoxel, Stream<VoxelShape> possibleHits, double desiredOffset) {
         for (Iterator<VoxelShape> iterator = possibleHits.iterator(); iterator.hasNext(); desiredOffset = iterator.next().getAllowedOffset(movementAxis, collisionVoxel, desiredOffset)) {
             if (Math.abs(desiredOffset) < 1.0E-7D) {
                 return 0.0D;
