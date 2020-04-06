@@ -1,9 +1,8 @@
-package me.creepinson.creepinoutils.api.util;
+package me.creepinson.creepinoutils.api.util.threading;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Worker extends Thread {
-    private final Object lock = new Object();
     private final AtomicBoolean shouldWait = new AtomicBoolean();
 
     protected abstract boolean processingIsComplete();
@@ -12,9 +11,7 @@ public abstract class Worker extends Thread {
 
     protected abstract void cleanUpResources();
 
-    public Object getLock() {
-        return lock;
-    }
+    public abstract Object getLock();
 
     public void disable() {
         shouldWait.set(false);
@@ -29,8 +26,8 @@ public abstract class Worker extends Thread {
         try {
             while (!processingIsComplete()) {
                 while (!shouldWait.get()) {
-                    synchronized (lock) {
-                        lock.wait();
+                    synchronized (getLock()) {
+                        getLock().wait();
                     }
                 }
             }
