@@ -2,7 +2,7 @@ package me.creepinson.creepinoutils.api.util;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class Worker implements Runnable {
+public abstract class Worker extends Thread {
     private final Object lock = new Object();
     private final AtomicBoolean shouldWait = new AtomicBoolean();
 
