@@ -1,10 +1,12 @@
 package me.creepinson.creepinoutils.api.util.math;
 
+import java.util.Iterator;
+
 import me.creepinson.creepinoutils.api.util.SerializableString;
 import me.creepinson.creepinoutils.api.util.StringUtil;
 import me.creepinson.creepinoutils.api.util.math.Facing.Axis;
 
-public class Vector implements SerializableString, Cloneable {
+public class Vector implements SerializableString, Cloneable, Iterable<Float> {
 
     private static final long serialVersionUID = 4709144018768849633L;
     public static final Vector X_AXIS = new Vector(1, 0, 0);
@@ -403,5 +405,29 @@ public class Vector implements SerializableString, Cloneable {
             if (data[i] != value)
                 return false;
         return true;
+    }
+
+    @Override
+    public Iterator<Float> iterator() {
+        Iterator<Float> it = new Iterator<Float>() {
+
+            private int currentIndex = 0;
+
+            @Override
+            public boolean hasNext() {
+                return currentIndex < data.length;
+            }
+
+            @Override
+            public Float next() {
+                return data[currentIndex++];
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+        return it;
     }
 }
