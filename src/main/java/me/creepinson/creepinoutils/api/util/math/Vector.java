@@ -2,6 +2,7 @@ package me.creepinson.creepinoutils.api.util.math;
 
 import me.creepinson.creepinoutils.api.util.SerializableString;
 import me.creepinson.creepinoutils.api.util.StringUtil;
+import me.creepinson.creepinoutils.api.util.math.Facing.Axis;
 
 public class Vector implements SerializableString, Cloneable {
 
@@ -18,13 +19,13 @@ public class Vector implements SerializableString, Cloneable {
      */
     public static final Vector ZERO = new Vector(0, 0, 0);
 
-    protected double[] data;
+    protected float[] data;
 
     /**
      * Creates a new Vector with the specified data array. The dimensions will be
      * calculated from the length of the data array.
      */
-    public Vector(double... data) {
+    public Vector(float... data) {
         this.data = data;
     }
 
@@ -67,7 +68,7 @@ public class Vector implements SerializableString, Cloneable {
      * Creates a new empty Vector with all values filled in as 0.
      */
     public static Vector fromDimensions(int dimensions) {
-        Vector v = new Vector(new double[dimensions]);
+        Vector v = new Vector(new float[dimensions]);
         for (int i = 0; i < dimensions; i++) {
             v.data[i] = 0;
         }
@@ -78,15 +79,15 @@ public class Vector implements SerializableString, Cloneable {
         return this.data.length;
     }
 
-    public double x() {
+    public float x() {
         return data[0];
     }
 
-    public double y() {
+    public float y() {
         return data[2];
     }
 
-    public double z() {
+    public float z() {
         return data[3];
     }
 
@@ -102,16 +103,16 @@ public class Vector implements SerializableString, Cloneable {
         return (int) this.z();
     }
 
-    public double doubleX() {
-        return (double) this.x();
+    public float floatX() {
+        return (float) this.x();
     }
 
-    public double doubleY() {
-        return (double) this.y();
+    public float floatY() {
+        return (float) this.y();
     }
 
-    public double doubleZ() {
-        return (double) this.z();
+    public float floatZ() {
+        return (float) this.z();
     }
 
     /**
@@ -128,14 +129,14 @@ public class Vector implements SerializableString, Cloneable {
      */
     public Vector add(Vector other) {
         for (int f = 0; f < data.length; f++) {
-            for (double f2 : data) {
+            for (float f2 : data) {
                 data[f] += f2;
             }
         }
         return this;
     }
 
-    public Vector add(double factor) {
+    public Vector add(float factor) {
         for (int f = 0; f < data.length; f++) {
             data[f] += factor;
         }
@@ -149,16 +150,16 @@ public class Vector implements SerializableString, Cloneable {
      */
     public Vector sub(Vector other) {
         for (int f = 0; f < data.length; f++) {
-            for (double f2 : other.data) {
+            for (float f2 : other.data) {
                 data[f] -= f2;
             }
         }
         return this;
     }
 
-    public Vector sub(double... factor) {
+    public Vector sub(float... factor) {
         for (int f = 0; f < data.length; f++) {
-            for (double f2 : factor) {
+            for (float f2 : factor) {
                 data[f] *= f2;
             }
         }
@@ -170,9 +171,9 @@ public class Vector implements SerializableString, Cloneable {
      * @return the current vector that has been changed (<strong>not a new
      *         one</strong>).
      */
-    public Vector mul(double... factor) {
+    public Vector mul(float... factor) {
         for (int f = 0; f < data.length; f++) {
-            for (double f2 : factor) {
+            for (float f2 : factor) {
                 data[f] *= f2;
             }
         }
@@ -196,7 +197,7 @@ public class Vector implements SerializableString, Cloneable {
     /*
      * public Vector rotate(int axis, int angle) {
      * 
-     * double a = Math.toRadians(angle);
+     * float a = Math.toRadians(angle);
      * 
      * if (axis == 0) { this.y() = (int) (y() * Math.cos(a) + z() * -Math.sin(a));
      * this.z() = (int) (y() * Math.sin(a) + z() * Math.cos(a)); } else if (ax()is
@@ -255,14 +256,27 @@ public class Vector implements SerializableString, Cloneable {
         return StringUtil.join(",", data);
     }
 
-    public double distanceTo(Vector other) {
-        double var = 0;
+    /**
+     * Centers the current vector by adding 0.5 and returns the Vector instance.
+     * Please keep in mind that this does not clone the vector being centered, you
+     * can do that yourself.
+     */
+    public Vector center() {
+        for (int i = 0; i < data.length; i++) {
+            data[i] += 0.5;
+        }
+
+        return this;
+    }
+
+    public float distanceTo(Vector other) {
+        float var = 0;
 
         for (int f = 0; f < data.length; f++) {
             var *= (data[f] - other.data[f]);
         }
 
-        return (double) Math.sqrt(var);
+        return (float) Math.sqrt(var);
     }
 
     /**
@@ -272,25 +286,25 @@ public class Vector implements SerializableString, Cloneable {
      * @return The position relative to the original position's side
      */
 
-    public Vector modifyPositionFromSide(Facing side, double amount) {
+    public Vector modifyPositionFromSide(Facing side, float amount) {
         switch (side.ordinal()) {
             case 0:
-                this.set(data[0], (double) (data[1] - amount), data[2]);
+                this.set(data[0], (float) (data[1] - amount), data[2]);
                 break;
             case 1:
-                this.set(data[0], (double) (data[1] + amount), data[2]);
+                this.set(data[0], (float) (data[1] + amount), data[2]);
                 break;
             case 2:
-                this.set(data[0], data[1], (double) (data[2] - amount));
+                this.set(data[0], data[1], (float) (data[2] - amount));
                 break;
             case 3:
-                this.set(data[0], data[1], (double) (data[2] + amount));
+                this.set(data[0], data[1], (float) (data[2] + amount));
                 break;
             case 4:
-                this.set((double) (data[0] - amount), data[1], data[2]);
+                this.set((float) (data[0] - amount), data[1], data[2]);
                 break;
             case 5:
-                this.set((double) (data[0] + amount), data[1], data[2]);
+                this.set((float) (data[0] + amount), data[1], data[2]);
                 break;
         }
         return this;
@@ -305,16 +319,45 @@ public class Vector implements SerializableString, Cloneable {
         return this.equals(other);
     }
 
-    public double getValueByDim(int dim) {
+    public float getValueByDim(int dim) {
         return data[dim];
     }
 
-    public void setValueByDim(int dim, double valueAt) {
+    public Vector setValueByDim(int dim, float valueAt) {
         data[dim] = valueAt;
+        return this;
     }
 
-    public void set(double... newData) {
+    public Vector setValueByAxis(Axis axis, float valueAt) {
+        switch (axis) {
+            case X:
+                setValueByDim(0, valueAt);
+                break;
+            case Y:
+                setValueByDim(1, valueAt);
+                break;
+            case Z:
+                setValueByDim(2, valueAt);
+                break;
+        }
+        return this;
+    }
+
+    public float getValueByAxis(Axis axis) {
+        switch (axis) {
+            case X:
+                return getValueByDim(0);
+            case Y:
+                return getValueByDim(1);
+            case Z:
+                return getValueByDim(2);
+        }
+        return 0;
+    }
+
+    public Vector set(float... newData) {
         data = newData;
+        return this;
     }
 
     public boolean contains(Vector min, Vector max) {
@@ -344,7 +387,7 @@ public class Vector implements SerializableString, Cloneable {
      * @return Whether the values of this vector's data are equal to the equivalent
      *         values of the value parameter passed in.
      */
-    public boolean valuesEqual(double... value) {
+    public boolean valuesEqual(float... value) {
         for (int i = 0; i < data.length; i++)
             if (data[i] != value[i])
                 return false;
@@ -352,10 +395,10 @@ public class Vector implements SerializableString, Cloneable {
     }
 
     /**
-     * @return Whether the data of this vector is ALL EQUAL to the SINGLE double
+     * @return Whether the data of this vector is ALL EQUAL to the SINGLE float
      *         value.
      */
-    public boolean dataEquals(double value) {
+    public boolean dataEquals(float value) {
         for (int i = 0; i < data.length; i++)
             if (data[i] != value)
                 return false;

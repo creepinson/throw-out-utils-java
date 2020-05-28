@@ -19,26 +19,27 @@ public abstract class VoxelShape {
         this.part = part;
     }
 
-    public double getStart(Facing.Axis axis) {
+    public float getStart(Facing.Axis axis) {
         int i = this.part.getStart(axis);
-        return i >= this.part.getSize(axis) ? Double.POSITIVE_INFINITY : this.getValueUnchecked(axis, i);
+        return (float) i >= this.part.getSize(axis) ? Float.POSITIVE_INFINITY : this.getValueUnchecked(axis, i);
     }
 
-    public double getEnd(Facing.Axis axis) {
+    public float getEnd(Facing.Axis axis) {
         int i = this.part.getEnd(axis);
-        return i <= 0 ? Double.NEGATIVE_INFINITY : this.getValueUnchecked(axis, i);
+        return (float) i <= 0 ? Float.NEGATIVE_INFINITY : this.getValueUnchecked(axis, i);
     }
 
     public Cuboid getBoundingBox() {
         if (this.isEmpty()) {
             throw new UnsupportedOperationException("No bounds for empty shape.");
         } else {
-            return new Cuboid(this.getStart(Facing.Axis.X), this.getStart(Facing.Axis.Y), this.getStart(Facing.Axis.Z), this.getEnd(Facing.Axis.X), this.getEnd(Facing.Axis.Y), this.getEnd(Facing.Axis.Z));
+            return new Cuboid(this.getStart(Facing.Axis.X), this.getStart(Facing.Axis.Y), this.getStart(Facing.Axis.Z),
+                    this.getEnd(Facing.Axis.X), this.getEnd(Facing.Axis.Y), this.getEnd(Facing.Axis.Z));
         }
     }
 
-    protected double getValueUnchecked(Facing.Axis axis, int index) {
-        return this.getValues(axis).getDouble(index);
+    protected float getValueUnchecked(Facing.Axis axis, int index) {
+        return (float) this.getValues(axis).getDouble(index);
     }
 
     protected abstract DoubleList getValues(Facing.Axis axis);
@@ -48,20 +49,30 @@ public abstract class VoxelShape {
     }
 
     public VoxelShape withOffset(double xOffset, double yOffset, double zOffset) {
-        return this.isEmpty() ? VoxelShapes.empty() : new VoxelShapeArray(this.part, new OffsetDoubleList(this.getValues(Facing.Axis.X), xOffset), new OffsetDoubleList(this.getValues(Facing.Axis.Y), yOffset), new OffsetDoubleList(this.getValues(Facing.Axis.Z), zOffset));
+        return this.isEmpty() ? VoxelShapes.empty()
+                : new VoxelShapeArray(this.part, new OffsetDoubleList(this.getValues(Facing.Axis.X), xOffset),
+                        new OffsetDoubleList(this.getValues(Facing.Axis.Y), yOffset),
+                        new OffsetDoubleList(this.getValues(Facing.Axis.Z), zOffset));
     }
 
     public VoxelShape simplify() {
-        VoxelShape[] aVoxelShape = new VoxelShape[]{VoxelShapes.empty()};
+        VoxelShape[] aVoxelShape = new VoxelShape[] { VoxelShapes.empty() };
         this.forEachBox((p_197763_1_, p_197763_3_, p_197763_5_, p_197763_7_, p_197763_9_, p_197763_11_) -> {
-            aVoxelShape[0] = VoxelShapes.combine(aVoxelShape[0], VoxelShapes.create(p_197763_1_, p_197763_3_, p_197763_5_, p_197763_7_, p_197763_9_, p_197763_11_), IBooleanFunction.OR);
+            aVoxelShape[0] = VoxelShapes.combine(aVoxelShape[0],
+                    VoxelShapes.create(p_197763_1_, p_197763_3_, p_197763_5_, p_197763_7_, p_197763_9_, p_197763_11_),
+                    IBooleanFunction.OR);
         });
         return aVoxelShape[0];
     }
 
     public void forEachEdge(VoxelShapes.ILineConsumer action) {
         this.part.forEachEdge((p_197750_2_, p_197750_3_, p_197750_4_, p_197750_5_, p_197750_6_, p_197750_7_) -> {
-            action.consume(this.getValueUnchecked(Facing.Axis.X, p_197750_2_), this.getValueUnchecked(Facing.Axis.Y, p_197750_3_), this.getValueUnchecked(Facing.Axis.Z, p_197750_4_), this.getValueUnchecked(Facing.Axis.X, p_197750_5_), this.getValueUnchecked(Facing.Axis.Y, p_197750_6_), this.getValueUnchecked(Facing.Axis.Z, p_197750_7_));
+            action.consume(this.getValueUnchecked(Facing.Axis.X, p_197750_2_),
+                    this.getValueUnchecked(Facing.Axis.Y, p_197750_3_),
+                    this.getValueUnchecked(Facing.Axis.Z, p_197750_4_),
+                    this.getValueUnchecked(Facing.Axis.X, p_197750_5_),
+                    this.getValueUnchecked(Facing.Axis.Y, p_197750_6_),
+                    this.getValueUnchecked(Facing.Axis.Z, p_197750_7_));
         }, true);
     }
 
@@ -70,7 +81,9 @@ public abstract class VoxelShape {
         DoubleList doublelist1 = this.getValues(Facing.Axis.Y);
         DoubleList doublelist2 = this.getValues(Facing.Axis.Z);
         this.part.forEachBox((p_224789_4_, p_224789_5_, p_224789_6_, p_224789_7_, p_224789_8_, p_224789_9_) -> {
-            action.consume(doublelist.getDouble(p_224789_4_), doublelist1.getDouble(p_224789_5_), doublelist2.getDouble(p_224789_6_), doublelist.getDouble(p_224789_7_), doublelist1.getDouble(p_224789_8_), doublelist2.getDouble(p_224789_9_));
+            action.consume(doublelist.getDouble(p_224789_4_), doublelist1.getDouble(p_224789_5_),
+                    doublelist2.getDouble(p_224789_6_), doublelist.getDouble(p_224789_7_),
+                    doublelist1.getDouble(p_224789_8_), doublelist2.getDouble(p_224789_9_));
         }, true);
     }
 
@@ -113,7 +126,8 @@ public abstract class VoxelShape {
     }
 
     protected boolean contains(double x, double y, double z) {
-        return this.part.contains(this.getClosestIndex(Facing.Axis.X, x), this.getClosestIndex(Facing.Axis.Y, y), this.getClosestIndex(Facing.Axis.Z, z));
+        return this.part.contains(this.getClosestIndex(Facing.Axis.X, x), this.getClosestIndex(Facing.Axis.Y, y),
+                this.getClosestIndex(Facing.Axis.Z, z));
     }
 
     public VoxelShape project(Facing side) {
@@ -139,10 +153,12 @@ public abstract class VoxelShape {
         Facing.Axis Facing$axis = side.getAxis();
         Facing.AxisDirection Facing$AxisDirection = side.getAxisDirection();
         DoubleList doublelist = this.getValues(Facing$axis);
-        if (doublelist.size() == 2 && MathUtils.fuzzyEquals(doublelist.getDouble(0), 0.0D, 1.0E-7D) && MathUtils.fuzzyEquals(doublelist.getDouble(1), 1.0D, 1.0E-7D)) {
+        if (doublelist.size() == 2 && MathUtils.fuzzyEquals(doublelist.getDouble(0), 0.0D, 1.0E-7D)
+                && MathUtils.fuzzyEquals(doublelist.getDouble(1), 1.0D, 1.0E-7D)) {
             return this;
         } else {
-            int i = this.getClosestIndex(Facing$axis, Facing$AxisDirection == Facing.AxisDirection.POSITIVE ? 0.9999999D : 1.0E-7D);
+            int i = this.getClosestIndex(Facing$axis,
+                    Facing$AxisDirection == Facing.AxisDirection.POSITIVE ? 0.9999999D : 1.0E-7D);
             return new SplitVoxelShape(this, Facing$axis, i);
         }
     }
@@ -161,14 +177,25 @@ public abstract class VoxelShape {
             Facing.Axis Facing$axis = axisrotation.rotate(Facing.Axis.X);
             Facing.Axis Facing$axis1 = axisrotation.rotate(Facing.Axis.Y);
             Facing.Axis Facing$axis2 = axisrotation.rotate(Facing.Axis.Z);
-            double d0 = axisrotation.getCoordinate(collisionBox.maxX(), collisionBox.maxY(), collisionBox.maxZ(), Facing$axis);
+            double d0 = axisrotation.getCoordinate(collisionBox.maxX(), collisionBox.maxY(), collisionBox.maxZ(),
+                    Facing$axis);
             double d1 = Facing$axis.getCoordinate(collisionBox.minX(), collisionBox.minY(), collisionBox.minZ());
             int i = this.getClosestIndex(Facing$axis, d1 + 1.0E-7D);
             int j = this.getClosestIndex(Facing$axis, d0 - 1.0E-7D);
-            int k = Math.max(0, this.getClosestIndex(Facing$axis1, Facing$axis1.getCoordinate(collisionBox.minX(), collisionBox.minY(), collisionBox.minZ()) + 1.0E-7D));
-            int l = Math.min(this.part.getSize(Facing$axis1), this.getClosestIndex(Facing$axis1, Facing$axis1.getCoordinate(collisionBox.maxX(), collisionBox.maxY(), collisionBox.maxZ()) - 1.0E-7D) + 1);
-            int i1 = Math.max(0, this.getClosestIndex(Facing$axis2, Facing$axis2.getCoordinate(collisionBox.minX(), collisionBox.minY(), collisionBox.minZ()) + 1.0E-7D));
-            int j1 = Math.min(this.part.getSize(Facing$axis2), this.getClosestIndex(Facing$axis2, Facing$axis2.getCoordinate(collisionBox.maxX(), collisionBox.maxY(), collisionBox.maxZ()) - 1.0E-7D) + 1);
+            int k = Math.max(0,
+                    this.getClosestIndex(Facing$axis1,
+                            Facing$axis1.getCoordinate(collisionBox.minX(), collisionBox.minY(), collisionBox.minZ())
+                                    + 1.0E-7D));
+            int l = Math.min(this.part.getSize(Facing$axis1), this.getClosestIndex(Facing$axis1,
+                    Facing$axis1.getCoordinate(collisionBox.maxX(), collisionBox.maxY(), collisionBox.maxZ()) - 1.0E-7D)
+                    + 1);
+            int i1 = Math.max(0,
+                    this.getClosestIndex(Facing$axis2,
+                            Facing$axis2.getCoordinate(collisionBox.minX(), collisionBox.minY(), collisionBox.minZ())
+                                    + 1.0E-7D));
+            int j1 = Math.min(this.part.getSize(Facing$axis2), this.getClosestIndex(Facing$axis2,
+                    Facing$axis2.getCoordinate(collisionBox.maxX(), collisionBox.maxY(), collisionBox.maxZ()) - 1.0E-7D)
+                    + 1);
             int k1 = this.part.getSize(Facing$axis);
             if (desiredOffset > 0.0D) {
                 for (int l1 = j + 1; l1 < k1; ++l1) {

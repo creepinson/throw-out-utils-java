@@ -1,6 +1,7 @@
 package me.creepinson.creepinoutils.api.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -278,10 +279,14 @@ public class StringUtil {
     }
 
     public static String join(String joiner, double... strings) {
+        return join(joiner, Arrays.stream(strings).map(f -> (float) f).toArray());
+    }
+
+    public static String join(String joiner, float... strings) {
         if (strings == null)
             return null;
         StringBuffer buffer = new StringBuffer();
-        for (double string : strings) {
+        for (float string : strings) {
             if (buffer.length() > 0) {
                 buffer.append(joiner);
             }

@@ -1,5 +1,7 @@
 package me.creepinson.creepinoutils.api.util.math.shape;
 
+import java.util.Arrays;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -110,9 +112,14 @@ public class Cuboid implements Cloneable, java.io.Serializable {
         this(other.minimumPoint, other.maximumPoint);
     }
 
-    public Cuboid(double x1, double y1, double z1, double x2, double y2, double z2) {
+    public Cuboid(float x1, float y1, float z1, float x2, float y2, float z2) {
         this.minimumPoint = new Vector(x1, y1, z1);
-        this.maximumPoint = new Vector(x1, y1, z1);
+        this.maximumPoint = new Vector(x2, y2, z2);
+    }
+
+    public Cuboid(double x1, double y1, double z1, double x2, double y2, double z2) {
+        this.minimumPoint = new Vector((float) x1, (float) y1, (float) z1);
+        this.maximumPoint = new Vector((float) x2, (float) y2, (float) z2);
     }
 
     public boolean equals(Object p_equals_1_) {
@@ -125,22 +132,6 @@ public class Cuboid implements Cloneable, java.io.Serializable {
 
             return c.minimumPoint.equals(this.minimumPoint) && c.maximumPoint.equals(this.maximumPoint);
         }
-    }
-
-    public int hashCode() {
-        long i = Double.doubleToLongBits(this.minX());
-        int j = (int) (i ^ i >>> 32);
-        i = Double.doubleToLongBits(this.minY());
-        j = 31 * j + (int) (i ^ i >>> 32);
-        i = Double.doubleToLongBits(this.minZ());
-        j = 31 * j + (int) (i ^ i >>> 32);
-        i = Double.doubleToLongBits(this.maxX());
-        j = 31 * j + (int) (i ^ i >>> 32);
-        i = Double.doubleToLongBits(this.maxY());
-        j = 31 * j + (int) (i ^ i >>> 32);
-        i = Double.doubleToLongBits(this.maxZ());
-        j = 31 * j + (int) (i ^ i >>> 32);
-        return j;
     }
 
     /**
@@ -228,23 +219,23 @@ public class Cuboid implements Cloneable, java.io.Serializable {
      *
      * <h3>See Also:</h3>
      * <ul>
-     * <li>{@link #expand(double, double, double)} - like this, except for
+     * <li>{@link #expand(float, float, float)} - like this, except for
      * expanding.</li>
-     * <li>{@link #grow(double, double, double)} and {@link #grow(double)} - expands
-     * in all directions.</li>
-     * <li>{@link #shrink(double)} - contracts in all directions (like
-     * {@link #grow(double)})</li>
+     * <li>{@link #grow(float, float, float)} and {@link #grow(float)} - expands in
+     * all directions.</li>
+     * <li>{@link #shrink(float)} - contracts in all directions (like
+     * {@link #grow(float)})</li>
      * </ul>
      *
      * @return A new modified bounding box.
      */
-    public Cuboid contract(double x, double y, double z) {
-        double d0 = this.minX();
-        double d1 = this.minY();
-        double d2 = this.minZ();
-        double d3 = this.maxX();
-        double d4 = this.maxY();
-        double d5 = this.maxZ();
+    public Cuboid contract(float x, float y, float z) {
+        float d0 = this.minX();
+        float d1 = this.minY();
+        float d2 = this.minZ();
+        float d3 = this.maxX();
+        float d4 = this.maxY();
+        float d5 = this.maxZ();
 
         if (x < 0.0D) {
             d0 -= x;
@@ -333,24 +324,24 @@ public class Cuboid implements Cloneable, java.io.Serializable {
      *
      * <h3>See Also:</h3>
      * <ul>
-     * <li>{@link #contract(double, double, double)} - like this, except for
+     * <li>{@link #contract(float, float, float)} - like this, except for
      * shrinking.</li>
-     * <li>{@link #grow(double, double, double)} and {@link #grow(double)} - expands
-     * in all directions.</li>
-     * <li>{@link #shrink(double)} - contracts in all directions (like
-     * {@link #grow(double)})</li>
+     * <li>{@link #grow(float, float, float)} and {@link #grow(float)} - expands in
+     * all directions.</li>
+     * <li>{@link #shrink(float)} - contracts in all directions (like
+     * {@link #grow(float)})</li>
      * </ul>
      *
      * @return A modified bounding box that will always be equal or greater in
      *         volume to this bounding box.
      */
-    public Cuboid expand(double x, double y, double z) {
-        double d0 = this.minX();
-        double d1 = this.minY();
-        double d2 = this.minZ();
-        double d3 = this.maxX();
-        double d4 = this.maxY();
-        double d5 = this.maxZ();
+    public Cuboid expand(float x, float y, float z) {
+        float d0 = this.minX();
+        float d1 = this.minY();
+        float d2 = this.minZ();
+        float d3 = this.maxX();
+        float d4 = this.maxY();
+        float d5 = this.maxZ();
 
         if (x < 0.0D) {
             d0 += x;
@@ -460,66 +451,66 @@ public class Cuboid implements Cloneable, java.io.Serializable {
      *
      * <h3>See Also:</h3>
      * <ul>
-     * <li>{@link #expand(double, double, double)} - expands in only one
+     * <li>{@link #expand(float, float, float)} - expands in only one
      * direction.</li>
-     * <li>{@link #contract(double, double, double)} - contracts in only one
-     * direction.</li> <lu>{@link #grow(double)} - version of this that expands in
+     * <li>{@link #contract(float, float, float)} - contracts in only one
+     * direction.</li> <lu>{@link #grow(float)} - version of this that expands in
      * all directions from one parameter.</li>
-     * <li>{@link #shrink(double)} - contracts in all directions</li>
+     * <li>{@link #shrink(float)} - contracts in all directions</li>
      * </ul>
      *
      * @return A modified bounding box.
      */
-    public Cuboid grow(double x, double y, double z) {
-        double d0 = this.minX() - x;
-        double d1 = this.minY() - y;
-        double d2 = this.minZ() - z;
-        double d3 = this.maxX() + x;
-        double d4 = this.maxY() + y;
-        double d5 = this.maxZ() + z;
+    public Cuboid grow(float x, float y, float z) {
+        float d0 = this.minX() - x;
+        float d1 = this.minY() - y;
+        float d2 = this.minZ() - z;
+        float d3 = this.maxX() + x;
+        float d4 = this.maxY() + y;
+        float d5 = this.maxZ() + z;
         return new Cuboid(d0, d1, d2, d3, d4, d5);
     }
 
     /**
      * Creates a new {@link Cuboid} that is expanded by the given value in all
-     * directions. Equivalent to {@link #grow(double, double, double)} with the
-     * given value for all 3 params. Negative values will shrink the AABB. <br/>
+     * directions. Equivalent to {@link #grow(float, float, float)} with the given
+     * value for all 3 params. Negative values will shrink the AABB. <br/>
      * Side lengths will be increased by 2 times the value of the parameter, since
      * both min and max are changed. <br/>
      * If contracting and the amount to contract by is larger than the length of a
      * side, then the side will wrap (still creating a valid AABB - see samples on
-     * {@link #grow(double, double, double)}).
+     * {@link #grow(float, float, float)}).
      *
      * @return A modified AABB.
      */
-    public Cuboid grow(double value) {
+    public Cuboid grow(float value) {
         return this.grow(value, value, value);
     }
 
     public Cuboid intersect(Cuboid other) {
-        double d0 = Math.max(this.minX(), other.minX());
-        double d1 = Math.max(this.minY(), other.minY());
-        double d2 = Math.max(this.minZ(), other.minZ());
-        double d3 = Math.min(this.maxX(), other.maxX());
-        double d4 = Math.min(this.maxY(), other.maxY());
-        double d5 = Math.min(this.maxZ(), other.maxZ());
+        float d0 = Math.max(this.minX(), other.minX());
+        float d1 = Math.max(this.minY(), other.minY());
+        float d2 = Math.max(this.minZ(), other.minZ());
+        float d3 = Math.min(this.maxX(), other.maxX());
+        float d4 = Math.min(this.maxY(), other.maxY());
+        float d5 = Math.min(this.maxZ(), other.maxZ());
         return new Cuboid(d0, d1, d2, d3, d4, d5);
     }
 
     public Cuboid union(Cuboid other) {
-        double d0 = Math.min(this.minX(), other.minX());
-        double d1 = Math.min(this.minY(), other.minY());
-        double d2 = Math.min(this.minZ(), other.minZ());
-        double d3 = Math.max(this.maxX(), other.maxX());
-        double d4 = Math.max(this.maxY(), other.maxY());
-        double d5 = Math.max(this.maxZ(), other.maxZ());
+        float d0 = Math.min(this.minX(), other.minX());
+        float d1 = Math.min(this.minY(), other.minY());
+        float d2 = Math.min(this.minZ(), other.minZ());
+        float d3 = Math.max(this.maxX(), other.maxX());
+        float d4 = Math.max(this.maxY(), other.maxY());
+        float d5 = Math.max(this.maxZ(), other.maxZ());
         return new Cuboid(d0, d1, d2, d3, d4, d5);
     }
 
     /**
      * Offsets the current bounding box by the specified amount.
      */
-    public Cuboid offset(double x, double y, double z) {
+    public Cuboid offset(float x, float y, float z) {
         return new Cuboid(this.minX() + x, this.minY() + y, this.minZ() + z, this.maxX() + x, this.maxY() + y,
                 this.maxZ() + z);
     }
@@ -534,17 +525,17 @@ public class Cuboid implements Cloneable, java.io.Serializable {
      * if the bounding boxes do not overlap or if var2 is closer to 0 then the
      * calculated offset. Otherwise return the calculated offset.
      */
-    public double calculateXOffset(Cuboid other, double offsetX) {
+    public float calculateXOffset(Cuboid other, float offsetX) {
         if (other.maxY() > this.minY() && other.minY() < this.maxY() && other.maxZ() > this.minZ()
                 && other.minZ() < this.maxZ()) {
             if (offsetX > 0.0D && other.maxX() <= this.minX()) {
-                double d1 = this.minX() - other.maxX();
+                float d1 = this.minX() - other.maxX();
 
                 if (d1 < offsetX) {
                     offsetX = d1;
                 }
             } else if (offsetX < 0.0D && other.minX() >= this.maxX()) {
-                double d0 = this.maxX() - other.minX();
+                float d0 = this.maxX() - other.minX();
 
                 if (d0 > offsetX) {
                     offsetX = d0;
@@ -563,17 +554,17 @@ public class Cuboid implements Cloneable, java.io.Serializable {
      * if the bounding boxes do not overlap or if var2 is closer to 0 then the
      * calculated offset. Otherwise return the calculated offset.
      */
-    public double calculateYOffset(Cuboid other, double offsetY) {
+    public float calculateYOffset(Cuboid other, float offsetY) {
         if (other.maxX() > this.minX() && other.minX() < this.maxX() && other.maxZ() > this.minZ()
                 && other.minZ() < this.maxZ()) {
             if (offsetY > 0.0D && other.maxY() <= this.minY()) {
-                double d1 = this.minY() - other.maxY();
+                float d1 = this.minY() - other.maxY();
 
                 if (d1 < offsetY) {
                     offsetY = d1;
                 }
             } else if (offsetY < 0.0D && other.minY() >= this.maxY()) {
-                double d0 = this.maxY() - other.minY();
+                float d0 = this.maxY() - other.minY();
 
                 if (d0 > offsetY) {
                     offsetY = d0;
@@ -592,17 +583,17 @@ public class Cuboid implements Cloneable, java.io.Serializable {
      * if the bounding boxes do not overlap or if var2 is closer to 0 then the
      * calculated offset. Otherwise return the calculated offset.
      */
-    public double calculateZOffset(Cuboid other, double offsetZ) {
+    public float calculateZOffset(Cuboid other, float offsetZ) {
         if (other.maxX() > this.minX() && other.minX() < this.maxX() && other.maxY() > this.minY()
                 && other.minY() < this.maxY()) {
             if (offsetZ > 0.0D && other.maxZ() <= this.minZ()) {
-                double d1 = this.minZ() - other.maxZ();
+                float d1 = this.minZ() - other.maxZ();
 
                 if (d1 < offsetZ) {
                     offsetZ = d1;
                 }
             } else if (offsetZ < 0.0D && other.minZ() >= this.maxZ()) {
-                double d0 = this.maxZ() - other.minZ();
+                float d0 = this.maxZ() - other.minZ();
 
                 if (d0 > offsetZ) {
                     offsetZ = d0;
@@ -629,46 +620,50 @@ public class Cuboid implements Cloneable, java.io.Serializable {
         return vector != null && vector.contains(getMinPoint(), getMaxPoint());
     }
 
-    public boolean contains(double... data) {
+    public boolean contains(float... data) {
         return new Vector(data).contains(minimumPoint, maximumPoint);
+    }
+
+    public boolean contains(double... data) {
+        return contains(Arrays.stream(data).map(f -> (float)f).toArray());
     }
 
     /**
      * Returns the average length of the edges of the bounding box.
      */
-    public double getAverageEdgeLength() {
-        double d0 = this.maxX() - this.minX();
-        double d1 = this.maxY() - this.minY();
-        double d2 = this.maxZ() - this.minZ();
-        return (d0 + d1 + d2) / 3.0D;
+    public float getAverageEdgeLength() {
+        float d0 = this.maxX() - this.minX();
+        float d1 = this.maxY() - this.minY();
+        float d2 = this.maxZ() - this.minZ();
+        return (d0 + d1 + d2) / 3.0F;
     }
 
-    public double getXSize() {
+    public float getXSize() {
         return this.maxX() - this.minX();
     }
 
-    public double getYSize() {
+    public float getYSize() {
         return this.maxY() - this.minY();
     }
 
-    public double getZSize() {
+    public float getZSize() {
         return this.maxZ() - this.minZ();
     }
 
     /**
      * Creates a new {@link Cuboid} that is expanded by the given value in all
-     * directions. Equivalent to {@link #grow(double)} with value set to the
-     * negative of the value provided here. Passing a negative value to this method
-     * values will grow the AABB. <br/>
+     * directions. Equivalent to {@link #grow(float)} with value set to the negative
+     * of the value provided here. Passing a negative value to this method values
+     * will grow the AABB. <br/>
      * Side lengths will be decreased by 2 times the value of the parameter, since
      * both min and max are changed. <br/>
      * If contracting and the amount to contract by is larger than the length of a
      * side, then the side will wrap (still creating a valid AABB - see samples on
-     * {@link #grow(double, double, double)}).
+     * {@link #grow(float, float, float)}).
      *
      * @return A modified AABB.
      */
-    public Cuboid shrink(double value) {
+    public Cuboid shrink(float value) {
         return this.grow(-value);
     }
 
@@ -683,8 +678,8 @@ public class Cuboid implements Cloneable, java.io.Serializable {
     }
 
     public Vector getCenter() {
-        return new Vector(this.minX() + (this.maxX() - this.minX()) * 0.5D,
-                this.minY() + (this.maxY() - this.minY()) * 0.5D, this.minZ() + (this.maxZ() - this.minZ()) * 0.5D);
+        return new Vector(this.minX() + (this.maxX() - this.minX()) * 0.5F,
+                this.minY() + (this.maxY() - this.minY()) * 0.5F, this.minZ() + (this.maxZ() - this.minZ()) * 0.5F);
     }
 
     public enum SizeType {

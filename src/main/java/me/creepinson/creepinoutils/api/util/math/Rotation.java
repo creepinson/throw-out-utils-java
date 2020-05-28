@@ -140,7 +140,8 @@ public enum Rotation {
     }
 
     public boolean negativeX() {
-        return rotationMatrix.m00 != 0 ? rotationMatrix.m00 < 0 : (rotationMatrix.m01 != 0 ? rotationMatrix.m01 < 0 : rotationMatrix.m02 < 0);
+        return rotationMatrix.m00 != 0 ? rotationMatrix.m00 < 0
+                : (rotationMatrix.m01 != 0 ? rotationMatrix.m01 < 0 : rotationMatrix.m02 < 0);
     }
 
     public <T> T getX(T x, T y, T z) {
@@ -148,7 +149,8 @@ public enum Rotation {
     }
 
     public boolean negativeY() {
-        return rotationMatrix.m10 != 0 ? rotationMatrix.m10 < 0 : (rotationMatrix.m11 != 0 ? rotationMatrix.m11 < 0 : rotationMatrix.m12 < 0);
+        return rotationMatrix.m10 != 0 ? rotationMatrix.m10 < 0
+                : (rotationMatrix.m11 != 0 ? rotationMatrix.m11 < 0 : rotationMatrix.m12 < 0);
     }
 
     public <T> T getY(T x, T y, T z) {
@@ -156,7 +158,8 @@ public enum Rotation {
     }
 
     public boolean negativeZ() {
-        return rotationMatrix.m20 != 0 ? rotationMatrix.m20 < 0 : (rotationMatrix.m21 != 0 ? rotationMatrix.m21 < 0 : rotationMatrix.m22 < 0);
+        return rotationMatrix.m20 != 0 ? rotationMatrix.m20 < 0
+                : (rotationMatrix.m21 != 0 ? rotationMatrix.m21 < 0 : rotationMatrix.m22 < 0);
     }
 
     public <T> T getZ(T x, T y, T z) {
@@ -262,9 +265,9 @@ public enum Rotation {
         }
 
         public Vector transform(Vector triple) {
-            double x = triple.x() * m00 + triple.y() * m01 + triple.z() * m02;
-            double y = triple.x() * m10 + triple.y() * m11 + triple.z() * m12;
-            double z = triple.x() * m20 + triple.y() * m21 + triple.z() * m22;
+            float x = triple.x() * m00 + triple.y() * m01 + triple.z() * m02;
+            float y = triple.x() * m10 + triple.y() * m11 + triple.z() * m12;
+            float z = triple.x() * m20 + triple.y() * m21 + triple.z() * m22;
             return new Vector(x, y, z);
         }
 
@@ -272,14 +275,17 @@ public enum Rotation {
         public boolean equals(Object object) {
             if (object instanceof RotationMatrix) {
                 RotationMatrix m1 = (RotationMatrix) object;
-                return (this.m00 == m1.m00 && this.m01 == m1.m01 && this.m02 == m1.m02 && this.m10 == m1.m10 && this.m11 == m1.m11 && this.m12 == m1.m12 && this.m20 == m1.m20 && this.m21 == m1.m21 && this.m22 == m1.m22);
+                return (this.m00 == m1.m00 && this.m01 == m1.m01 && this.m02 == m1.m02 && this.m10 == m1.m10
+                        && this.m11 == m1.m11 && this.m12 == m1.m12 && this.m20 == m1.m20 && this.m21 == m1.m21
+                        && this.m22 == m1.m22);
             }
             return false;
         }
 
         @Override
         public String toString() {
-            return this.m00 + ", " + this.m01 + ", " + this.m02 + "\n" + this.m10 + ", " + this.m11 + ", " + this.m12 + "\n" + this.m20 + ", " + this.m21 + ", " + this.m22 + "\n";
+            return this.m00 + ", " + this.m01 + ", " + this.m02 + "\n" + this.m10 + ", " + this.m11 + ", " + this.m12
+                    + "\n" + this.m20 + ", " + this.m21 + ", " + this.m22 + "\n";
         }
 
     }

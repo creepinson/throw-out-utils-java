@@ -41,6 +41,10 @@ public class RotationUtils {
     }
 
     public static void setValue(Vector vec, double value, Axis axis) {
+        setValue(vec, (float) value, axis);
+    }
+
+    public static void setValue(Vector vec, float value, Axis axis) {
         switch (axis) {
             case X:
                 vec.setValueByDim(0, value);
@@ -52,10 +56,6 @@ public class RotationUtils {
                 vec.setValueByDim(2, value);
                 break;
         }
-    }
-
-    public static void setValue(Vector vec, float value, Axis axis) {
-        setValue(vec, (double) value, axis);
     }
 
     public static float get(Axis axis, float x, float y, float z) {
@@ -71,15 +71,7 @@ public class RotationUtils {
     }
 
     public static double get(Axis axis, Vector v) {
-        switch (axis) {
-            case X:
-                return v.x();
-            case Y:
-                return v.y();
-            case Z:
-                return v.z();
-        }
-        return 0;
+        return v.getValueByAxis(axis);
     }
 
     public static double get(Axis axis, double x, double y, double z) {

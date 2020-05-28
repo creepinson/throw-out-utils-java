@@ -242,6 +242,11 @@ public enum Facing implements SerializableString {
         private Axis(String nameIn) {
             this.name = nameIn;
         }
+        // TODO: Facing axis from vector
+        /* 
+        public static Facing.Axis fromVector(Vector v) {
+            
+        } */
 
         public static Facing.Axis byName(String name) {
             return NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
