@@ -1,7 +1,7 @@
 package me.creepinson.creepinoutils.api.util.data.game;
 
 import me.creepinson.creepinoutils.api.util.SerializableString;
-import me.creepinson.creepinoutils.api.util.math.Vector3;
+import me.creepinson.creepinoutils.api.util.math.Vector;
 
 /**
  * @author Creepinson http://gitlab.com/creepinson
@@ -9,7 +9,7 @@ import me.creepinson.creepinoutils.api.util.math.Vector3;
 public interface IPlayer extends SerializableString {
     IWorld getWorld();
 
-    Vector3 getPosition();
+    Vector getPosition();
 
-    void setPosition(Vector3 position);
+    void setPosition(Vector position);
 }

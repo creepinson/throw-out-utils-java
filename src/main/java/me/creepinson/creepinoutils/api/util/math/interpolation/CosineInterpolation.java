@@ -1,10 +1,10 @@
 package me.creepinson.creepinoutils.api.util.math.interpolation;
 
-import me.creepinson.creepinoutils.api.util.math.Vector3;
+import me.creepinson.creepinoutils.api.util.math.Vector;
 
 public class CosineInterpolation extends Interpolation {
 
-    public CosineInterpolation(Vector3... points) {
+    public CosineInterpolation(Vector... points) {
         super(points);
     }
 

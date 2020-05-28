@@ -1,9 +1,7 @@
 package me.creepinson.creepinoutils.api.util.math;
 
-import com.sun.javafx.geom.Vec3d;
 import me.creepinson.creepinoutils.api.util.math.Facing.Axis;
 import me.creepinson.creepinoutils.api.util.math.Facing.AxisDirection;
-
 
 public class RotationUtils {
 
@@ -42,44 +40,22 @@ public class RotationUtils {
         return null;
     }
 
-    public static void setValue(Vector3 vec, double value, Axis axis) {
+    public static void setValue(Vector vec, double value, Axis axis) {
         switch (axis) {
             case X:
-                vec.x = (float) value;
+                vec.setValueByDim(0, value);
                 break;
             case Y:
-                vec.y = (float) value;
+                vec.setValueByDim(1, value);
                 break;
             case Z:
-                vec.z = (float) value;
+                vec.setValueByDim(2, value);
                 break;
         }
     }
 
-    public static void setValue(Vector3 vec, float value, Axis axis) {
-        switch (axis) {
-            case X:
-                vec.x = value;
-                break;
-            case Y:
-                vec.y = value;
-                break;
-            case Z:
-                vec.z = value;
-                break;
-        }
-    }
-
-    public static Vec3d setValue(Vec3d vec, double value, Axis axis) {
-        switch (axis) {
-            case X:
-                return new Vec3d(value, vec.y, vec.z);
-            case Y:
-                return new Vec3d(vec.x, value, vec.z);
-            case Z:
-                return new Vec3d(vec.x, vec.y, value);
-        }
-        return null;
+    public static void setValue(Vector vec, float value, Axis axis) {
+        setValue(vec, (double) value, axis);
     }
 
     public static float get(Axis axis, float x, float y, float z) {
@@ -94,15 +70,14 @@ public class RotationUtils {
         return 0;
     }
 
-
-    public static double get(Axis axis, Vector3 v) {
+    public static double get(Axis axis, Vector v) {
         switch (axis) {
             case X:
-                return v.x;
+                return v.x();
             case Y:
-                return v.y;
+                return v.y();
             case Z:
-                return v.z;
+                return v.z();
         }
         return 0;
     }
@@ -195,7 +170,7 @@ public class RotationUtils {
     }
 
     public static Rotation rotate(Rotation rotation, Rotation by) {
-        Vector3 vec = rotation.getVec();
+        Vector vec = rotation.getVec();
         by.getMatrix().transform(vec);
         return Rotation.getRotation(vec);
     }
@@ -205,7 +180,9 @@ public class RotationUtils {
     }
 
     public static Facing rotate(Facing facing, Rotation rotation) {
-        Vector3 rotatedNormal = new Vector3(rotation.getMatrix().getX(facing.getDirectionVec()), rotation.getMatrix().getY(facing.getDirectionVec()), rotation.getMatrix().getZ(facing.getDirectionVec()));
+        Vector rotatedNormal = new Vector(rotation.getMatrix().getX(facing.getDirectionVec()),
+                rotation.getMatrix().getY(facing.getDirectionVec()),
+                rotation.getMatrix().getZ(facing.getDirectionVec()));
         for (Facing rotated : Facing.values()) {
             if (rotated.getDirectionVec().equals(rotatedNormal))
                 return rotated;
@@ -213,18 +190,18 @@ public class RotationUtils {
         return facing;
     }
 
-    public static Vector3 rotate(Vector3 vec, Rotation rotation) {
+    public static Vector rotate(Vector vec, Rotation rotation) {
         return rotation.getMatrix().transform(vec);
     }
 
-    public static Vector3 flip(Vector3 vec, Axis axis) {
+    public static Vector flip(Vector vec, Axis axis) {
         switch (axis) {
             case X:
-                return new Vector3(-vec.x, vec.y, vec.z);
+                return new Vector(-vec.x(), vec.y(), vec.z());
             case Y:
-                return new Vector3(vec.x, -vec.y, vec.z);
+                return new Vector(vec.x(), -vec.y(), vec.z());
             case Z:
-                return new Vector3(vec.x, vec.y, -vec.z);
+                return new Vector(vec.x(), vec.y(), -vec.z());
         }
         return vec;
     }
@@ -286,19 +263,13 @@ public class RotationUtils {
     public static enum BooleanRotation {
 
         // one: y, two: z
-        X_PP(Axis.X, 0, true, true),
-        X_NP(Axis.X, 1, false, true),
-        X_NN(Axis.X, 2, false, false),
+        X_PP(Axis.X, 0, true, true), X_NP(Axis.X, 1, false, true), X_NN(Axis.X, 2, false, false),
         X_PN(Axis.X, 3, true, false),
         // one: x, two: z
-        Y_PP(Axis.Y, 0, true, true),
-        Y_PN(Axis.Y, 1, true, false),
-        Y_NN(Axis.Y, 2, false, false),
+        Y_PP(Axis.Y, 0, true, true), Y_PN(Axis.Y, 1, true, false), Y_NN(Axis.Y, 2, false, false),
         Y_NP(Axis.Y, 3, false, true),
         // one: x, two: y
-        Z_PP(Axis.Z, 0, true, true),
-        Z_NP(Axis.Z, 1, false, true),
-        Z_NN(Axis.Z, 2, false, false),
+        Z_PP(Axis.Z, 0, true, true), Z_NP(Axis.Z, 1, false, true), Z_NN(Axis.Z, 2, false, false),
         Z_PN(Axis.Z, 3, true, false);
 
         public final Axis axis;
@@ -361,18 +332,21 @@ public class RotationUtils {
 
         private Facing getFacingInBetween(BooleanRotation other) {
             if (positiveOne != other.positiveOne)
-                return Facing.getFacingFromAxis(positiveTwo ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE, getTwo(axis));
+                return Facing.getFacingFromAxis(positiveTwo ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE,
+                        getTwo(axis));
             else if (positiveTwo != other.positiveTwo)
-                return Facing.getFacingFromAxis(positiveOne ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE, getOne(axis));
+                return Facing.getFacingFromAxis(positiveOne ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE,
+                        getOne(axis));
             else
                 throw new RuntimeException("Impossible to happen!");
         }
 
-        public boolean is(Vector3 vec) {
-            return positiveOne == (RotationUtils.get(BooleanRotation.getOne(axis), vec) >= 0) && positiveTwo == (RotationUtils.get(BooleanRotation.getTwo(axis), vec) >= 0);
+        public boolean is(Vector vec) {
+            return positiveOne == (RotationUtils.get(BooleanRotation.getOne(axis), vec) >= 0)
+                    && positiveTwo == (RotationUtils.get(BooleanRotation.getTwo(axis), vec) >= 0);
         }
 
-        public static BooleanRotation getRotationState(Axis axis, Vector3 vec) {
+        public static BooleanRotation getRotationState(Axis axis, Vector vec) {
             boolean positiveOne = RotationUtils.get(BooleanRotation.getOne(axis), vec) >= 0;
             boolean positiveTwo = RotationUtils.get(BooleanRotation.getTwo(axis), vec) >= 0;
 

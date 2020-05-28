@@ -1,6 +1,6 @@
 package me.creepinson.creepinoutils.api.util.data.game;
 
-import me.creepinson.creepinoutils.api.util.math.Vector3;
+import me.creepinson.creepinoutils.api.util.math.Vector;
 
 import java.io.Serializable;
 
@@ -14,7 +14,7 @@ public interface IChunk extends Serializable {
 
     int getZ();
 
-    void setTile(ITile tile, Vector3 position);
+    void setTile(ITile tile, Vector position);
 
-    ITile getTile(Vector3 position);
+    ITile getTile(Vector position);
 }

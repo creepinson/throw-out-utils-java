@@ -54,18 +54,18 @@ public enum Rotation {
         return null;
     }
 
-    public static Rotation getRotation(Vector3 vec) {
-        if (vec.x > 0)
+    public static Rotation getRotation(Vector vec) {
+        if (vec.x() > 0)
             return Rotation.X_CLOCKWISE;
-        if (vec.x < 0)
+        if (vec.x() < 0)
             return Rotation.X_COUNTER_CLOCKWISE;
-        if (vec.y > 0)
+        if (vec.y() > 0)
             return Rotation.Y_CLOCKWISE;
-        if (vec.y < 0)
+        if (vec.y() < 0)
             return Rotation.Y_COUNTER_CLOCKWISE;
-        if (vec.z > 0)
+        if (vec.z() > 0)
             return Rotation.Z_CLOCKWISE;
-        if (vec.z < 0)
+        if (vec.z() < 0)
             return Rotation.Z_COUNTER_CLOCKWISE;
         return null;
     }
@@ -73,7 +73,7 @@ public enum Rotation {
     public final Facing.Axis axis;
     public final int direction;
     public final boolean clockwise;
-    private final Vector3 vec;
+    private final Vector vec;
     private final RotationMatrix rotationMatrix;
 
     private Rotation(Facing.Axis axis, RotationMatrix matrix, boolean clockwise) {
@@ -81,7 +81,7 @@ public enum Rotation {
         this.axis = axis;
         this.clockwise = clockwise;
         this.direction = clockwise ? 1 : -1;
-        this.vec = new Vector3();
+        this.vec = new Vector();
         RotationUtils.setValue(vec, direction, axis);
     }
 
@@ -163,7 +163,7 @@ public enum Rotation {
         return rotationMatrix.m20 != 0 ? x : (rotationMatrix.m21 != 0 ? y : z);
     }
 
-    public Vector3 getVec() {
+    public Vector getVec() {
         return vec.clone();
     }
 
@@ -217,7 +217,7 @@ public enum Rotation {
             return getX(vec[0], vec[1], vec[2]);
         }
 
-        public int getX(Vector3 vec) {
+        public int getX(Vector vec) {
             return getX(vec.intX(), vec.intY(), vec.intZ());
         }
 
@@ -233,7 +233,7 @@ public enum Rotation {
             return getY(vec[0], vec[1], vec[2]);
         }
 
-        public int getY(Vector3 vec) {
+        public int getY(Vector vec) {
             return getY(vec.intX(), vec.intY(), vec.intZ());
         }
 
@@ -249,7 +249,7 @@ public enum Rotation {
             return getZ(vec[0], vec[1], vec[2]);
         }
 
-        public int getZ(Vector3 vec) {
+        public int getZ(Vector vec) {
             return getZ(vec.intX(), vec.intY(), vec.intZ());
         }
 
@@ -261,11 +261,11 @@ public enum Rotation {
             return x * m20 + y * m21 + z * m22;
         }
 
-        public Vector3 transform(Vector3 triple) {
-            float x = triple.x * m00 + triple.y * m01 + triple.z * m02;
-            float y = triple.x * m10 + triple.y * m11 + triple.z * m12;
-            float z = triple.x * m20 + triple.y * m21 + triple.z * m22;
-            return new Vector3(x, y, z);
+        public Vector transform(Vector triple) {
+            double x = triple.x() * m00 + triple.y() * m01 + triple.z() * m02;
+            double y = triple.x() * m10 + triple.y() * m11 + triple.z() * m12;
+            double z = triple.x() * m20 + triple.y() * m21 + triple.z() * m22;
+            return new Vector(x, y, z);
         }
 
         @Override

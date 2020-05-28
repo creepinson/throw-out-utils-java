@@ -2,6 +2,7 @@ package me.creepinson.creepinoutils.api.util.math;
 
 import me.creepinson.creepinoutils.api.util.ConditionUtil;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.function.IntPredicate;
 
@@ -13,17 +14,51 @@ import static java.lang.Integer.min;
 public class MathUtils {
     private static final float[] SIN_TABLE = new float[65536];
 
+    public static double[] floatsToDoubles(float[] input) {
+        if (input == null) {
+            return null; // Or throw an exception - your choice
+        }
+        double[] output = new double[input.length];
+        for (int i = 0; i < input.length; i++) {
+            output[i] = input[i];
+        }
+        return output;
+    }
+
+    public static float[] doublesToFloats(double[] input) {
+        if (input == null) {
+            return null; // Or throw an exception - your choice
+        }
+        float[] output = new float[input.length];
+        for (int i = 0; i < input.length; i++) {
+            output[i] = (float) input[i];
+        }
+        return output;
+    }
+
+    public static int[] doublesToInts(double[] input) {
+        if (input == null) {
+            return null; // Or throw an exception - your choice
+        }
+        int[] output = new int[input.length];
+        for (int i = 0; i < input.length; i++) {
+            output[i] = (int) input[i];
+        }
+        return output;
+    }
+
     /**
-     * Returns the greatest common divisor of {@code a, b}. Returns {@code 0} if {@code a == 0 && b ==
+     * Returns the greatest common divisor of {@code a, b}. Returns {@code 0} if
+     * {@code a == 0 && b ==
      * 0}.
      *
      * @throws IllegalArgumentException if {@code a < 0} or {@code b < 0}
      */
     public static int gcd(int a, int b) {
         /*
-         * The reason we require both arguments to be >= 0 is because otherwise, what do you return on
-         * gcd(0, Integer.MIN_VALUE)? BigInteger.gcd would return positive 2^31, but positive 2^31 isn't
-         * an int.
+         * The reason we require both arguments to be >= 0 is because otherwise, what do
+         * you return on gcd(0, Integer.MIN_VALUE)? BigInteger.gcd would return positive
+         * 2^31, but positive 2^31 isn't an int.
          */
         ConditionUtil.checkNonNegative("a", a);
         ConditionUtil.checkNonNegative("b", b);
@@ -35,8 +70,9 @@ public class MathUtils {
             return a; // similar logic
         }
         /*
-         * Uses the binary GCD algorithm; see http://en.wikipedia.org/wiki/Binary_GCD_algorithm. This is
-         * >40% faster than the Euclidean algorithm in benchmarks.
+         * Uses the binary GCD algorithm; see
+         * http://en.wikipedia.org/wiki/Binary_GCD_algorithm. This is >40% faster than
+         * the Euclidean algorithm in benchmarks.
          */
         int aTwos = Integer.numberOfTrailingZeros(a);
         a >>= aTwos; // divide out all 2s
@@ -45,7 +81,8 @@ public class MathUtils {
         while (a != b) { // both a, b are odd
             // The key to the binary GCD algorithm is as follows:
             // Both a and b are odd. Assume a > b; then gcd(a - b, b) = gcd(a, b).
-            // But in gcd(a - b, b), a - b is even and b is odd, so we can divide out powers of two.
+            // But in gcd(a - b, b), a - b is even and b is odd, so we can divide out powers
+            // of two.
 
             // We bend over backwards to avoid branching, adapting a technique from
             // http://graphics.stanford.edu/~seander/bithacks.html#IntegerMinOrMax
@@ -86,7 +123,6 @@ public class MathUtils {
         }
     }
 
-
     public static int binarySearch(int min, int max, IntPredicate isTargetBeforeOrAt) {
         int i = max - min;
 
@@ -112,12 +148,17 @@ public class MathUtils {
         return start + pct * (end - start);
     }
 
-    public static double lerp2(double p_219804_0_, double p_219804_2_, double p_219804_4_, double p_219804_6_, double p_219804_8_, double p_219804_10_) {
-        return lerp(p_219804_2_, lerp(p_219804_0_, p_219804_4_, p_219804_6_), lerp(p_219804_0_, p_219804_8_, p_219804_10_));
+    public static double lerp2(double p_219804_0_, double p_219804_2_, double p_219804_4_, double p_219804_6_,
+            double p_219804_8_, double p_219804_10_) {
+        return lerp(p_219804_2_, lerp(p_219804_0_, p_219804_4_, p_219804_6_),
+                lerp(p_219804_0_, p_219804_8_, p_219804_10_));
     }
 
-    public static double lerp3(double p_219807_0_, double p_219807_2_, double p_219807_4_, double p_219807_6_, double p_219807_8_, double p_219807_10_, double p_219807_12_, double p_219807_14_, double p_219807_16_, double p_219807_18_, double p_219807_20_) {
-        return lerp(p_219807_4_, lerp2(p_219807_0_, p_219807_2_, p_219807_6_, p_219807_8_, p_219807_10_, p_219807_12_), lerp2(p_219807_0_, p_219807_2_, p_219807_14_, p_219807_16_, p_219807_18_, p_219807_20_));
+    public static double lerp3(double p_219807_0_, double p_219807_2_, double p_219807_4_, double p_219807_6_,
+            double p_219807_8_, double p_219807_10_, double p_219807_12_, double p_219807_14_, double p_219807_16_,
+            double p_219807_18_, double p_219807_20_) {
+        return lerp(p_219807_4_, lerp2(p_219807_0_, p_219807_2_, p_219807_6_, p_219807_8_, p_219807_10_, p_219807_12_),
+                lerp2(p_219807_0_, p_219807_2_, p_219807_14_, p_219807_16_, p_219807_18_, p_219807_20_));
     }
 
     public static double perlinFade(double p_219801_0_) {
@@ -137,7 +178,7 @@ public class MathUtils {
         float u = rn.nextFloat() + rn.nextFloat();
         float r = (u > 1) ? 2 - u : u;
 
-        return new float[]{r * (float) Math.cos(t), r * (float) Math.sin(t)};
+        return new float[] { r * (float) Math.cos(t), r * (float) Math.sin(t) };
     }
 
     public static boolean chance(double percent) {
@@ -149,27 +190,33 @@ public class MathUtils {
     }
 
     /**
-     * Returns {@code true} if {@code a} and {@code b} are within {@code tolerance} of each other.
+     * Returns {@code true} if {@code a} and {@code b} are within {@code tolerance}
+     * of each other.
      *
-     * <p>Technically speaking, this is equivalent to {@code Math.abs(a - b) <= tolerance ||
+     * <p>
+     * Technically speaking, this is equivalent to
+     * {@code Math.abs(a - b) <= tolerance ||
      * Double.valueOf(a).equals(Double.valueOf(b))}.
      *
-     * <p>Notable special cases include:
+     * <p>
+     * Notable special cases include:
      *
      * <ul>
-     *   <li>All NaNs are fuzzily equal.
-     *   <li>If {@code a == b}, then {@code a} and {@code b} are always fuzzily equal.
-     *   <li>Positive and negative zero are always fuzzily equal.
-     *   <li>If {@code tolerance} is zero, and neither {@code a} nor {@code b} is NaN, then {@code a}
-     *       and {@code b} are fuzzily equal if and only if {@code a == b}.
-     *   <li>With {@link Double#POSITIVE_INFINITY} tolerance, all non-NaN values are fuzzily equal.
-     *   <li>With finite tolerance, {@code Double.POSITIVE_INFINITY} and {@code
+     * <li>All NaNs are fuzzily equal.
+     * <li>If {@code a == b}, then {@code a} and {@code b} are always fuzzily equal.
+     * <li>Positive and negative zero are always fuzzily equal.
+     * <li>If {@code tolerance} is zero, and neither {@code a} nor {@code b} is NaN,
+     * then {@code a} and {@code b} are fuzzily equal if and only if {@code a == b}.
+     * <li>With {@link Double#POSITIVE_INFINITY} tolerance, all non-NaN values are
+     * fuzzily equal.
+     * <li>With finite tolerance, {@code Double.POSITIVE_INFINITY} and {@code
      *       Double.NEGATIVE_INFINITY} are fuzzily equal only to themselves.
      * </ul>
      *
-     * <p>This is reflexive and symmetric, but <em>not</em> transitive, so it is <em>not</em> an
-     * equivalence relation and <em>not</em> suitable for use in {@link Object#equals}
-     * implementations.
+     * <p>
+     * This is reflexive and symmetric, but <em>not</em> transitive, so it is
+     * <em>not</em> an equivalence relation and <em>not</em> suitable for use in
+     * {@link Object#equals} implementations.
      *
      * @throws IllegalArgumentException if {@code tolerance} is {@code < 0} or NaN
      * @since 13.0
@@ -177,7 +224,8 @@ public class MathUtils {
     public static boolean fuzzyEquals(double a, double b, double tolerance) {
         ConditionUtil.checkNonNegative("tolerance", tolerance);
         return Math.copySign(a - b, 1.0) <= tolerance
-                // copySign(x, 1.0) is a branch-free version of abs(x), but with different NaN semantics
+                // copySign(x, 1.0) is a branch-free version of abs(x), but with different NaN
+                // semantics
                 || (a == b) // needed to ensure that infinities equal themselves
                 || (Double.isNaN(a) && Double.isNaN(b));
     }

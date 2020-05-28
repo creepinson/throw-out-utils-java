@@ -6,6 +6,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import me.creepinson.creepinoutils.api.util.math.MathUtils;
 
 /**
  * Some basic String utilities
@@ -54,10 +55,8 @@ public class StringUtil {
         return newTagValueBlock;
     }
 
-
     /**
-     * List the contents of an array. Each entry is separated by a newline
-     * character
+     * List the contents of an array. Each entry is separated by a newline character
      *
      * @param array
      * @return
@@ -68,8 +67,7 @@ public class StringUtil {
     }
 
     /**
-     * List the contents of an array. Each entry is separated by specified
-     * delimiter
+     * List the contents of an array. Each entry is separated by specified delimiter
      *
      * @param array
      * @param delimiter delimiter to use to separate each array element
@@ -191,8 +189,8 @@ public class StringUtil {
     }
 
     /**
-     * Takes Collection of Strings and returns them as a single line of comma separated strings.
-     * See {@link #concatStrings(String[])}
+     * Takes Collection of Strings and returns them as a single line of comma
+     * separated strings. See {@link #concatStrings(String[])}
      *
      * @param strings
      * @return
@@ -219,15 +217,16 @@ public class StringUtil {
     }
 
     /**
-     * If String exceeds maxLength, truncate it and add {@link #ELLIPSIS_STRING}
-     * to end.
+     * If String exceeds maxLength, truncate it and add {@link #ELLIPSIS_STRING} to
+     * end.
      *
      * @param msg
      * @param maxLength
      * @return
      */
     public static String abbreviate(String msg, int maxLength) {
-        if (msg == null) return null;
+        if (msg == null)
+            return null;
         if (msg.length() > maxLength) {
             return msg.substring(0, maxLength) + ELLIPSIS_STRING;
         }
@@ -242,18 +241,47 @@ public class StringUtil {
      * @return
      */
     public static String abbreviate(byte[] bytes, int offset, int maxLength) {
-        if (bytes == null || offset < 0 || maxLength < 1) return EMPTY_STRING;
+        if (bytes == null || offset < 0 || maxLength < 1)
+            return EMPTY_STRING;
         int msgLength = bytes.length - offset;
         int length = msgLength > maxLength ? maxLength : msgLength;
         String message = new String(bytes, offset, length);
-        if (msgLength > maxLength) message += ELLIPSIS_STRING;
+        if (msgLength > maxLength)
+            message += ELLIPSIS_STRING;
         return message;
     }
 
     public static String join(String joiner, Collection<String> strings) {
-        if (strings == null) return null;
+        if (strings == null)
+            return null;
         StringBuffer buffer = new StringBuffer();
         for (String string : strings) {
+            if (buffer.length() > 0) {
+                buffer.append(joiner);
+            }
+            buffer.append(string);
+        }
+        return buffer.toString();
+    }
+
+    public static String join(String joiner, String... strings) {
+        if (strings == null)
+            return null;
+        StringBuffer buffer = new StringBuffer();
+        for (String string : strings) {
+            if (buffer.length() > 0) {
+                buffer.append(joiner);
+            }
+            buffer.append(string);
+        }
+        return buffer.toString();
+    }
+
+    public static String join(String joiner, double... strings) {
+        if (strings == null)
+            return null;
+        StringBuffer buffer = new StringBuffer();
+        for (double string : strings) {
             if (buffer.length() > 0) {
                 buffer.append(joiner);
             }
@@ -276,43 +304,50 @@ public class StringUtil {
     }
 
     /**
-     * Returns the given {@code template} string with each occurrence of {@code "%s"} replaced with
-     * the corresponding argument value from {@code args}; or, if the placeholder and argument counts
-     * do not match, returns a best-effort form of that string. Will not throw an exception under
+     * Returns the given {@code template} string with each occurrence of
+     * {@code "%s"} replaced with the corresponding argument value from
+     * {@code args}; or, if the placeholder and argument counts do not match,
+     * returns a best-effort form of that string. Will not throw an exception under
      * normal conditions.
      *
-     * <p><b>Note:</b> For most string-formatting needs, use {@link String#format String.format},
-     * {@link java.io.PrintWriter#format PrintWriter.format}, and related methods. These support the
-     * full range of <a
-     * href="https://docs.oracle.com/javase/9/docs/api/java/util/Formatter.html#syntax">format
-     * specifiers</a>, and alert you to usage errors by throwing {@link
-     * java.util.IllegalFormatException}.
+     * <p>
+     * <b>Note:</b> For most string-formatting needs, use {@link String#format
+     * String.format}, {@link java.io.PrintWriter#format PrintWriter.format}, and
+     * related methods. These support the full range of <a href=
+     * "https://docs.oracle.com/javase/9/docs/api/java/util/Formatter.html#syntax">format
+     * specifiers</a>, and alert you to usage errors by throwing
+     * {@link java.util.IllegalFormatException}.
      *
-     * <p>In certain cases, such as outputting debugging information or constructing a message to be
-     * used for another unchecked exception, an exception during string formatting would serve little
-     * purpose except to supplant the real information you were trying to provide. These are the cases
-     * this method is made for; it instead generates a best-effort string with all supplied argument
-     * values present. This method is also useful in environments such as GWT where {@code
-     * String.format} is not available. As an example, method implementations of the class use this formatter, for both of the reasons just discussed.
+     * <p>
+     * In certain cases, such as outputting debugging information or constructing a
+     * message to be used for another unchecked exception, an exception during
+     * string formatting would serve little purpose except to supplant the real
+     * information you were trying to provide. These are the cases this method is
+     * made for; it instead generates a best-effort string with all supplied
+     * argument values present. This method is also useful in environments such as
+     * GWT where {@code
+     * String.format} is not available. As an example, method implementations of the
+     * class use this formatter, for both of the reasons just discussed.
      *
-     * <p><b>Warning:</b> Only the exact two-character placeholder sequence {@code "%s"} is
-     * recognized.
+     * <p>
+     * <b>Warning:</b> Only the exact two-character placeholder sequence
+     * {@code "%s"} is recognized.
      *
-     * @param template a string containing zero or more {@code "%s"} placeholder sequences. {@code
+     * @param template a string containing zero or more {@code "%s"} placeholder
+     *                 sequences. {@code
      *                 null} is treated as the four-character string {@code "null"}.
-     * @param args     the arguments to be substituted into the message template. The first argument
-     *                 specified is substituted for the first occurrence of {@code "%s"} in the template, and so
-     *                 forth. A {@code null} argument is converted to the four-character string {@code "null"};
-     *                 non-null values are converted to strings using {@link Object#toString()}.
-     * @since 25.1
+     * @param args     the arguments to be substituted into the message template.
+     *                 The first argument specified is substituted for the first
+     *                 occurrence of {@code "%s"} in the template, and so forth. A
+     *                 {@code null} argument is converted to the four-character
+     *                 string {@code "null"}; non-null values are converted to
+     *                 strings using {@link Object#toString()}.
      */
-    // TODO(diamondm) consider using Arrays.toString() for array parameters
-    public static String lenientFormat(
-            String template, Object... args) {
+    public static String lenientFormat(String template, Object... args) {
         template = String.valueOf(template); // null -> "null"
 
         if (args == null) {
-            args = new Object[]{"(Object[])null"};
+            args = new Object[] { "(Object[])null" };
         } else {
             for (int i = 0; i < args.length; i++) {
                 args[i] = lenientToString(args[i]);
@@ -356,11 +391,11 @@ public class StringUtil {
             return o.toString();
         } catch (Exception e) {
             // Default toString() behavior - see Object.toString()
-            String objectToString =
-                    o.getClass().getName() + '@' + Integer.toHexString(System.identityHashCode(o));
-            // Logger is created inline with fixed name to avoid forcing Proguard to create another class.
-            Logger.getLogger("com.google.common.base.Strings")
-                    .log(Level.WARNING, "Exception during lenientFormat for " + objectToString, e);
+            String objectToString = o.getClass().getName() + '@' + Integer.toHexString(System.identityHashCode(o));
+            // Logger is created inline with fixed name to avoid forcing Proguard to create
+            // another class.
+            Logger.getLogger("com.google.common.base.Strings").log(Level.WARNING,
+                    "Exception during lenientFormat for " + objectToString, e);
             return "<" + objectToString + " threw " + e.getClass().getName() + ">";
         }
     }

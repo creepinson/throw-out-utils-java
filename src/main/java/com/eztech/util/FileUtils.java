@@ -8,7 +8,7 @@ import java.net.URLDecoder;
 
 public class FileUtils {
 
-	//	private static final Logger LOG = Logger.getLogger(FileUtils.class);
+	// private static final Logger LOG = Logger.getLogger(FileUtils.class);
 
 	private FileUtils() {
 
@@ -33,13 +33,11 @@ public class FileUtils {
 	}
 
 	/**
-	 * Determines the path which represents the class path base that the
-	 * specified class was read from For now, does not support classes read from
-	 * a JAR.
+	 * Determines the path which represents the class path base that the specified
+	 * class was read from For now, does not support classes read from a JAR.
 	 * <p>
-	 * This is implemented by find the URL for the class, and then splitting off
-	 * the part of the URL path which is not part of the fully qualified Java
-	 * class name
+	 * This is implemented by find the URL for the class, and then splitting off the
+	 * part of the URL path which is not part of the fully qualified Java class name
 	 *
 	 * @param clazz the Class to examine
 	 * @return a path which represents the root of the class path
@@ -60,7 +58,6 @@ public class FileUtils {
 			try {
 				classPathBase = URLDecoder.decode(classPathBase, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -123,8 +120,8 @@ public class FileUtils {
 	}
 
 	/**
-	 * Gets the path of file, minus the file name. If no path portion, returns
-	 * empty string;
+	 * Gets the path of file, minus the file name. If no path portion, returns empty
+	 * string;
 	 *
 	 * @param fullPath
 	 * @return
@@ -174,8 +171,8 @@ public class FileUtils {
 	}
 
 	/**
-	 * Concatenates path and file to form filePath valid for current O/S.
-	 * Null arguments are accepted with throwing Exception.
+	 * Concatenates path and file to form filePath valid for current O/S. Null
+	 * arguments are accepted with throwing Exception.
 	 *
 	 * @param filePath
 	 * @param fileName
@@ -197,7 +194,7 @@ public class FileUtils {
 	public static int getLineCount(String fileLocation) {
 		int lines = 0;
 		if (!exists(fileLocation)) {
-			//			LOG.warn("getLineCount(): file does not exist! path=" + fileLocation);
+			// LOG.warn("getLineCount(): file does not exist! path=" + fileLocation);
 			return lines;
 		}
 		BufferedReader reader = null;
@@ -207,7 +204,8 @@ public class FileUtils {
 				lines++;
 			}
 		} catch (Exception e) {
-			//			LOG.error("getLineCount(): exception reading file! path=" + fileLocation + ", ex=" + e, e);
+			// LOG.error("getLineCount(): exception reading file! path=" + fileLocation + ",
+			// ex=" + e, e);
 			e.printStackTrace();
 		} finally {
 			if (reader != null)

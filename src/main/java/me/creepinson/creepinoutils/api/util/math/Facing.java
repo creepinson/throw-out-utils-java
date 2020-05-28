@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
  * @author mojang https://minecraft.net
  */
 public enum Facing implements SerializableString {
-    DOWN(0, 1, -1, "down", Facing.AxisDirection.NEGATIVE, Facing.Axis.Y, new Vector3(0, -1, 0)),
-    UP(1, 0, -1, "up", Facing.AxisDirection.POSITIVE, Facing.Axis.Y, new Vector3(0, 1, 0)),
-    NORTH(2, 3, 2, "north", Facing.AxisDirection.NEGATIVE, Facing.Axis.Z, new Vector3(0, 0, -1)),
-    SOUTH(3, 2, 0, "south", Facing.AxisDirection.POSITIVE, Facing.Axis.Z, new Vector3(0, 0, 1)),
-    WEST(4, 5, 1, "west", Facing.AxisDirection.NEGATIVE, Facing.Axis.X, new Vector3(-1, 0, 0)),
-    EAST(5, 4, 3, "east", Facing.AxisDirection.POSITIVE, Facing.Axis.X, new Vector3(1, 0, 0));
+    DOWN(0, 1, -1, "down", Facing.AxisDirection.NEGATIVE, Facing.Axis.Y, new Vector(0, -1, 0)),
+    UP(1, 0, -1, "up", Facing.AxisDirection.POSITIVE, Facing.Axis.Y, new Vector(0, 1, 0)),
+    NORTH(2, 3, 2, "north", Facing.AxisDirection.NEGATIVE, Facing.Axis.Z, new Vector(0, 0, -1)),
+    SOUTH(3, 2, 0, "south", Facing.AxisDirection.POSITIVE, Facing.Axis.Z, new Vector(0, 0, 1)),
+    WEST(4, 5, 1, "west", Facing.AxisDirection.NEGATIVE, Facing.Axis.X, new Vector(-1, 0, 0)),
+    EAST(5, 4, 3, "east", Facing.AxisDirection.POSITIVE, Facing.Axis.X, new Vector(1, 0, 0));
 
     private final int index;
     private final int opposite;
@@ -29,13 +29,20 @@ public enum Facing implements SerializableString {
     private final String name;
     private final Facing.Axis axis;
     private final Facing.AxisDirection axisDirection;
-    private final Vector3 FacingVec;
+    private final Vector FacingVec;
     private static final Facing[] VALUES = values();
-    private static final Map<String, Facing> NAME_LOOKUP = Arrays.stream(VALUES).collect(Collectors.toMap(Facing::getName2, (p_199787_0_) -> p_199787_0_));
-    private static final Facing[] BY_INDEX = Arrays.stream(VALUES).sorted(Comparator.comparingInt((p_199790_0_) -> p_199790_0_.index)).toArray((p_199788_0_) -> new Facing[p_199788_0_]);
-    private static final Facing[] BY_HORIZONTAL_INDEX = Arrays.stream(VALUES).filter((p_199786_0_) -> p_199786_0_.getAxis().isHorizontal()).sorted(Comparator.comparingInt((p_199789_0_) -> p_199789_0_.horizontalIndex)).toArray((p_199791_0_) -> new Facing[p_199791_0_]);
+    private static final Map<String, Facing> NAME_LOOKUP = Arrays.stream(VALUES)
+            .collect(Collectors.toMap(Facing::getName2, (p_199787_0_) -> p_199787_0_));
+    private static final Facing[] BY_INDEX = Arrays.stream(VALUES)
+            .sorted(Comparator.comparingInt((p_199790_0_) -> p_199790_0_.index))
+            .toArray((p_199788_0_) -> new Facing[p_199788_0_]);
+    private static final Facing[] BY_HORIZONTAL_INDEX = Arrays.stream(VALUES)
+            .filter((p_199786_0_) -> p_199786_0_.getAxis().isHorizontal())
+            .sorted(Comparator.comparingInt((p_199789_0_) -> p_199789_0_.horizontalIndex))
+            .toArray((p_199791_0_) -> new Facing[p_199791_0_]);
 
-    Facing(int indexIn, int oppositeIn, int horizontalIndexIn, String nameIn, Facing.AxisDirection AxisDirectionIn, Facing.Axis axisIn, Vector3 FacingVecIn) {
+    Facing(int indexIn, int oppositeIn, int horizontalIndexIn, String nameIn, Facing.AxisDirection AxisDirectionIn,
+            Facing.Axis axisIn, Vector FacingVecIn) {
         this.index = indexIn;
         this.horizontalIndex = horizontalIndexIn;
         this.opposite = oppositeIn;
@@ -46,7 +53,7 @@ public enum Facing implements SerializableString {
     }
 
     private static Facing[] compose(Facing first, Facing second, Facing third) {
-        return new Facing[]{first, second, third, third.getOpposite(), second.getOpposite(), first.getOpposite()};
+        return new Facing[] { first, second, third, third.getOpposite(), second.getOpposite(), first.getOpposite() };
     }
 
     public int getIndex() {
@@ -107,8 +114,8 @@ public enum Facing implements SerializableString {
         return this.FacingVec.intZ();
     }
 
-    public Vector3 getDirectionVec() {
-        return new Vector3((float) this.intXOffset(), (float) this.intYOffset(), (float) this.intZOffset());
+    public Vector getDirectionVec() {
+        return new Vector((float) this.intXOffset(), (float) this.intYOffset(), (float) this.intZOffset());
     }
 
     public String getName2() {
@@ -164,7 +171,8 @@ public enum Facing implements SerializableString {
         float f = Float.MIN_VALUE;
 
         for (Facing Facing1 : VALUES) {
-            float f1 = x * (float) Facing1.FacingVec.intX() + y * (float) Facing1.FacingVec.intY() + z * (float) Facing1.FacingVec.intZ();
+            float f1 = x * (float) Facing1.FacingVec.intX() + y * (float) Facing1.FacingVec.intY()
+                    + z * (float) Facing1.FacingVec.intZ();
             if (f1 > f) {
                 f = f1;
                 Facing = Facing1;
@@ -192,7 +200,7 @@ public enum Facing implements SerializableString {
         throw new IllegalArgumentException("No such Facing: " + AxisDirectionIn + " " + axisIn);
     }
 
-    public Vector3 getFacingVec() {
+    public Vector getFacingVec() {
         return this.FacingVec;
     }
 
@@ -225,9 +233,10 @@ public enum Facing implements SerializableString {
             }
         };
 
-        private static final Map<String, Facing.Axis> NAME_LOOKUP = Arrays.stream(values()).collect(Collectors.toMap(Facing.Axis::getName2, (p_199785_0_) -> {
-            return p_199785_0_;
-        }));
+        private static final Map<String, Facing.Axis> NAME_LOOKUP = Arrays.stream(values())
+                .collect(Collectors.toMap(Facing.Axis::getName2, (p_199785_0_) -> {
+                    return p_199785_0_;
+                }));
         private final String name;
 
         private Axis(String nameIn) {
@@ -283,10 +292,8 @@ public enum Facing implements SerializableString {
         public abstract double getCoordinate(double x, double y, double z);
     }
 
-
     public static enum AxisDirection {
-        POSITIVE(1, "Towards positive"),
-        NEGATIVE(-1, "Towards negative");
+        POSITIVE(1, "Towards positive"), NEGATIVE(-1, "Towards negative");
 
         private final int offset;
         private final String description;
@@ -306,8 +313,9 @@ public enum Facing implements SerializableString {
     }
 
     public static enum Plane implements Iterable<Facing>, Predicate<Facing> {
-        HORIZONTAL(new Facing[]{Facing.NORTH, Facing.EAST, Facing.SOUTH, Facing.WEST}, new Facing.Axis[]{Facing.Axis.X, Facing.Axis.Z}),
-        VERTICAL(new Facing[]{Facing.UP, Facing.DOWN}, new Facing.Axis[]{Facing.Axis.Y});
+        HORIZONTAL(new Facing[] { Facing.NORTH, Facing.EAST, Facing.SOUTH, Facing.WEST },
+                new Facing.Axis[] { Facing.Axis.X, Facing.Axis.Z }),
+        VERTICAL(new Facing[] { Facing.UP, Facing.DOWN }, new Facing.Axis[] { Facing.Axis.Y });
 
         private final Facing[] facingValues;
         private final Facing.Axis[] axisValues;

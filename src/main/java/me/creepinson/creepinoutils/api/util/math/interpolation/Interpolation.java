@@ -1,6 +1,6 @@
 package me.creepinson.creepinoutils.api.util.math.interpolation;
 
-import me.creepinson.creepinoutils.api.util.math.Vector3;
+import me.creepinson.creepinoutils.api.util.math.Vector;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,11 +9,11 @@ import java.util.Map.Entry;
 
 public abstract class Interpolation {
 
-    protected LinkedHashMap<Double, Vector3> points = new LinkedHashMap<>();
-    protected ArrayList<Vector3> pointVecs = new ArrayList<>();
+    protected LinkedHashMap<Double, Vector> points = new LinkedHashMap<>();
+    protected ArrayList<Vector> pointVecs = new ArrayList<>();
     private final Class classOfT;
 
-    public Interpolation(double[] times, Vector3[] points) {
+    public Interpolation(double[] times, Vector[] points) {
         if (points.length < 2)
             throw new IllegalArgumentException("At least two points are needed!");
 
@@ -27,7 +27,7 @@ public abstract class Interpolation {
         pointVecs = new ArrayList<>(this.points.values());
     }
 
-    public Interpolation(Vector3... points) {
+    public Interpolation(Vector... points) {
         if (points.length < 2)
             throw new IllegalArgumentException("At least two points are needed!");
 
@@ -48,16 +48,16 @@ public abstract class Interpolation {
     /**
      * 1 <= t <= 1
      **/
-    public Vector3 valueAt(double t) {
+    public Vector valueAt(double t) {
         if (t >= 0 && t <= 1) {
-            Entry<Double, Vector3> firstPoint = null;
+            Entry<Double, Vector> firstPoint = null;
             int indexFirst = -1;
-            Entry<Double, Vector3> secondPoint = null;
+            Entry<Double, Vector> secondPoint = null;
             int indexSecond = -1;
 
             int i = 0;
-            for (Iterator<Entry<Double, Vector3>> iterator = points.entrySet().iterator(); iterator.hasNext(); ) {
-                Entry<Double, Vector3> entry = iterator.next();
+            for (Iterator<Entry<Double, Vector>> iterator = points.entrySet().iterator(); iterator.hasNext(); ) {
+                Entry<Double, Vector> entry = iterator.next();
                 if (entry.getKey() >= t) {
                     if (firstPoint == null) {
                         firstPoint = entry;
@@ -76,9 +76,9 @@ public abstract class Interpolation {
             }
 
             if (secondPoint == null)
-                return (Vector3) firstPoint.getValue().clone();
+                return (Vector) firstPoint.getValue().clone();
 
-            Vector3 vec = (Vector3) firstPoint.getValue().clone();
+            Vector vec = (Vector) firstPoint.getValue().clone();
 
             double pointDistance = secondPoint.getKey() - firstPoint.getKey();
             double mu = (t - firstPoint.getKey()) / pointDistance;
@@ -89,7 +89,7 @@ public abstract class Interpolation {
 
             return vec;
         }
-        return new Vector3();
+        return new Vector();
     }
 
     public abstract float valueAt(double mu, int pointIndex, int pointIndexNext, int dim);

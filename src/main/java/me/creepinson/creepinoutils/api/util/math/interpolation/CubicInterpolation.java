@@ -1,23 +1,23 @@
 package me.creepinson.creepinoutils.api.util.math.interpolation;
 
 
-import me.creepinson.creepinoutils.api.util.math.Vector3;
+import me.creepinson.creepinoutils.api.util.math.Vector;
 
 public class CubicInterpolation extends Interpolation {
 
-    public Vector3 beginVec;
-    public Vector3 endVec;
+    public Vector beginVec;
+    public Vector endVec;
 
-    public CubicInterpolation(double[] times, Vector3[] points) {
+    public CubicInterpolation(double[] times, Vector[] points) {
         super(times, points);
-        beginVec = (Vector3) points[0].add(points[0].sub(points[1]));
-        endVec = (Vector3) points[points.length - 1].add(points[points.length - 1].sub(points[points.length - 2]));
+        beginVec = (Vector) points[0].add(points[0].sub(points[1]));
+        endVec = (Vector) points[points.length - 1].add(points[points.length - 1].sub(points[points.length - 2]));
     }
 
-    public CubicInterpolation(Vector3... points) {
+    public CubicInterpolation(Vector... points) {
         super(points);
-        beginVec = (Vector3) points[0].add(points[0].sub(points[1]));
-        endVec = (Vector3) points[points.length - 1].add(points[points.length - 1].sub(points[points.length - 2]));
+        beginVec = (Vector) points[0].add(points[0].sub(points[1]));
+        endVec = (Vector) points[points.length - 1].add(points[points.length - 1].sub(points[points.length - 2]));
     }
 
     @Override

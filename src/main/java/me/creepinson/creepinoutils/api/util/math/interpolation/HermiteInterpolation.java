@@ -1,9 +1,9 @@
 package me.creepinson.creepinoutils.api.util.math.interpolation;
 
 
-import me.creepinson.creepinoutils.api.util.math.Vector3;
+import me.creepinson.creepinoutils.api.util.math.Vector;
 
-public class HermiteInterpolation<T extends Vector3> extends CubicInterpolation {
+public class HermiteInterpolation<T extends Vector> extends CubicInterpolation {
 
     public Tension tension;
     public double bias;
