@@ -4,7 +4,7 @@ import me.creepinson.creepinoutils.api.util.math.AxisRotation;
 import me.creepinson.creepinoutils.api.util.math.Facing;
 
 /**
- * @author Creepinson http://gitlab.com/creepinson
+ * @author Creepinson https:/theoparis.com/about
  * @author mojang https://minecraft.net
  **/
 public abstract class VoxelShapePart {

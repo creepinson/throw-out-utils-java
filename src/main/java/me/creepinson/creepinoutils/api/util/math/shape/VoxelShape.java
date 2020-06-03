@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Creepinson http://gitlab.com/creepinson
+ * @author Creepinson https:/theoparis.com/about
  **/
 
 public abstract class VoxelShape {

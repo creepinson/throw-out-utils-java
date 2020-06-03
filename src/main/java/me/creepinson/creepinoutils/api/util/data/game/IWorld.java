@@ -5,7 +5,7 @@ import me.creepinson.creepinoutils.api.util.SerializableString;
 import java.util.Collection;
 
 /**
- * @author Creepinson http://gitlab.com/creepinson
+ * @author Creepinson https:/theoparis.com/about
  **/
 public interface IWorld extends SerializableString {
     Collection<IChunk> getLoadedChunks();

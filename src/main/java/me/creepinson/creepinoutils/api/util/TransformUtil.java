@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * @author Creepinson http://gitlab.com/creepinson
+ * @author Creepinson https:/theoparis.com/about
  **/
 public class TransformUtil {
     public static <T> Set<T> asSet(T[] array) {

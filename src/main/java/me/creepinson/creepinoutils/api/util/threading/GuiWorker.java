@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author Creepinson http://gitlab.com/creepinson
+ * @author Creepinson https:/theoparis.com/about
  **/
 public abstract class GuiWorker {
     public final Set<Object> parameters;

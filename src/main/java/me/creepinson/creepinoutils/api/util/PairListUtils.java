@@ -1,7 +1,7 @@
 package me.creepinson.creepinoutils.api.util;
 
 /**
- * @author Creepinson http://gitlab.com/creepinson
+ * @author Creepinson https:/theoparis.com/about
  * Project creepinoutils
  **/
 public class PairListUtils {

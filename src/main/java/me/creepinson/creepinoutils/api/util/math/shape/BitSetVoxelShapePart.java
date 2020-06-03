@@ -7,7 +7,7 @@ import me.creepinson.creepinoutils.api.util.math.IDoubleListMerger;
 import java.util.BitSet;
 
 /**
- * @author Creepinson http://gitlab.com/creepinson
+ * @author Creepinson https:/theoparis.com/about
  **/
 public final class BitSetVoxelShapePart extends VoxelShapePart {
     private final BitSet bitSet;

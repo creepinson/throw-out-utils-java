@@ -4,7 +4,7 @@ import me.creepinson.creepinoutils.api.util.SerializableString;
 import me.creepinson.creepinoutils.api.util.math.Vector;
 
 /**
- * @author Creepinson http://gitlab.com/creepinson
+ * @author Creepinson https:/theoparis.com/about
  **/
 public interface IPlayer extends SerializableString {
     IWorld getWorld();

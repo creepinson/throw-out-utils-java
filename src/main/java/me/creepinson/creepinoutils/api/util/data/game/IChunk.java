@@ -5,7 +5,7 @@ import me.creepinson.creepinoutils.api.util.math.Vector;
 import java.io.Serializable;
 
 /**
- * @author Creepinson http://gitlab.com/creepinson
+ * @author Creepinson https:/theoparis.com/about
  **/
 public interface IChunk extends Serializable {
     IWorld getWorld();

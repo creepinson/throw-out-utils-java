@@ -3,7 +3,7 @@ package me.creepinson.creepinoutils.api.util.threading;
 import javax.swing.*;
 
 /**
- * @author Creepinson http://gitlab.com/creepinson
+ * @author Creepinson https:/theoparis.com/about
  **/
 public class PausingConfirmationWorker extends Worker {
     public final GuiWorker gui;

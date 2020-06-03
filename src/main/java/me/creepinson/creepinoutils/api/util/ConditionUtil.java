@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import static me.creepinson.creepinoutils.api.util.StringUtil.lenientFormat;
 
 /**
- * @author Creepinson http://gitlab.com/creepinson
+ * @author Creepinson https:/theoparis.com/about
  **/
 public class ConditionUtil {
     /**

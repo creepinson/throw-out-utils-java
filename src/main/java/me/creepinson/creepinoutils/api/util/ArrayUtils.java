@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.stream.Collectors;
 
 /**
- * @author Creepinson http://gitlab.com/creepinson
+ * @author Creepinson https:/theoparis.com/about
  **/
 public class ArrayUtils {
 
