@@ -620,11 +620,11 @@ public class Cuboid implements Cloneable, java.io.Serializable {
     }
 
     public boolean contains(float... data) {
-        return new Vector(data).contains(minimumPoint, maximumPoint);
+        return contains(new Vector(data));
     }
 
     public boolean contains(double... data) {
-        return contains(Arrays.stream(data).map(f -> (float) f).toArray());
+        return contains(new Vector(data));
     }
 
     /**

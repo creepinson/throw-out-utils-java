@@ -164,6 +164,25 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
     }
 
     /**
+     * @param factor to multiply() with
+     * @return the current vector that has been changed (<strong>not a new
+     * one</strong>).
+     */
+    public Vector add(double factor) {
+        return add((float) factor);
+    }
+
+
+    /**
+     * @param factor to multiply() with
+     * @return the current vector that has been changed (<strong>not a new
+     * one</strong>).
+     */
+    public Vector add(int factor) {
+        return add((float) factor);
+    }
+
+    /**
      * @param other to subtract
      * @return the current vector that has been changed (<strong>not a new
      * one</strong>).
@@ -187,11 +206,49 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
      * @return the current vector that has been changed (<strong>not a new
      * one</strong>).
      */
+    public Vector sub(double factor) {
+        return sub((float) factor);
+    }
+
+
+    /**
+     * @param factor to multiply() with
+     * @return the current vector that has been changed (<strong>not a new
+     * one</strong>).
+     */
+    public Vector sub(int factor) {
+        return sub((float) factor);
+    }
+
+    /**
+     * @param factor to multiply() with
+     * @return the current vector that has been changed (<strong>not a new
+     * one</strong>).
+     */
     public Vector mul(float factor) {
         for (int f = 0; f < data.length; f++) {
             data[f] *= factor;
         }
         return this;
+    }
+
+    /**
+     * @param factor to multiply() with
+     * @return the current vector that has been changed (<strong>not a new
+     * one</strong>).
+     */
+    public Vector mul(double factor) {
+        return mul((float) factor);
+    }
+
+
+    /**
+     * @param factor to multiply() with
+     * @return the current vector that has been changed (<strong>not a new
+     * one</strong>).
+     */
+    public Vector mul(int factor) {
+        return mul((float) factor);
     }
 
     /**
