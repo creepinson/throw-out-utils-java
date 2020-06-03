@@ -1,5 +1,6 @@
 package me.creepinson.creepinoutils.api.util.math;
 
+import me.creepinson.creepinoutils.api.util.ArrayUtils;
 import me.creepinson.creepinoutils.api.util.SerializableString;
 import me.creepinson.creepinoutils.api.util.StringUtil;
 import me.creepinson.creepinoutils.api.util.math.Facing.Axis;
@@ -30,6 +31,23 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
     public Vector(float... data) {
         this.data = data;
     }
+
+    /**
+     * Creates a new Vector with the specified data array. The dimensions will be
+     * calculated from the length of the data array.
+     */
+    public Vector(double... data) {
+        this(ArrayUtils.toFloatArray(data));
+    }
+
+    /**
+     * Creates a new Vector with the specified data array. The dimensions will be
+     * calculated from the length of the data array.
+     */
+    public Vector(int... data) {
+        this(ArrayUtils.toFloatArray(data));
+    }
+
 
     /**
      * Offset this Vector 1 block in the given direction
@@ -395,15 +413,15 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
      * value.
      */
     public boolean dataEquals(float value) {
-        for (int i = 0; i < data.length; i++)
-            if (data[i] != value)
+        for (float datum : data)
+            if (datum != value)
                 return false;
         return true;
     }
 
     @Override
     public Iterator<Float> iterator() {
-        Iterator<Float> it = new Iterator<Float>() {
+        return new Iterator<Float>() {
 
             private int currentIndex = 0;
 
@@ -422,6 +440,5 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
                 throw new UnsupportedOperationException();
             }
         };
-        return it;
     }
 }
