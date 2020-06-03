@@ -60,7 +60,7 @@ public class HermiteInterpolation<T extends Vector> extends CubicInterpolation {
         return (float) (a0 * v1 + a1 * m0 + a2 * m1 + a3 * v2);
     }
 
-    public static enum Tension {
+    public enum Tension {
         High(1), Normal(0), Low(-1);
 
         public final int value;

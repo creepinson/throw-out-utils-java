@@ -67,12 +67,12 @@ public class Event {
         this.phase = value;
     }
 
-    public static enum Result {
+    public enum Result {
         DENY,
         DEFAULT,
         ALLOW;
 
-        private Result() {
+        Result() {
         }
     }
 
@@ -81,7 +81,7 @@ public class Event {
     public @interface HasResult {
     }
 
-    public static interface Listener {
+    public interface Listener {
         void invoke(Event var1);
     }
 }

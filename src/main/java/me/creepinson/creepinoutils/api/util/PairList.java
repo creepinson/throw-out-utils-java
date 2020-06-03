@@ -220,14 +220,14 @@ public class PairList<K, V> extends ArrayList<Pair<K, V>> {
     public V getValue(K key) {
         Integer index = keyIndex.get(key);
         if (index != null)
-            return get((int) index).value;
+            return get(index).value;
         return null;
     }
 
     public Pair<K, V> getPair(K key) {
         Integer index = keyIndex.get(key);
         if (index != null)
-            return get((int) index);
+            return get(index);
         return null;
     }
 

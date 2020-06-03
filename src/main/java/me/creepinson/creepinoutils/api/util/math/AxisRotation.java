@@ -48,7 +48,7 @@ public enum AxisRotation {
     public static final Facing.Axis[] AXES = Facing.Axis.values();
     public static final AxisRotation[] AXIS_ROTATIONS = values();
 
-    private AxisRotation() {
+    AxisRotation() {
     }
 
     public abstract int getCoordinate(int x, int y, int z, Facing.Axis axis);

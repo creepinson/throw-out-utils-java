@@ -51,12 +51,12 @@ public abstract class VoxelShape {
     public VoxelShape withOffset(double xOffset, double yOffset, double zOffset) {
         return this.isEmpty() ? VoxelShapes.empty()
                 : new VoxelShapeArray(this.part, new OffsetDoubleList(this.getValues(Facing.Axis.X), xOffset),
-                        new OffsetDoubleList(this.getValues(Facing.Axis.Y), yOffset),
-                        new OffsetDoubleList(this.getValues(Facing.Axis.Z), zOffset));
+                new OffsetDoubleList(this.getValues(Facing.Axis.Y), yOffset),
+                new OffsetDoubleList(this.getValues(Facing.Axis.Z), zOffset));
     }
 
     public VoxelShape simplify() {
-        VoxelShape[] aVoxelShape = new VoxelShape[] { VoxelShapes.empty() };
+        VoxelShape[] aVoxelShape = new VoxelShape[]{VoxelShapes.empty()};
         this.forEachBox((p_197763_1_, p_197763_3_, p_197763_5_, p_197763_7_, p_197763_9_, p_197763_11_) -> {
             aVoxelShape[0] = VoxelShapes.combine(aVoxelShape[0],
                     VoxelShapes.create(p_197763_1_, p_197763_3_, p_197763_5_, p_197763_7_, p_197763_9_, p_197763_11_),

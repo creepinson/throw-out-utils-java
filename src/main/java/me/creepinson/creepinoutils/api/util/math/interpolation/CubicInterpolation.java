@@ -10,14 +10,14 @@ public class CubicInterpolation extends Interpolation {
 
     public CubicInterpolation(double[] times, Vector[] points) {
         super(times, points);
-        beginVec = (Vector) points[0].add(points[0].sub(points[1]));
-        endVec = (Vector) points[points.length - 1].add(points[points.length - 1].sub(points[points.length - 2]));
+        beginVec = points[0].add(points[0].sub(points[1]));
+        endVec = points[points.length - 1].add(points[points.length - 1].sub(points[points.length - 2]));
     }
 
     public CubicInterpolation(Vector... points) {
         super(points);
-        beginVec = (Vector) points[0].add(points[0].sub(points[1]));
-        endVec = (Vector) points[points.length - 1].add(points[points.length - 1].sub(points[points.length - 2]));
+        beginVec = points[0].add(points[0].sub(points[1]));
+        endVec = points[points.length - 1].add(points[points.length - 1].sub(points[points.length - 2]));
     }
 
     @Override

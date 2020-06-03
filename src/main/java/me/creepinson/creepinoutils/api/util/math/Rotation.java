@@ -76,7 +76,7 @@ public enum Rotation {
     private final Vector vec;
     private final RotationMatrix rotationMatrix;
 
-    private Rotation(Facing.Axis axis, RotationMatrix matrix, boolean clockwise) {
+    Rotation(Facing.Axis axis, RotationMatrix matrix, boolean clockwise) {
         this.rotationMatrix = matrix;
         this.axis = axis;
         this.clockwise = clockwise;

@@ -10,7 +10,7 @@ import java.util.function.Supplier;
  * @author Creepinson http://gitlab.com/creepinson
  **/
 public class TransformUtil {
-    public static <T> Set<T> asSet(T array[]) {
+    public static <T> Set<T> asSet(T[] array) {
         Set<T> set = new HashSet<>(Arrays.asList(array));
         return set;
     }

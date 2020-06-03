@@ -7,8 +7,6 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import me.creepinson.creepinoutils.api.util.math.MathUtils;
-
 /**
  * Some basic String utilities
  *
@@ -352,7 +350,7 @@ public class StringUtil {
         template = String.valueOf(template); // null -> "null"
 
         if (args == null) {
-            args = new Object[] { "(Object[])null" };
+            args = new Object[]{"(Object[])null"};
         } else {
             for (int i = 0; i < args.length; i++) {
                 args[i] = lenientToString(args[i]);

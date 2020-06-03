@@ -5,7 +5,7 @@
 
 package me.creepinson.creepinoutils.api.util.math;
 
-import me.creepinson.creepinoutils.api.util.IteratorUtil;
+import me.creepinson.creepinoutils.api.util.ArrayUtils;
 import me.creepinson.creepinoutils.api.util.SerializableString;
 
 import java.util.*;
@@ -42,7 +42,7 @@ public enum Facing implements SerializableString {
             .toArray((p_199791_0_) -> new Facing[p_199791_0_]);
 
     Facing(int indexIn, int oppositeIn, int horizontalIndexIn, String nameIn, Facing.AxisDirection AxisDirectionIn,
-            Facing.Axis axisIn, Vector FacingVecIn) {
+           Facing.Axis axisIn, Vector FacingVecIn) {
         this.index = indexIn;
         this.horizontalIndex = horizontalIndexIn;
         this.opposite = oppositeIn;
@@ -53,7 +53,7 @@ public enum Facing implements SerializableString {
     }
 
     private static Facing[] compose(Facing first, Facing second, Facing third) {
-        return new Facing[] { first, second, third, third.getOpposite(), second.getOpposite(), first.getOpposite() };
+        return new Facing[]{first, second, third, third.getOpposite(), second.getOpposite(), first.getOpposite()};
     }
 
     public int getIndex() {
@@ -204,7 +204,7 @@ public enum Facing implements SerializableString {
         return this.FacingVec;
     }
 
-    public static enum Axis implements SerializableString, java.util.function.Predicate<Facing> {
+    public enum Axis implements SerializableString, java.util.function.Predicate<Facing> {
         X("x") {
             public int getCoordinate(int x, int y, int z) {
                 return x;
@@ -239,7 +239,7 @@ public enum Facing implements SerializableString {
                 }));
         private final String name;
 
-        private Axis(String nameIn) {
+        Axis(String nameIn) {
             this.name = nameIn;
         }
         // TODO: Facing axis from vector
@@ -297,13 +297,13 @@ public enum Facing implements SerializableString {
         public abstract double getCoordinate(double x, double y, double z);
     }
 
-    public static enum AxisDirection {
+    public enum AxisDirection {
         POSITIVE(1, "Towards positive"), NEGATIVE(-1, "Towards negative");
 
         private final int offset;
         private final String description;
 
-        private AxisDirection(int offset, String description) {
+        AxisDirection(int offset, String description) {
             this.offset = offset;
             this.description = description;
         }
@@ -317,15 +317,15 @@ public enum Facing implements SerializableString {
         }
     }
 
-    public static enum Plane implements Iterable<Facing>, Predicate<Facing> {
-        HORIZONTAL(new Facing[] { Facing.NORTH, Facing.EAST, Facing.SOUTH, Facing.WEST },
-                new Facing.Axis[] { Facing.Axis.X, Facing.Axis.Z }),
-        VERTICAL(new Facing[] { Facing.UP, Facing.DOWN }, new Facing.Axis[] { Facing.Axis.Y });
+    public enum Plane implements Iterable<Facing>, Predicate<Facing> {
+        HORIZONTAL(new Facing[]{Facing.NORTH, Facing.EAST, Facing.SOUTH, Facing.WEST},
+                new Facing.Axis[]{Facing.Axis.X, Facing.Axis.Z}),
+        VERTICAL(new Facing[]{Facing.UP, Facing.DOWN}, new Facing.Axis[]{Facing.Axis.Y});
 
         private final Facing[] facingValues;
         private final Facing.Axis[] axisValues;
 
-        private Plane(Facing[] facingValuesIn, Facing.Axis[] axisValuesIn) {
+        Plane(Facing[] facingValuesIn, Facing.Axis[] axisValuesIn) {
             this.facingValues = facingValuesIn;
             this.axisValues = axisValuesIn;
         }
@@ -339,7 +339,7 @@ public enum Facing implements SerializableString {
         }
 
         public Iterator<Facing> iterator() {
-            return IteratorUtil.forArray(this.facingValues);
+            return ArrayUtils.forArray(this.facingValues);
         }
     }
 }

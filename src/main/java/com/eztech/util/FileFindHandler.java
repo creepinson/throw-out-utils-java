@@ -9,16 +9,16 @@ import java.io.File;
  */
 public interface FileFindHandler {
 
-	/**
-	 * Execute an action when file is found
-	 *
-	 * @param file the File which was found
-	 */
-	void handleFile(File file);
+    /**
+     * Execute an action when file is found
+     *
+     * @param file the File which was found
+     */
+    void handleFile(File file);
 
-	/**
-	 * Should be called by the client when no more files will be fed to the FileFindHandler
-	 */
-	void onComplete();
+    /**
+     * Should be called by the client when no more files will be fed to the FileFindHandler
+     */
+    void onComplete();
 
 }

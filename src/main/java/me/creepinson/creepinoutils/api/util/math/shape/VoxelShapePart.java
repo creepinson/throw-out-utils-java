@@ -25,7 +25,7 @@ public abstract class VoxelShapePart {
 
     public boolean contains(int x, int y, int z) {
         if (x >= 0 && y >= 0 && z >= 0) {
-            return x < this.xSize && y < this.ySize && z < this.zSize ? this.isFilled(x, y, z) : false;
+            return (x < this.xSize && y < this.ySize && z < this.zSize) && this.isFilled(x, y, z);
         } else {
             return false;
         }

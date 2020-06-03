@@ -2,7 +2,6 @@ package me.creepinson.creepinoutils.api.util.math;
 
 import me.creepinson.creepinoutils.api.util.ConditionUtil;
 
-import java.util.Arrays;
 import java.util.Random;
 import java.util.function.IntPredicate;
 
@@ -149,14 +148,14 @@ public class MathUtils {
     }
 
     public static double lerp2(double p_219804_0_, double p_219804_2_, double p_219804_4_, double p_219804_6_,
-            double p_219804_8_, double p_219804_10_) {
+                               double p_219804_8_, double p_219804_10_) {
         return lerp(p_219804_2_, lerp(p_219804_0_, p_219804_4_, p_219804_6_),
                 lerp(p_219804_0_, p_219804_8_, p_219804_10_));
     }
 
     public static double lerp3(double p_219807_0_, double p_219807_2_, double p_219807_4_, double p_219807_6_,
-            double p_219807_8_, double p_219807_10_, double p_219807_12_, double p_219807_14_, double p_219807_16_,
-            double p_219807_18_, double p_219807_20_) {
+                               double p_219807_8_, double p_219807_10_, double p_219807_12_, double p_219807_14_, double p_219807_16_,
+                               double p_219807_18_, double p_219807_20_) {
         return lerp(p_219807_4_, lerp2(p_219807_0_, p_219807_2_, p_219807_6_, p_219807_8_, p_219807_10_, p_219807_12_),
                 lerp2(p_219807_0_, p_219807_2_, p_219807_14_, p_219807_16_, p_219807_18_, p_219807_20_));
     }
@@ -178,15 +177,11 @@ public class MathUtils {
         float u = rn.nextFloat() + rn.nextFloat();
         float r = (u > 1) ? 2 - u : u;
 
-        return new float[] { r * (float) Math.cos(t), r * (float) Math.sin(t) };
+        return new float[]{r * (float) Math.cos(t), r * (float) Math.sin(t)};
     }
 
     public static boolean chance(double percent) {
-        if (Math.random() < percent / 100) {
-            return true;
-        } else {
-            return false;
-        }
+        return Math.random() < percent / 100;
     }
 
     /**
@@ -247,7 +242,7 @@ public class MathUtils {
     }
 
     public static float sqrt(float value) {
-        return (float) Math.sqrt((double) value);
+        return (float) Math.sqrt(value);
     }
 
     public static float sqrt(double value) {

@@ -7,7 +7,7 @@ public enum EventPriority implements Event.Listener {
     LOW,
     LOWEST;
 
-    private EventPriority() {
+    EventPriority() {
     }
 
     public void invoke(Event event) {

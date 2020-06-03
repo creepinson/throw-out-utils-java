@@ -4,12 +4,12 @@ package me.creepinson.creepinoutils.api.util;
  * Made By Creepinson
  */
 public class GraphicalUtils {
-    public static enum AnvilSlot {
+    public enum AnvilSlot {
         INPUT_LEFT(0), INPUT_RIGHT(1), OUTPUT(2);
 
         private int slot;
 
-        private AnvilSlot(int slot) {
+        AnvilSlot(int slot) {
             this.slot = slot;
         }
 
@@ -28,7 +28,7 @@ public class GraphicalUtils {
         }
     }
 
-    public static interface AnvilClickEventHandler {
+    public interface AnvilClickEventHandler {
         void onAnvilClick(AnvilClickEvent event);
     }
 

@@ -19,9 +19,9 @@ public final class VoxelShapes {
     public static final VoxelShape INFINITY = create(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
             Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
     private static final VoxelShape EMPTY = new VoxelShapeArray(new BitSetVoxelShapePart(0, 0, 0),
-            (DoubleList) (new DoubleArrayList(new double[] { 0.0D })),
-            (DoubleList) (new DoubleArrayList(new double[] { 0.0D })),
-            (DoubleList) (new DoubleArrayList(new double[] { 0.0D })));
+            new DoubleArrayList(new double[]{0.0D}),
+            new DoubleArrayList(new double[]{0.0D}),
+            new DoubleArrayList(new double[]{0.0D}));
 
     public static VoxelShape empty() {
         return EMPTY;
@@ -54,9 +54,9 @@ public final class VoxelShapes {
                 int l2 = (int) Math.round(aabb.maxZ() * (double) j1);
                 BitSetVoxelShapePart bitsetVoxelshapepart = new BitSetVoxelShapePart(l, i1, j1, k1, i2, k2, l1, j2, l2);
 
-                for (long i3 = (long) k1; i3 < (long) l1; ++i3) {
-                    for (long j3 = (long) i2; j3 < (long) j2; ++j3) {
-                        for (long k3 = (long) k2; k3 < (long) l2; ++k3) {
+                for (long i3 = k1; i3 < (long) l1; ++i3) {
+                    for (long j3 = i2; j3 < (long) j2; ++j3) {
+                        for (long k3 = k2; k3 < (long) l2; ++k3) {
                             bitsetVoxelshapepart.setFilled((int) i3, (int) j3, (int) k3, false, true);
                         }
                     }
@@ -65,8 +65,8 @@ public final class VoxelShapes {
                 return new VoxelShapeCube(bitsetVoxelshapepart);
             }
         } else {
-            return new VoxelShapeArray(FULL_CUBE.part, new double[] { aabb.minX(), aabb.maxX() },
-                    new double[] { aabb.minY(), aabb.maxY() }, new double[] { aabb.minZ(), aabb.maxZ() });
+            return new VoxelShapeArray(FULL_CUBE.part, new double[]{aabb.minX(), aabb.maxX()},
+                    new double[]{aabb.minY(), aabb.maxY()}, new double[]{aabb.minZ(), aabb.maxZ()});
         }
     }
 
@@ -130,9 +130,9 @@ public final class VoxelShapes {
                 return idoublelistmerger instanceof DoubleCubeMergingList
                         && idoublelistmerger1 instanceof DoubleCubeMergingList
                         && idoublelistmerger2 instanceof DoubleCubeMergingList
-                                ? new VoxelShapeCube(bitsetVoxelshapepart)
-                                : new VoxelShapeArray(bitsetVoxelshapepart, idoublelistmerger.func_212435_a(),
-                                        idoublelistmerger1.func_212435_a(), idoublelistmerger2.func_212435_a());
+                        ? new VoxelShapeCube(bitsetVoxelshapepart)
+                        : new VoxelShapeArray(bitsetVoxelshapepart, idoublelistmerger.func_212435_a(),
+                        idoublelistmerger1.func_212435_a(), idoublelistmerger2.func_212435_a());
             }
         }
     }
@@ -173,18 +173,18 @@ public final class VoxelShapes {
     }
 
     private static boolean func_197874_a(IDoubleListMerger p_197874_0_, IDoubleListMerger p_197874_1_,
-            IDoubleListMerger p_197874_2_, VoxelShapePart p_197874_3_, VoxelShapePart p_197874_4_,
-            IBooleanFunction p_197874_5_) {
+                                         IDoubleListMerger p_197874_2_, VoxelShapePart p_197874_3_, VoxelShapePart p_197874_4_,
+                                         IBooleanFunction p_197874_5_) {
         return !p_197874_0_.forMergedIndexes((p_199861_5_, p_199861_6_,
-                p_199861_7_) -> p_197874_1_.forMergedIndexes((p_199860_6_, p_199860_7_,
-                        p_199860_8_) -> p_197874_2_.forMergedIndexes((p_199862_7_, p_199862_8_,
-                                p_199862_9_) -> !p_197874_5_.apply(
-                                        p_197874_3_.contains(p_199861_5_, p_199860_6_, p_199862_7_),
-                                        p_197874_4_.contains(p_199861_6_, p_199860_7_, p_199862_8_)))));
+                                              p_199861_7_) -> p_197874_1_.forMergedIndexes((p_199860_6_, p_199860_7_,
+                                                                                            p_199860_8_) -> p_197874_2_.forMergedIndexes((p_199862_7_, p_199862_8_,
+                                                                                                                                          p_199862_9_) -> !p_197874_5_.apply(
+                p_197874_3_.contains(p_199861_5_, p_199860_6_, p_199862_7_),
+                p_197874_4_.contains(p_199861_6_, p_199860_7_, p_199862_8_)))));
     }
 
     public static double getAllowedOffset(Facing.Axis movementAxis, Cuboid collisionVoxel,
-            Stream<VoxelShape> possibleHits, double desiredOffset) {
+                                          Stream<VoxelShape> possibleHits, double desiredOffset) {
         for (Iterator<VoxelShape> iterator = possibleHits.iterator(); iterator.hasNext(); desiredOffset = iterator
                 .next().getAllowedOffset(movementAxis, collisionVoxel, desiredOffset)) {
             if (Math.abs(desiredOffset) < 1.0E-7D) {
@@ -216,7 +216,7 @@ public final class VoxelShapes {
             return MathUtils.fuzzyEquals(Voxelshape.getEnd(Facing$axis), 1.0D, 1.0E-7D)
                     && MathUtils.fuzzyEquals(Voxelshape1.getStart(Facing$axis), 0.0D, 1.0E-7D)
                     && !compare(new SplitVoxelShape(Voxelshape, Facing$axis, Voxelshape.part.getSize(Facing$axis) - 1),
-                            new SplitVoxelShape(Voxelshape1, Facing$axis, 0), ibooleanfunction);
+                    new SplitVoxelShape(Voxelshape1, Facing$axis, 0), ibooleanfunction);
         }
     }
 
@@ -235,7 +235,7 @@ public final class VoxelShapes {
                 i = 0;
             }
 
-            return (VoxelShape) (!flag ? empty() : new SplitVoxelShape(p_216387_0_, Facing$axis, i));
+            return !flag ? empty() : new SplitVoxelShape(p_216387_0_, Facing$axis, i);
         }
     }
 
@@ -276,7 +276,7 @@ public final class VoxelShapes {
     }
 
     protected static IDoubleListMerger makeListMerger(int p_199410_0_, DoubleList list1, DoubleList list2,
-            boolean p_199410_3_, boolean p_199410_4_) {
+                                                      boolean p_199410_3_, boolean p_199410_4_) {
         int i = list1.size() - 1;
         int j = list2.size() - 1;
         if (list1 instanceof DoubleRangeList && list2 instanceof DoubleRangeList) {
@@ -294,8 +294,8 @@ public final class VoxelShapes {
             if (list1 instanceof SimpleDoubleMerger) {
                 return (IDoubleListMerger) list1;
             } else {
-                return (IDoubleListMerger) (list2 instanceof SimpleDoubleMerger ? (IDoubleListMerger) list2
-                        : new SimpleDoubleMerger(list1));
+                return list2 instanceof SimpleDoubleMerger ? (IDoubleListMerger) list2
+                        : new SimpleDoubleMerger(list1);
             }
         } else {
             return new IndirectMerger(list1, list2, p_199410_3_, p_199410_4_);
@@ -304,6 +304,6 @@ public final class VoxelShapes {
 
     public interface ILineConsumer {
         void consume(double p_consume_1_, double p_consume_3_, double p_consume_5_, double p_consume_7_,
-                double p_consume_9_, double p_consume_11_);
+                     double p_consume_9_, double p_consume_11_);
     }
 }

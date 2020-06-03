@@ -1,12 +1,12 @@
 package me.creepinson.creepinoutils.api.util.math.shape;
 
-import java.util.Arrays;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import me.creepinson.creepinoutils.api.util.math.Vector;
+
+import java.util.Arrays;
 
 public class Cuboid implements Cloneable, java.io.Serializable {
     public static final Cuboid AIR = new Cuboid(0, 0, 0, 0, 0, 0);
@@ -69,7 +69,6 @@ public class Cuboid implements Cloneable, java.io.Serializable {
     }
 
     /**
-     * 
      * @return Returns whether or not the maximum point's values are 0.
      */
     public boolean isEmpty() {
@@ -149,70 +148,70 @@ public class Cuboid implements Cloneable, java.io.Serializable {
      * </tr>
      * <tr>
      * <td>
-     * 
+     *
      * <pre>
      * <code>new AxisAlignedBB(0, 0, 0, 4, 4, 4).contract(2, 2, 2)</code>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
-     * 
+     *
      * <pre>
      * <samp>box[0.0,
      * 0.0, 0.0 -> 2.0, 2.0, 2.0]</samp>
      * </pre>
-     * 
+     *
      * </td>
      * </tr>
      * <tr>
      * <td>
-     * 
+     *
      * <pre>
      * <code>new AxisAlignedBB(0, 0, 0, 4, 4, 4).contract(-2, -2, -
      * 2)</code>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
-     * 
+     *
      * <pre>
      * <samp>box[2.0, 2.0, 2.0 -> 4.0, 4.0, 4.0]</samp>
      * </pre>
-     * 
+     *
      * </td>
      * </tr>
      * <tr>
      * <td>
-     * 
+     *
      * <pre>
      * <code>new AxisAlignedBB(5, 5, 5, 7, 7, 7).contract(0, 1, -
      * 1)</code>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
-     * 
+     *
      * <pre>
      * <samp>box[5.0, 5.0, 6.0 -> 7.0, 6.0, 7.0]</samp>
      * </pre>
-     * 
+     *
      * </td>
      * </tr>
      * <tr>
      * <td>
-     * 
+     *
      * <pre>
      * <code>new AxisAlignedBB(-2, -2, -2, 2, 2, 2).contract(4, -4,
      * 0)</code>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
-     * 
+     *
      * <pre>
      * <samp>box[-8.0, 2.0, -2.0 -> -2.0, 8.0, 2.0]</samp>
      * </pre>
-     * 
+     *
      * </td>
      * </tr>
      * </table>
@@ -271,53 +270,53 @@ public class Cuboid implements Cloneable, java.io.Serializable {
      * </tr>
      * <tr>
      * <td>
-     * 
+     *
      * <pre>
      * <code>new AxisAlignedBB(0, 0, 0, 1, 1, 1).expand(2, 2, 2)</code>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
-     * 
+     *
      * <pre>
      * <samp>box[0, 0,
      * 0 -> 3, 3, 3]</samp>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
      * <tr>
      * <td>
-     * 
+     *
      * <pre>
      * <code>new AxisAlignedBB(0, 0, 0, 1, 1, 1).expand(-2, -2, -2)</code>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
-     * 
+     *
      * <pre>
      * <samp>box[-2,
      * -2, -2 -> 1, 1, 1]</samp>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
      * <tr>
      * <td>
-     * 
+     *
      * <pre>
      * <code>new AxisAlignedBB(5, 5, 5, 7, 7, 7).expand(0, 1, -1)</code>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
-     * 
+     *
      * <pre>
      * <samp>box[5, 5,
      * 4, 7, 8, 7]</samp>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
      * </table>
@@ -333,7 +332,7 @@ public class Cuboid implements Cloneable, java.io.Serializable {
      * </ul>
      *
      * @return A modified bounding box that will always be equal or greater in
-     *         volume to this bounding box.
+     * volume to this bounding box.
      */
     public Cuboid expand(float x, float y, float z) {
         float d0 = this.minX();
@@ -381,70 +380,70 @@ public class Cuboid implements Cloneable, java.io.Serializable {
      * </tr>
      * <tr>
      * <td>
-     * 
+     *
      * <pre>
      * <code>new AxisAlignedBB(0, 0, 0, 1, 1, 1).grow(2, 2, 2)</code>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
-     * 
+     *
      * <pre>
      * <samp>box[-2.0, -
      * 2.0, -2.0 -> 3.0, 3.0, 3.0]</samp>
      * </pre>
-     * 
+     *
      * </td>
      * </tr>
      * <tr>
      * <td>
-     * 
+     *
      * <pre>
      * <code>new AxisAlignedBB(0, 0, 0, 6, 6, 6).grow(-2, -2, -2)</code>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
-     * 
+     *
      * <pre>
      * <samp>box[2.0,
      * 2.0, 2.0 -> 4.0, 4.0, 4.0]</samp>
      * </pre>
-     * 
+     *
      * </td>
      * </tr>
      * <tr>
      * <td>
-     * 
+     *
      * <pre>
      * <code>new AxisAlignedBB(5, 5, 5, 7, 7, 7).grow(0, 1, -1)</code>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
-     * 
+     *
      * <pre>
      * <samp>box[5.0,
      * 4.0, 6.0 -> 7.0, 8.0, 6.0]</samp>
      * </pre>
-     * 
+     *
      * </td>
      * </tr>
      * <tr>
      * <td>
-     * 
+     *
      * <pre>
      * <code>new AxisAlignedBB(1, 1, 1, 3, 3, 3).grow(-4, -2, -3)</code>
      * </pre>
-     * 
+     *
      * </td>
      * <td>
-     * 
+     *
      * <pre>
      * <samp>box[-1.0,
      * 1.0, 0.0 -> 5.0, 3.0, 4.0]</samp>
      * </pre>
-     * 
+     *
      * </td>
      * </tr>
      * </table>
@@ -625,7 +624,7 @@ public class Cuboid implements Cloneable, java.io.Serializable {
     }
 
     public boolean contains(double... data) {
-        return contains(Arrays.stream(data).map(f -> (float)f).toArray());
+        return contains(Arrays.stream(data).map(f -> (float) f).toArray());
     }
 
     /**

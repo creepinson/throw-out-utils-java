@@ -76,9 +76,9 @@ public abstract class Interpolation {
             }
 
             if (secondPoint == null)
-                return (Vector) firstPoint.getValue().clone();
+                return firstPoint.getValue().clone();
 
-            Vector vec = (Vector) firstPoint.getValue().clone();
+            Vector vec = firstPoint.getValue().clone();
 
             double pointDistance = secondPoint.getKey() - firstPoint.getKey();
             double mu = (t - firstPoint.getKey()) / pointDistance;
