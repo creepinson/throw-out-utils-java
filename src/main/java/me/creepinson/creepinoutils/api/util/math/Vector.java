@@ -1,10 +1,10 @@
 package me.creepinson.creepinoutils.api.util.math;
 
-import java.util.Iterator;
-
 import me.creepinson.creepinoutils.api.util.SerializableString;
 import me.creepinson.creepinoutils.api.util.StringUtil;
 import me.creepinson.creepinoutils.api.util.math.Facing.Axis;
+
+import java.util.Iterator;
 
 public class Vector implements SerializableString, Cloneable, Iterable<Float> {
 
@@ -105,16 +105,16 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
         return (int) this.z();
     }
 
-    public float floatX() {
-        return (float) this.x();
+    public double doubleX() {
+        return this.x();
     }
 
-    public float floatY() {
-        return (float) this.y();
+    public double doubleY() {
+        return this.y();
     }
 
-    public float floatZ() {
-        return (float) this.z();
+    public double doubleZ() {
+        return this.z();
     }
 
     /**
@@ -127,7 +127,7 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
     /**
      * @param other to add
      * @return the current vector that has been changed (<strong>not a new
-     *         one</strong>).
+     * one</strong>).
      */
     public Vector add(Vector other) {
         for (int f = 0; f < data.length; f++) {
@@ -148,22 +148,18 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
     /**
      * @param other to subtract
      * @return the current vector that has been changed (<strong>not a new
-     *         one</strong>).
+     * one</strong>).
      */
     public Vector sub(Vector other) {
         for (int f = 0; f < data.length; f++) {
-            for (float f2 : other.data) {
-                data[f] -= f2;
-            }
+            data[f] -= other.data[f];
         }
         return this;
     }
 
-    public Vector sub(float... factor) {
+    public Vector sub(float factor) {
         for (int f = 0; f < data.length; f++) {
-            for (float f2 : factor) {
-                data[f] *= f2;
-            }
+            data[f] -= factor;
         }
         return this;
     }
@@ -171,20 +167,18 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
     /**
      * @param factor to multiply() with
      * @return the current vector that has been changed (<strong>not a new
-     *         one</strong>).
+     * one</strong>).
      */
-    public Vector mul(float... factor) {
+    public Vector mul(float factor) {
         for (int f = 0; f < data.length; f++) {
-            for (float f2 : factor) {
-                data[f] *= f2;
-            }
+            data[f] *= factor;
         }
         return this;
     }
 
     /**
      * @return the current vector that has been changed (<strong>not a new
-     *         one</strong>). Equivalent to mul(-1).
+     * one</strong>). Equivalent to mul(-1).
      */
     public Vector reverse() {
         mul(-1);
@@ -198,16 +192,16 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
      */
     /*
      * public Vector rotate(int axis, int angle) {
-     * 
+     *
      * float a = Math.toRadians(angle);
-     * 
+     *
      * if (axis == 0) { this.y() = (int) (y() * Math.cos(a) + z() * -Math.sin(a));
      * this.z() = (int) (y() * Math.sin(a) + z() * Math.cos(a)); } else if (ax()is
      * == 1) { this.x() = (int) (x() * Math.cos(a) + z() * -Math.sin(a)); this.z() =
      * (int) (x() * Math.sin(a) + z() * Math.cos(a)); } else if (ax()is == 2) {
      * this.x() = (int) (x() * Math.cos(a) + y() * -Math.sin(a)); this.y() = (int)
      * (x() * Math.sin(a) + y() * Math.cos(a)); }
-     * 
+     *
      * return this; }
      */
 
@@ -220,8 +214,8 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
 
     /**
      * @return the current vector that has been changed (<strong>not a new
-     *         one</strong>). Normaliz()es the vector to length 1. Note that this
-     *         vector uses int values for coordinates.
+     * one</strong>). Normaliz()es the vector to length 1. Note that this
+     * vector uses int values for coordinates.
      */
     public Vector normalize() {
 
@@ -291,22 +285,22 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
     public Vector modifyPositionFromSide(Facing side, float amount) {
         switch (side.ordinal()) {
             case 0:
-                this.set(data[0], (float) (data[1] - amount), data[2]);
+                this.set(data[0], data[1] - amount, data[2]);
                 break;
             case 1:
-                this.set(data[0], (float) (data[1] + amount), data[2]);
+                this.set(data[0], data[1] + amount, data[2]);
                 break;
             case 2:
-                this.set(data[0], data[1], (float) (data[2] - amount));
+                this.set(data[0], data[1], data[2] - amount);
                 break;
             case 3:
-                this.set(data[0], data[1], (float) (data[2] + amount));
+                this.set(data[0], data[1], data[2] + amount);
                 break;
             case 4:
-                this.set((float) (data[0] - amount), data[1], data[2]);
+                this.set(data[0] - amount, data[1], data[2]);
                 break;
             case 5:
-                this.set((float) (data[0] + amount), data[1], data[2]);
+                this.set(data[0] + amount, data[1], data[2]);
                 break;
         }
         return this;
@@ -387,7 +381,7 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
 
     /**
      * @return Whether the values of this vector's data are equal to the equivalent
-     *         values of the value parameter passed in.
+     * values of the value parameter passed in.
      */
     public boolean valuesEqual(float... value) {
         for (int i = 0; i < data.length; i++)
@@ -398,7 +392,7 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
 
     /**
      * @return Whether the data of this vector is ALL EQUAL to the SINGLE float
-     *         value.
+     * value.
      */
     public boolean dataEquals(float value) {
         for (int i = 0; i < data.length; i++)

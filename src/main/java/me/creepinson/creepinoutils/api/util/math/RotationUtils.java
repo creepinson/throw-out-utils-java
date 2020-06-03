@@ -45,17 +45,7 @@ public class RotationUtils {
     }
 
     public static void setValue(Vector vec, float value, Axis axis) {
-        switch (axis) {
-            case X:
-                vec.setValueByDim(0, value);
-                break;
-            case Y:
-                vec.setValueByDim(1, value);
-                break;
-            case Z:
-                vec.setValueByDim(2, value);
-                break;
-        }
+        vec.setValueByAxis(axis, value);
     }
 
     public static float get(Axis axis, float x, float y, float z) {
@@ -252,7 +242,7 @@ public class RotationUtils {
 
     static BooleanRotation[][] rotations = new BooleanRotation[3][4];
 
-    public static enum BooleanRotation {
+    public enum BooleanRotation {
 
         // one: y, two: z
         X_PP(Axis.X, 0, true, true), X_NP(Axis.X, 1, false, true), X_NN(Axis.X, 2, false, false),
