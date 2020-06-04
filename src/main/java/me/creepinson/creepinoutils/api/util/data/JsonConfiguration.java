@@ -88,4 +88,8 @@ public class JsonConfiguration {
         defaultsCallback.addDefaults(ret);
         return ret;
     }
+
+    public boolean fileExists() {
+        return this.file.exists();
+    }
 }
