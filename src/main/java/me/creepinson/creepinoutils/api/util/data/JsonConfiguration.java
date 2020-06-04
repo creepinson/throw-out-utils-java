@@ -28,11 +28,33 @@ public class JsonConfiguration {
         return this;
     }
 
-    public JsonConfiguration create(Path path) {
-        return create(path.toFile());
+    protected File file;
+
+    public JsonConfiguration(Path path) {
+        this.file = path.toFile();
     }
 
-    public JsonConfiguration create(File file) {
+    public JsonConfiguration(File f) {
+        this.file = f;
+    }
+
+    public JsonConfiguration write() {
+        try {
+            String json = JsonUtils.get().toJson(configMap, new TypeToken<Map<String, Object>>() {
+            }.getType());
+            FileWriter writer = new FileWriter(file);
+            // Write to the file you passed
+            writer.write(json);
+            // Always close when done.
+            writer.close();
+        } catch (IOException e) {
+            // Print an error if something fails. Please use a real logger, not System.out.
+            System.out.println("Error creating default configuration.");
+        }
+        return this;
+    }
+
+    public JsonConfiguration create() {
         try {
             // Create the config if it doesn't already exist.
             if (!file.exists() && file.createNewFile()) {
