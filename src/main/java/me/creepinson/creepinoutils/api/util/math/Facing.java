@@ -5,23 +5,29 @@
 
 package me.creepinson.creepinoutils.api.util.math;
 
-import me.creepinson.creepinoutils.api.util.ArrayUtils;
-import me.creepinson.creepinoutils.api.util.SerializableString;
-
-import java.util.*;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import me.creepinson.creepinoutils.api.util.ArrayUtils;
+import me.creepinson.creepinoutils.api.util.ISerializable;
 
 /**
  * @author mojang https://minecraft.net
  */
-public enum Facing implements SerializableString {
-    DOWN(0, 1, -1, "down", Facing.AxisDirection.NEGATIVE, Facing.Axis.Y, new Vector(0, -1, 0)),
-    UP(1, 0, -1, "up", Facing.AxisDirection.POSITIVE, Facing.Axis.Y, new Vector(0, 1, 0)),
-    NORTH(2, 3, 2, "north", Facing.AxisDirection.NEGATIVE, Facing.Axis.Z, new Vector(0, 0, -1)),
-    SOUTH(3, 2, 0, "south", Facing.AxisDirection.POSITIVE, Facing.Axis.Z, new Vector(0, 0, 1)),
-    WEST(4, 5, 1, "west", Facing.AxisDirection.NEGATIVE, Facing.Axis.X, new Vector(-1, 0, 0)),
-    EAST(5, 4, 3, "east", Facing.AxisDirection.POSITIVE, Facing.Axis.X, new Vector(1, 0, 0));
+public enum Facing implements Serializable {
+    DOWN(0, 1, -1, "down", Facing.AxisDirection.NEGATIVE, Facing.Axis.Y, new Tensor(0, -1, 0)),
+    UP(1, 0, -1, "up", Facing.AxisDirection.POSITIVE, Facing.Axis.Y, new Tensor(0, 1, 0)),
+    NORTH(2, 3, 2, "north", Facing.AxisDirection.NEGATIVE, Facing.Axis.Z, new Tensor(0, 0, -1)),
+    SOUTH(3, 2, 0, "south", Facing.AxisDirection.POSITIVE, Facing.Axis.Z, new Tensor(0, 0, 1)),
+    WEST(4, 5, 1, "west", Facing.AxisDirection.NEGATIVE, Facing.Axis.X, new Tensor(-1, 0, 0)),
+    EAST(5, 4, 3, "east", Facing.AxisDirection.POSITIVE, Facing.Axis.X, new Tensor(1, 0, 0));
 
     private final int index;
     private final int opposite;
@@ -29,7 +35,7 @@ public enum Facing implements SerializableString {
     private final String name;
     private final Facing.Axis axis;
     private final Facing.AxisDirection axisDirection;
-    private final Vector FacingVec;
+    private final Tensor FacingVec;
     private static final Facing[] VALUES = values();
     private static final Map<String, Facing> NAME_LOOKUP = Arrays.stream(VALUES)
             .collect(Collectors.toMap(Facing::getName2, (p_199787_0_) -> p_199787_0_));
@@ -42,7 +48,7 @@ public enum Facing implements SerializableString {
             .toArray((p_199791_0_) -> new Facing[p_199791_0_]);
 
     Facing(int indexIn, int oppositeIn, int horizontalIndexIn, String nameIn, Facing.AxisDirection AxisDirectionIn,
-           Facing.Axis axisIn, Vector FacingVecIn) {
+           Facing.Axis axisIn, Tensor FacingVecIn) {
         this.index = indexIn;
         this.horizontalIndex = horizontalIndexIn;
         this.opposite = oppositeIn;
@@ -114,8 +120,8 @@ public enum Facing implements SerializableString {
         return this.FacingVec.intZ();
     }
 
-    public Vector getDirectionVec() {
-        return new Vector((float) this.intXOffset(), (float) this.intYOffset(), (float) this.intZOffset());
+    public Tensor getDirectionVec() {
+        return new Tensor((float) this.intXOffset(), (float) this.intYOffset(), (float) this.intZOffset());
     }
 
     public String getName2() {
@@ -162,11 +168,11 @@ public enum Facing implements SerializableString {
         return values()[rand.nextInt(values().length)];
     }
 
-    public static Facing getFacingFromVector(double x, double y, double z) {
-        return getFacingFromVector((float) x, (float) y, (float) z);
+    public static Facing getFacingFromTensor(double x, double y, double z) {
+        return getFacingFromTensor((float) x, (float) y, (float) z);
     }
 
-    public static Facing getFacingFromVector(float x, float y, float z) {
+    public static Facing getFacingFromTensor(float x, float y, float z) {
         Facing Facing = NORTH;
         float f = Float.MIN_VALUE;
 
@@ -200,11 +206,11 @@ public enum Facing implements SerializableString {
         throw new IllegalArgumentException("No such Facing: " + AxisDirectionIn + " " + axisIn);
     }
 
-    public Vector getFacingVec() {
+    public Tensor getFacingVec() {
         return this.FacingVec;
     }
 
-    public enum Axis implements SerializableString, java.util.function.Predicate<Facing> {
+    public enum Axis implements Serializable, java.util.function.Predicate<Facing> {
         X("x") {
             public int getCoordinate(int x, int y, int z) {
                 return x;
@@ -242,9 +248,9 @@ public enum Facing implements SerializableString {
         Axis(String nameIn) {
             this.name = nameIn;
         }
-        // TODO: Facing axis from vector
+        // TODO: Facing axis from Tensor
         /* 
-        public static Facing.Axis fromVector(Vector v) {
+        public static Facing.Axis fromTensor(Tensor v) {
             
         } */
 
@@ -267,7 +273,7 @@ public enum Facing implements SerializableString {
         public String toString() {
             return this.name;
         }
-
+        
         public static Facing.Axis random(Random p_218393_0_) {
             return values()[p_218393_0_.nextInt(values().length)];
         }

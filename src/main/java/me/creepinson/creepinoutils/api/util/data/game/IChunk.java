@@ -1,20 +1,20 @@
 package me.creepinson.creepinoutils.api.util.data.game;
 
-import me.creepinson.creepinoutils.api.util.math.Vector;
-
 import java.io.Serializable;
+
+import me.creepinson.creepinoutils.api.util.math.Tensor;
 
 /**
  * @author Creepinson https:/theoparis.com/about
  **/
 public interface IChunk extends Serializable {
-    IWorld getWorld();
+	IWorld getWorld();
 
-    int getX();
+	int getX();
 
-    int getZ();
+	int getZ();
 
-    void setTile(ITile tile, Vector position);
+	void setTile(ITile tile, Tensor position);
 
-    ITile getTile(Vector position);
+	ITile getTile(Tensor position);
 }

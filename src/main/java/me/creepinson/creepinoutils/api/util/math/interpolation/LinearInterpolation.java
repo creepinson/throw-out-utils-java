@@ -1,15 +1,15 @@
 package me.creepinson.creepinoutils.api.util.math.interpolation;
 
 
-import me.creepinson.creepinoutils.api.util.math.Vector;
+import me.creepinson.creepinoutils.api.util.math.Tensor;
 
 public class LinearInterpolation extends Interpolation {
 
-    public LinearInterpolation(double[] times, Vector[] points) {
+    public LinearInterpolation(double[] times, Tensor[] points) {
         super(times, points);
     }
 
-    public LinearInterpolation(Vector... points) {
+    public LinearInterpolation(Tensor... points) {
         super(points);
     }
 

@@ -1,20 +1,20 @@
 package me.creepinson.creepinoutils.api.util.math.interpolation;
 
 
-import me.creepinson.creepinoutils.api.util.math.Vector;
+import me.creepinson.creepinoutils.api.util.math.Tensor;
 
 public class CubicInterpolation extends Interpolation {
 
-    public Vector beginVec;
-    public Vector endVec;
+    public Tensor beginVec;
+    public Tensor endVec;
 
-    public CubicInterpolation(double[] times, Vector[] points) {
+    public CubicInterpolation(double[] times, Tensor[] points) {
         super(times, points);
         beginVec = points[0].add(points[0].sub(points[1]));
         endVec = points[points.length - 1].add(points[points.length - 1].sub(points[points.length - 2]));
     }
 
-    public CubicInterpolation(Vector... points) {
+    public CubicInterpolation(Tensor... points) {
         super(points);
         beginVec = points[0].add(points[0].sub(points[1]));
         endVec = points[points.length - 1].add(points[points.length - 1].sub(points[points.length - 2]));
@@ -23,10 +23,10 @@ public class CubicInterpolation extends Interpolation {
     @Override
     protected double getValue(int index, int dim) {
         if (index < 0)
-            return beginVec.getValueByDim(dim);
+            return beginVec.getData().get(dim);
         if (index >= points.size())
-            return endVec.getValueByDim(dim);
-        return pointVecs.get(index).getValueByDim(dim);
+            return endVec.getData().get(dim);
+        return pointVecs.get(index).getData().get(dim);
     }
 
     @Override

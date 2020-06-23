@@ -112,9 +112,21 @@ public class ArrayUtils {
     /**
      * Helper function to multiply the values in a list.
      */
-    public static float multiplyFloats(List<Float> data) {
+    public static float multiplyf(List<Float> data) {
         float result = 0;
         for (float i : data) {
+            result *= i;
+        }
+        return result;
+    }
+    
+
+    /**
+     * Helper function to multiply the values in a list.
+     */
+    public static double multiplyd(List<Double> data) {
+    	double result = 0;
+        for (double i : data) {
             result *= i;
         }
         return result;

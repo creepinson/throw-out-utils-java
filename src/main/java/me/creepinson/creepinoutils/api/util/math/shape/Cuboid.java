@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import me.creepinson.creepinoutils.api.util.math.Vector;
+import me.creepinson.creepinoutils.api.util.math.Tensor;
 
 import java.util.Arrays;
 
@@ -63,7 +63,7 @@ public class Cuboid implements Cloneable, java.io.Serializable {
 
     public SizeType getType() {
         SizeType type = this.isEmpty() ? SizeType.AIR : SizeType.OTHER;
-        if (this.maximumPoint.valuesEqual(1))
+        if (this.maximumPoint.equals(1))
             type = SizeType.FULL;
         return type;
     }
@@ -72,38 +72,38 @@ public class Cuboid implements Cloneable, java.io.Serializable {
      * @return Returns whether or not the maximum point's values are 0.
      */
     public boolean isEmpty() {
-        return this.maximumPoint.dataEquals(0);
+        return this.maximumPoint.isEmpty();
     }
 
     /**
      * '
      *
-     * @return the vector containing the minimum point of this cuboid
+     * @return the Tensor containing the minimum point of this cuboid
      */
-    public Vector getMinPoint() {
+    public Tensor getMinPoint() {
         return this.minimumPoint;
     }
 
     /**
      * '
      *
-     * @return the vector containing the maximum point of this cuboid
+     * @return the Tensor containing the maximum point of this cuboid
      */
-    public Vector getMaxPoint() {
+    public Tensor getMaxPoint() {
         return this.maximumPoint;
     }
 
-    protected final Vector minimumPoint, maximumPoint;
+    protected final Tensor minimumPoint, maximumPoint;
 
     /**
      * Creates a cuboid with a minimum and maximum point.
      */
-    public Cuboid(Vector p1, Vector p2) {
+    public Cuboid(Tensor p1, Tensor p2) {
         this.minimumPoint = p1.clone();
         this.maximumPoint = p2.clone();
     }
 
-    public Cuboid(Vector loc) {
+    public Cuboid(Tensor loc) {
         this(loc, loc);
     }
 
@@ -112,13 +112,13 @@ public class Cuboid implements Cloneable, java.io.Serializable {
     }
 
     public Cuboid(float x1, float y1, float z1, float x2, float y2, float z2) {
-        this.minimumPoint = new Vector(x1, y1, z1);
-        this.maximumPoint = new Vector(x2, y2, z2);
+        this.minimumPoint = new Tensor(x1, y1, z1);
+        this.maximumPoint = new Tensor(x2, y2, z2);
     }
 
     public Cuboid(double x1, double y1, double z1, double x2, double y2, double z2) {
-        this.minimumPoint = new Vector((float) x1, (float) y1, (float) z1);
-        this.maximumPoint = new Vector((float) x2, (float) y2, (float) z2);
+        this.minimumPoint = new Tensor((float) x1, (float) y1, (float) z1);
+        this.maximumPoint = new Tensor((float) x2, (float) y2, (float) z2);
     }
 
     public boolean equals(Object p_equals_1_) {
@@ -514,7 +514,7 @@ public class Cuboid implements Cloneable, java.io.Serializable {
                 this.maxZ() + z);
     }
 
-    public Cuboid offset(Vector vec) {
+    public Cuboid offset(Tensor vec) {
         return new Cuboid(minimumPoint.clone().add(vec), maximumPoint.clone().add(vec));
     }
 
@@ -609,22 +609,18 @@ public class Cuboid implements Cloneable, java.io.Serializable {
      * Checks if the bounding box intersects with another.
      */
     public boolean intersects(Cuboid other) {
-        return Vector.intersects(minimumPoint, maximumPoint);
+        return Tensor.intersects(minimumPoint, maximumPoint);
     }
 
     /**
-     * Returns if the supplied vector is completely inside the bounding box
+     * Returns if the supplied Tensor is completely inside the bounding box
      */
-    public boolean contains(Vector vector) {
-        return vector != null && vector.contains(getMinPoint(), getMaxPoint());
-    }
-
-    public boolean contains(float... data) {
-        return contains(new Vector(data));
+    public boolean contains(Tensor Tensor) {
+        return Tensor != null && Tensor.contains(getMinPoint(), getMaxPoint());
     }
 
     public boolean contains(double... data) {
-        return contains(new Vector(data));
+        return contains(new Tensor(data));
     }
 
     /**
@@ -676,8 +672,8 @@ public class Cuboid implements Cloneable, java.io.Serializable {
                 || Double.isNaN(this.maxX()) || Double.isNaN(this.maxY()) || Double.isNaN(this.maxZ());
     }
 
-    public Vector getCenter() {
-        return new Vector(this.minX() + (this.maxX() - this.minX()) * 0.5F,
+    public Tensor getCenter() {
+        return new Tensor(this.minX() + (this.maxX() - this.minX()) * 0.5F,
                 this.minY() + (this.maxY() - this.minY()) * 0.5F, this.minZ() + (this.maxZ() - this.minZ()) * 0.5F);
     }
 

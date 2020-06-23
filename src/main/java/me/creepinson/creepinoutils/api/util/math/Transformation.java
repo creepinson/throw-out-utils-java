@@ -6,29 +6,29 @@ package me.creepinson.creepinoutils.api.util.math;
  **/
 public class Transformation {
 
-    public Vector center;
+    public Tensor center;
 
     public int rotX;
     public int rotY;
     public int rotZ;
 
-    public Vector doubledRotationCenter;
-    public Vector offset;
+    public Tensor doubledRotationCenter;
+    public Tensor offset;
 
 
     public Transformation(int[] array) {
         if (array.length != 13)
             throw new IllegalArgumentException("Invalid array when creating door transformation!");
 
-        center = new Vector(array[0], array[1], array[2]);
+        center = new Tensor(array[0], array[1], array[2]);
         rotX = array[3];
         rotY = array[4];
         rotZ = array[5];
-        doubledRotationCenter = new Vector(array[6], array[7], array[8]);
-        this.offset = new Vector(array[9], array[10], array[11]);
+        doubledRotationCenter = new Tensor(array[6], array[7], array[8]);
+        this.offset = new Tensor(array[9], array[10], array[11]);
     }
 
-    public Transformation(Vector center, int rotX, int rotY, int rotZ, Vector doubledRotationCenter, Vector offset) {
+    public Transformation(Tensor center, int rotX, int rotY, int rotZ, Tensor doubledRotationCenter, Tensor offset) {
         this.center = center;
         this.rotX = rotX;
         this.rotY = rotY;
@@ -37,13 +37,13 @@ public class Transformation {
         this.offset = offset;
     }
 
-    public Transformation(Vector center, Rotation rotation) {
+    public Transformation(Tensor center, Rotation rotation) {
         this.center = center;
         this.rotX = rotation.axis == Facing.Axis.X ? (rotation.clockwise ? 1 : -1) : 0;
         this.rotY = rotation.axis == Facing.Axis.Y ? (rotation.clockwise ? 1 : -1) : 0;
         this.rotZ = rotation.axis == Facing.Axis.Z ? (rotation.clockwise ? 1 : -1) : 0;
-        this.doubledRotationCenter = new Vector(0, 0, 0);
-        this.offset = new Vector();
+        this.doubledRotationCenter = new Tensor(0, 0, 0);
+        this.offset = new Tensor();
 
     }
 
@@ -65,7 +65,7 @@ public class Transformation {
         return null;
     }
 
-    public Vector transform(Vector pos) {
+    public Tensor transform(Tensor pos) {
         pos = pos.sub(center);
         if (rotX != 0) {
             Rotation rotation = getRotation(Facing.Axis.X);

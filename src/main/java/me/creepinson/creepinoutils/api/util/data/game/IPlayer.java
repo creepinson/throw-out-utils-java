@@ -1,15 +1,15 @@
 package me.creepinson.creepinoutils.api.util.data.game;
 
-import me.creepinson.creepinoutils.api.util.SerializableString;
-import me.creepinson.creepinoutils.api.util.math.Vector;
+import me.creepinson.creepinoutils.api.util.ISerializable;
+import me.creepinson.creepinoutils.api.util.math.Tensor;
 
 /**
  * @author Creepinson https:/theoparis.com/about
  **/
-public interface IPlayer extends SerializableString {
-    IWorld getWorld();
+public interface IPlayer extends ISerializable {
+	IWorld getWorld();
 
-    Vector getPosition();
+	Tensor getPosition();
 
-    void setPosition(Vector position);
+	void setPosition(Tensor position);
 }

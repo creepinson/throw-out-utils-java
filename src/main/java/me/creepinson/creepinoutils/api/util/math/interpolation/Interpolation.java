@@ -1,6 +1,6 @@
 package me.creepinson.creepinoutils.api.util.math.interpolation;
 
-import me.creepinson.creepinoutils.api.util.math.Vector;
+import me.creepinson.creepinoutils.api.util.math.Tensor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,11 +9,11 @@ import java.util.Map.Entry;
 
 public abstract class Interpolation {
 
-    protected LinkedHashMap<Double, Vector> points = new LinkedHashMap<>();
-    protected ArrayList<Vector> pointVecs = new ArrayList<>();
+    protected LinkedHashMap<Double, Tensor> points = new LinkedHashMap<>();
+    protected ArrayList<Tensor> pointVecs = new ArrayList<>();
     private final Class classOfT;
 
-    public Interpolation(double[] times, Vector[] points) {
+    public Interpolation(double[] times, Tensor[] points) {
         if (points.length < 2)
             throw new IllegalArgumentException("At least two points are needed!");
 
@@ -27,7 +27,7 @@ public abstract class Interpolation {
         pointVecs = new ArrayList<>(this.points.values());
     }
 
-    public Interpolation(Vector... points) {
+    public Interpolation(Tensor... points) {
         if (points.length < 2)
             throw new IllegalArgumentException("At least two points are needed!");
 
@@ -42,22 +42,22 @@ public abstract class Interpolation {
     }
 
     protected double getValue(int index, int dim) {
-        return pointVecs.get(index).getValueByDim(dim);
+        return pointVecs.get(index).getData().get(dim);
     }
 
     /**
      * 1 <= t <= 1
      **/
-    public Vector valueAt(double t) {
+    public Tensor valueAt(double t) {
         if (t >= 0 && t <= 1) {
-            Entry<Double, Vector> firstPoint = null;
+            Entry<Double, Tensor> firstPoint = null;
             int indexFirst = -1;
-            Entry<Double, Vector> secondPoint = null;
+            Entry<Double, Tensor> secondPoint = null;
             int indexSecond = -1;
 
             int i = 0;
-            for (Iterator<Entry<Double, Vector>> iterator = points.entrySet().iterator(); iterator.hasNext(); ) {
-                Entry<Double, Vector> entry = iterator.next();
+            for (Iterator<Entry<Double, Tensor>> iterator = points.entrySet().iterator(); iterator.hasNext(); ) {
+                Entry<Double, Tensor> entry = iterator.next();
                 if (entry.getKey() >= t) {
                     if (firstPoint == null) {
                         firstPoint = entry;
@@ -78,18 +78,18 @@ public abstract class Interpolation {
             if (secondPoint == null)
                 return firstPoint.getValue().clone();
 
-            Vector vec = firstPoint.getValue().clone();
+            Tensor vec = firstPoint.getValue().clone();
 
             double pointDistance = secondPoint.getKey() - firstPoint.getKey();
             double mu = (t - firstPoint.getKey()) / pointDistance;
 
             for (int dim = 0; dim < 3; dim++) {
-                vec.setValueByDim(dim, valueAt(mu, indexFirst, indexSecond, dim));
+                vec.getData().set(dim, (double)valueAt(mu, indexFirst, indexSecond, dim));
             }
 
             return vec;
         }
-        return new Vector();
+        return new Tensor();
     }
 
     public abstract float valueAt(double mu, int pointIndex, int pointIndexNext, int dim);

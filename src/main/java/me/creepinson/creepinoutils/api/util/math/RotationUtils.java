@@ -40,11 +40,11 @@ public class RotationUtils {
         return null;
     }
 
-    public static void setValue(Vector vec, double value, Axis axis) {
+    public static void setValue(Tensor vec, double value, Axis axis) {
         setValue(vec, (float) value, axis);
     }
 
-    public static void setValue(Vector vec, float value, Axis axis) {
+    public static void setValue(Tensor vec, float value, Axis axis) {
         vec.setValueByAxis(axis, value);
     }
 
@@ -60,7 +60,7 @@ public class RotationUtils {
         return 0;
     }
 
-    public static double get(Axis axis, Vector v) {
+    public static double get(Axis axis, Tensor v) {
         return v.getValueByAxis(axis);
     }
 
@@ -152,7 +152,7 @@ public class RotationUtils {
     }
 
     public static Rotation rotate(Rotation rotation, Rotation by) {
-        Vector vec = rotation.getVec();
+        Tensor vec = rotation.getVec();
         by.getMatrix().transform(vec);
         return Rotation.getRotation(vec);
     }
@@ -162,7 +162,7 @@ public class RotationUtils {
     }
 
     public static Facing rotate(Facing facing, Rotation rotation) {
-        Vector rotatedNormal = new Vector(rotation.getMatrix().getX(facing.getDirectionVec()),
+        Tensor rotatedNormal = new Tensor(rotation.getMatrix().getX(facing.getDirectionVec()),
                 rotation.getMatrix().getY(facing.getDirectionVec()),
                 rotation.getMatrix().getZ(facing.getDirectionVec()));
         for (Facing rotated : Facing.values()) {
@@ -172,18 +172,18 @@ public class RotationUtils {
         return facing;
     }
 
-    public static Vector rotate(Vector vec, Rotation rotation) {
+    public static Tensor rotate(Tensor vec, Rotation rotation) {
         return rotation.getMatrix().transform(vec);
     }
 
-    public static Vector flip(Vector vec, Axis axis) {
+    public static Tensor flip(Tensor vec, Axis axis) {
         switch (axis) {
             case X:
-                return new Vector(-vec.x(), vec.y(), vec.z());
+                return new Tensor(-vec.x(), vec.y(), vec.z());
             case Y:
-                return new Vector(vec.x(), -vec.y(), vec.z());
+                return new Tensor(vec.x(), -vec.y(), vec.z());
             case Z:
-                return new Vector(vec.x(), vec.y(), -vec.z());
+                return new Tensor(vec.x(), vec.y(), -vec.z());
         }
         return vec;
     }
@@ -323,12 +323,12 @@ public class RotationUtils {
                 throw new RuntimeException("Impossible to happen!");
         }
 
-        public boolean is(Vector vec) {
+        public boolean is(Tensor vec) {
             return positiveOne == (RotationUtils.get(BooleanRotation.getOne(axis), vec) >= 0)
                     && positiveTwo == (RotationUtils.get(BooleanRotation.getTwo(axis), vec) >= 0);
         }
 
-        public static BooleanRotation getRotationState(Axis axis, Vector vec) {
+        public static BooleanRotation getRotationState(Axis axis, Tensor vec) {
             boolean positiveOne = RotationUtils.get(BooleanRotation.getOne(axis), vec) >= 0;
             boolean positiveTwo = RotationUtils.get(BooleanRotation.getTwo(axis), vec) >= 0;
 
