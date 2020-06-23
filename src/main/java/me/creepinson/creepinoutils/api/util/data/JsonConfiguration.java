@@ -1,6 +1,8 @@
 
 package me.creepinson.creepinoutils.api.util.data;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -9,9 +11,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.reflect.TypeToken;
-
 /**
+ * @author Creepinson https://theoparis.com/about
  * A confiuration utility class for reading and writing data to a json file.
  */
 public class JsonConfiguration {

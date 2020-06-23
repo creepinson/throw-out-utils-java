@@ -6,7 +6,7 @@ plugins {
 group 'me.creepinson'
 version '1.0.0'
 
-sourceCompatibility = 1.8
+sourceCompatibility = targetCompatibility = 1.8
 
 repositories {
     maven { url = "https://jitpack.io" }
@@ -14,9 +14,11 @@ repositories {
 }
 
 dependencies {
+    compile 'org.tensorics:tensorics-core:0.+'
     compile "it.unimi.dsi:fastutil:8.3.1"
     compile 'com.google.code.gson:gson:2.8.6'
     compile 'org.mongodb:mongo-java-driver:3.12.2'
     compile "org.reflections:reflections:0.9.12"
     compile "com.fasterxml.jackson.core:jackson-databind:2.2.0"
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
 }

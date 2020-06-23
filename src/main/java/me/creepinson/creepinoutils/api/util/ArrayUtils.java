@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -11,12 +12,17 @@ import java.util.stream.Collectors;
  **/
 public class ArrayUtils {
 
+    public static boolean isArray(Object obj) {
+        return obj != null && obj.getClass().isArray();
+    }
+
     public static <T> Iterator<T> forArray(T[] arr) {
         return Arrays.asList(arr).iterator();
     }
 
     /**
-     * Simple helper function to <strong>create</strong> and fill an array with the specified value.
+     * Simple helper function to <strong>create</strong> and fill an array with the
+     * specified value.
      *
      * @return the array being filled
      */
@@ -34,7 +40,8 @@ public class ArrayUtils {
     }
 
     /**
-     * Simple helper function to <strong>create</strong> and fill an array with the specified value.
+     * Simple helper function to <strong>create</strong> and fill an array with the
+     * specified value.
      *
      * @return the array being filled
      */
@@ -59,12 +66,12 @@ public class ArrayUtils {
         return (T[]) arr;
     }
 
-    public static <T> ArrayList<T> arrayAsList(Object[] a) {
-        return new ArrayList<>(Arrays.asList((T[]) a));
+    public static <T> ArrayList<T> asList(T... a) {
+        return new ArrayList<>(Arrays.asList(a));
     }
 
-    public static <T> LinkedList<T> arrayAsLinkedList(Object[] a) {
-        return new LinkedList<T>(Arrays.asList((T[]) a));
+    public static <T> LinkedList asLinkedList(T... a) {
+        return new LinkedList(Arrays.asList(a));
     }
 
     public static float[] toFloatArray(double[] data) {
@@ -87,6 +94,28 @@ public class ArrayUtils {
         double[] result = new double[data.length];
         for (int i = 0; i < data.length; i++) {
             result[i] = data[i];
+        }
+        return result;
+    }
+
+    /**
+     * Helper function to multiply the values in a list.
+     */
+    public static int multiply(List<Integer> data) {
+        int result = 0;
+        for (int i : data) {
+            result *= i;
+        }
+        return result;
+    }
+
+    /**
+     * Helper function to multiply the values in a list.
+     */
+    public static float multiplyFloats(List<Float> data) {
+        float result = 0;
+        for (float i : data) {
+            result *= i;
         }
         return result;
     }

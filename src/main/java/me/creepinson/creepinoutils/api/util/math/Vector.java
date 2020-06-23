@@ -7,6 +7,9 @@ import me.creepinson.creepinoutils.api.util.math.Facing.Axis;
 
 import java.util.Iterator;
 
+/**
+ * @deprecated Use {@link me.creepinson.creepinoutils.api.util.math.Tensor}
+ */
 public class Vector implements SerializableString, Cloneable, Iterable<Float> {
 
     private static final long serialVersionUID = 4709144018768849633L;
@@ -323,6 +326,7 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
         return data == other.data;
     }
 
+    @Override
     public String toString() {
         return StringUtil.join(",", data);
     }
@@ -447,11 +451,6 @@ public class Vector implements SerializableString, Cloneable, Iterable<Float> {
         }
 
         return true;
-    }
-
-    @Override
-    public String getName() {
-        return this.toString();
     }
 
     /**
