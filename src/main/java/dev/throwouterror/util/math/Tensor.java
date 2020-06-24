@@ -138,6 +138,10 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
 		return data.get(2);
 	}
 
+	public double w() {
+		return data.get(3);
+	}
+
 	public int intX() {
 		return (int) this.x();
 	}
@@ -150,6 +154,10 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
 		return (int) this.z();
 	}
 
+	public int intW() {
+		return (int) this.w();
+	}
+
 	public float floatX() {
 		return (float) this.x();
 	}
@@ -160,6 +168,10 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
 
 	public float floatZ() {
 		return (float) this.z();
+	}
+
+	public float floatW() {
+		return (float) this.w();
 	}
 
 	/**
@@ -271,7 +283,7 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
 	}
 
 	/**
-	 * Calculates the cross-product of the given vectors.
+	 * Calculates the cross-product of the given Tensors.
 	 */
 	public static Tensor cross(Tensor vec1, Tensor vec2) {
 		return new Tensor(vec1.y() * vec2.z() - vec1.z() * vec2.y(), vec1.z() * vec2.x() - vec1.x() * vec2.z(),

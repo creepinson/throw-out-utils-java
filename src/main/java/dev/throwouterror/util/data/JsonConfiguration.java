@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Creepinson https://theoparis.com/about
+ * @author Theo Paris https://theoparis.com/about
  * A confiuration utility class for reading and writing data to a json file.
  */
 public class JsonConfiguration {

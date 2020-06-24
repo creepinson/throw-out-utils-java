@@ -1,7 +1,7 @@
 package dev.throwouterror.util.data;
 
 /**
- * @author Creepinson https://theoparis.com/about
+ * @author Theo Paris https://theoparis.com/about
  **/
 public enum ConfigurationType {
     FILE, MONGODB;
