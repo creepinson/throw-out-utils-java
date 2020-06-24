@@ -68,11 +68,11 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
 	public Tensor offset(Facing facing, int n) {
 		return n == 0 ? this : this.clone().add(facing.getDirectionVec()).mul(n);
 	}
-	
+
 	public Tensor offset(Facing facing) {
 		return this.offset(facing, 1);
 	}
-	
+
 	/**
 	 * @return This tensor's data in a form of a multidimensional list.
 	 */
@@ -285,9 +285,9 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
 	/**
 	 * Calculates the cross-product of the given Tensors.
 	 */
-	public static Tensor cross(Tensor vec1, Tensor vec2) {
-		return new Tensor(vec1.y() * vec2.z() - vec1.z() * vec2.y(), vec1.z() * vec2.x() - vec1.x() * vec2.z(),
-				vec1.x() * vec2.y() - vec1.y() * vec2.x());
+	public Tensor cross(Tensor vec2) {
+		return new Tensor(y() * vec2.z() - z() * vec2.y(), z() * vec2.x() - x() * vec2.z(),
+				x() * vec2.y() - y() * vec2.x());
 	}
 
 	@Override
@@ -340,27 +340,27 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
 
 	public Tensor setValueByAxis(Axis axis, double valueAt) {
 		switch (axis) {
-		case X:
-			data.set(0, valueAt);
-			break;
-		case Y:
-			data.set(1, valueAt);
-			break;
-		case Z:
-			data.set(2, valueAt);
-			break;
+			case X:
+				data.set(0, valueAt);
+				break;
+			case Y:
+				data.set(1, valueAt);
+				break;
+			case Z:
+				data.set(2, valueAt);
+				break;
 		}
 		return this;
 	}
 
 	public double getValueByAxis(Axis axis) {
 		switch (axis) {
-		case X:
-			return data.get(0);
-		case Y:
-			return data.get(1);
-		case Z:
-			return data.get(2);
+			case X:
+				return data.get(0);
+			case Y:
+				return data.get(1);
+			case Z:
+				return data.get(2);
 		}
 		return 0;
 	}

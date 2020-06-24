@@ -7,8 +7,8 @@ import com.google.gson.JsonObject;
 /**
  * @author Creepinson https:/theoparis.com/about
  **/
-public interface ISerializable extends Serializable {
+public interface ISerializable<T> extends Serializable {
 	String toString();
 
-	ISerializable fromString(String s);
+	T fromString(String s);
 }
