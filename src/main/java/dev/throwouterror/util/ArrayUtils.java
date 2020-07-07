@@ -142,7 +142,7 @@ public class ArrayUtils {
      * Helper function to multiply the values in a list.
      */
     public static int multiply(List<Integer> data) {
-        int result = 0;
+        int result = 1;
         for (Integer i : data) {
             result *= i.intValue();
         }
@@ -153,7 +153,7 @@ public class ArrayUtils {
      * Helper function to multiply the values in a list.
      */
     public static float multiplyf(List<Float> data) {
-        float result = 0;
+        float result = 1;
         for (Float i : data) {
             result *= i.floatValue();
         }
@@ -164,7 +164,7 @@ public class ArrayUtils {
      * Helper function to multiply the values in a list.
      */
     public static double multiplyd(List<Double> data) {
-        double result = 0;
+        double result = 1;
         for (Double i : data) {
             result *= i.doubleValue();
         }
