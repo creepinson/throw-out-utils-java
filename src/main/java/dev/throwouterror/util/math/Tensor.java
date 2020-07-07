@@ -35,17 +35,17 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
      * Creates an empty Tensor of n-dimensions filled with zeroes.
      */
     public Tensor(int[] dimensions) {
-        this.dimensions = new LinkedList(Arrays.asList(dimensions));
-        this.data = new LinkedList(ArrayUtils.fillList(ArrayUtils.multiply(this.dimensions), 0));
+        this.dimensions = ArrayUtils.toLinkedList(dimensions);
+        this.data = new LinkedList<Double>(ArrayUtils.fillList(ArrayUtils.multiply(this.dimensions), 0D));
     }
 
     /**
      * Creates a new tensor with the specified n-dimensional data.
      */
     public Tensor(double... data) {
-        this.data = ArrayUtils.asLinkedList(data);
+        this.data = ArrayUtils.toLinkedList(data);
 
-        this.dimensions = ArrayUtils.asLinkedList(data.length);
+        this.dimensions = ArrayUtils.toLinkedList(data.length);
     }
 
     /**

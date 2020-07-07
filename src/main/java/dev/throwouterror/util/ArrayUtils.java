@@ -12,6 +12,54 @@ import java.util.stream.Collectors;
  **/
 public class ArrayUtils {
 
+    public static LinkedList<Integer> toLinkedList(int... array) {
+        LinkedList<Integer> list = new LinkedList<Integer>();
+        for (int i : array) {
+            list.add(i);
+        }
+        return list;
+    }
+
+    public static ArrayList<Integer> toList(int... array) {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        for (int i : array) {
+            list.add(i);
+        }
+        return list;
+    }
+
+    public static LinkedList<Float> toLinkedList(float... array) {
+        LinkedList<Float> list = new LinkedList<Float>();
+        for (float i : array) {
+            list.add(i);
+        }
+        return list;
+    }
+
+    public static ArrayList<Float> toList(float... array) {
+        ArrayList<Float> list = new ArrayList<Float>();
+        for (float i : array) {
+            list.add(i);
+        }
+        return list;
+    }
+
+    public static LinkedList<Double> toLinkedList(double... array) {
+        LinkedList<Double> list = new LinkedList<Double>();
+        for (double i : array) {
+            list.add(i);
+        }
+        return list;
+    }
+
+    public static ArrayList<Double> toList(double... array) {
+        ArrayList<Double> list = new ArrayList<Double>();
+        for (double i : array) {
+            list.add(i);
+        }
+        return list;
+    }
+
     public static boolean isArray(Object obj) {
         return obj != null && obj.getClass().isArray();
     }
@@ -64,14 +112,6 @@ public class ArrayUtils {
         Object[] arr = new Object[size];
 
         return (T[]) arr;
-    }
-
-    public static <T> ArrayList<T> asList(T... a) {
-        return new ArrayList<>(Arrays.asList(a));
-    }
-
-    public static <T> LinkedList asLinkedList(T... a) {
-        return new LinkedList(Arrays.asList(a));
     }
 
     public static float[] toFloatArray(double[] data) {
