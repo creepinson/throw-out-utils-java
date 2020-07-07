@@ -103,8 +103,8 @@ public class ArrayUtils {
      */
     public static int multiply(List<Integer> data) {
         int result = 0;
-        for (int i : data) {
-            result *= i;
+        for (Integer i : data) {
+            result *= i.intValue();
         }
         return result;
     }
@@ -114,20 +114,19 @@ public class ArrayUtils {
      */
     public static float multiplyf(List<Float> data) {
         float result = 0;
-        for (float i : data) {
-            result *= i;
+        for (Float i : data) {
+            result *= i.floatValue();
         }
         return result;
     }
-    
 
     /**
      * Helper function to multiply the values in a list.
      */
     public static double multiplyd(List<Double> data) {
-    	double result = 0;
-        for (double i : data) {
-            result *= i;
+        double result = 0;
+        for (Double i : data) {
+            result *= i.doubleValue();
         }
         return result;
     }
