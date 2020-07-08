@@ -21,12 +21,12 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
     /**
      * An empty Scalar with 1 dimension.
      */
-    public static final Tensor ZERO = new Tensor(new int[]{1});
+    public static final Tensor ZERO = new Tensor(new int[] { 1 });
 
     /**
      * An empty Tensor with 3 dimensions.
      */
-    public static final Tensor Tensor_ZERO = new Tensor(new int[]{3});
+    public static final Tensor Tensor_ZERO = new Tensor(new int[] { 3 });
 
     protected LinkedList<Double> data;
     protected LinkedList<Integer> dimensions;
@@ -52,7 +52,17 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
      * Creates a new tensor with the specified n-dimensional data. This constructor
      * is used for cloning.
      */
-    protected Tensor(LinkedList<Double> data, LinkedList<Integer> size) {
+    public Tensor(double[] data, int[] size) {
+        this.data = ArrayUtils.toLinkedList(data);
+
+        this.dimensions = ArrayUtils.toLinkedList(size);
+    }
+
+    /**
+     * Creates a new tensor with the specified n-dimensional data. This constructor
+     * is used for cloning.
+     */
+    public Tensor(LinkedList<Double> data, LinkedList<Integer> size) {
         this.data = data;
 
         this.dimensions = size;
@@ -71,6 +81,10 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
      */
     public LinkedList<Object> toList() {
         return this.go(this.data);
+    }
+
+    public double[] toArray() {
+        return this.data.stream().mapToDouble(v -> v.doubleValue()).toArray();
     }
 
     /**
@@ -97,8 +111,8 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
 
     /**
      * @return the current Tensor that has been changed (<strong>not a new
-     * one</strong>). Normaliz()es the Tensor to length 1. Note that this
-     * Tensor uses int values for coordinates.
+     *         one</strong>). Normaliz()es the Tensor to length 1. Note that this
+     *         Tensor uses int values for coordinates.
      */
     public Tensor normalize() {
 
@@ -112,7 +126,7 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
 
     /**
      * @return the current Tensor that has been changed (<strong>not a new
-     * one</strong>). Equivalent to mul(-1).
+     *         one</strong>). Equivalent to mul(-1).
      */
     public Tensor reverse() {
         mul(-1);
@@ -170,7 +184,7 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
     /**
      * @param other to add
      * @return the current Tensor that has been changed (<strong>not a new
-     * one</strong>).
+     *         one</strong>).
      */
     public Tensor add(Tensor other) {
         for (int f = 0; f < data.size(); f++) {
@@ -186,7 +200,7 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
     /**
      * @param factor to multiply() with
      * @return the current Tensor that has been changed (<strong>not a new
-     * one</strong>).
+     *         one</strong>).
      */
     public Tensor add(double factor) {
         return add((float) factor);
@@ -195,7 +209,7 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
     /**
      * @param factor to multiply() with
      * @return the current Tensor that has been changed (<strong>not a new
-     * one</strong>).
+     *         one</strong>).
      */
     public Tensor add(int factor) {
         return add((float) factor);
@@ -204,7 +218,7 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
     /**
      * @param other to subtract
      * @return the current Tensor that has been changed (<strong>not a new
-     * one</strong>).
+     *         one</strong>).
      */
     public Tensor sub(Tensor other) {
         for (int f = 0; f < data.size(); f++) {
@@ -220,7 +234,7 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
     /**
      * @param factor to multiply() with
      * @return the current Tensor that has been changed (<strong>not a new
-     * one</strong>).
+     *         one</strong>).
      */
     public Tensor sub(double factor) {
         return sub((float) factor);
@@ -229,7 +243,7 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
     /**
      * @param factor to multiply() with
      * @return the current Tensor that has been changed (<strong>not a new
-     * one</strong>).
+     *         one</strong>).
      */
     public Tensor sub(int factor) {
         return sub((float) factor);
@@ -238,7 +252,7 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
     /**
      * @param factor to multiply() with
      * @return the current Tensor that has been changed (<strong>not a new
-     * one</strong>).
+     *         one</strong>).
      */
     public Tensor mul(float factor) {
         this.map(v -> v * factor);
@@ -248,7 +262,7 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
     /**
      * @param factor to multiply() with
      * @return the current Tensor that has been changed (<strong>not a new
-     * one</strong>).
+     *         one</strong>).
      */
     public Tensor mul(double factor) {
         return mul((float) factor);
@@ -257,7 +271,7 @@ public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
     /**
      * @param factor to multiply() with
      * @return the current Tensor that has been changed (<strong>not a new
-     * one</strong>).
+     *         one</strong>).
      */
     public Tensor mul(int factor) {
         return mul((float) factor);
