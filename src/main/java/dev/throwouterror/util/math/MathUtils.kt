@@ -1,6 +1,6 @@
 package dev.throwouterror.util.math
 
-import dev.throwouterror.util.ConditionUtil
+import dev.throwouterror.util.ConditionUtils
 import java.util.*
 import java.util.function.IntPredicate
 import kotlin.math.min
@@ -58,8 +58,8 @@ object MathUtils {
          */
         var a = a
         var b = b
-        ConditionUtil.checkNonNegative("a", a)
-        ConditionUtil.checkNonNegative("b", b)
+        ConditionUtils.checkNonNegative("a", a)
+        ConditionUtils.checkNonNegative("b", b)
         if (a == 0) { // 0 % b == 0, so b divides a, but the converse doesn't hold.
             // BigInteger.gcd is consistent with this decision.
             return b
@@ -202,7 +202,7 @@ object MathUtils {
      * @since 13.0
      */
     fun fuzzyEquals(a: Double, b: Double, tolerance: Double): Boolean {
-        ConditionUtil.checkNonNegative("tolerance", tolerance)
+        ConditionUtils.checkNonNegative("tolerance", tolerance)
         return ((a - b).withSign(1.0) <= tolerance // copySign(x, 1.0) is a branch-free version of abs(x), but with different NaN
 // semantics
                 || a == b // needed to ensure that infinities equal themselves

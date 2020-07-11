@@ -5,7 +5,7 @@ import java.math.BigInteger
 /**
  * @author Creepinson https:/theoparis.com/about
  */
-object ConditionUtil {
+object ConditionUtils {
     /**
      * Ensures that an object reference passed as a parameter to the calling method is not null.
      *

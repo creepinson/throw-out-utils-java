@@ -7,9 +7,9 @@ import java.util.function.Supplier
 /**
  * @author Creepinson https:/theoparis.com/about
  */
-object TransformUtil {
+object TransformationUtils {
     fun <T> asSet(array: Array<T>): Set<T> {
-        return HashSet(Arrays.asList(*array))
+        return HashSet(listOf(*array))
     }
 
     fun <T> make(supplier: Supplier<T>): T {
