@@ -1,65 +1,60 @@
-package dev.throwouterror.util;
+package dev.throwouterror.util
 
 /**
- * @author Creepinson https:/theoparis.com/about
- * Project creepinoutils
- **/
-public class PairListUtils {
-    public static PairList<Integer, Double> loadPairListDouble(int[] array) {
-        PairList<Integer, Double> list = new PairList<>();
-        int i = 0;
-        while (i < array.length) {
-            list.add(array[i], Double.longBitsToDouble((((long) array[i + 1]) << 32) | (array[i + 2] & 0xffffffffL)));
-            i += 3;
+ * @author Theo Paris https:/theoparis.com/about
+ */
+object PairListUtils {
+    fun loadPairListDouble(array: IntArray): PairList<Int, Double> {
+        val list = PairList<Int, Double>()
+        var i = 0
+        while (i < array.size) {
+            list.add(array[i], java.lang.Double.longBitsToDouble(array[i + 1].toLong() shl 32 or ((array[i + 2] and 0xffffffffL.toInt()).toLong())))
+            i += 3
         }
-        return list;
+        return list
     }
 
-    public static PairList<Integer, Double> loadPairListInteger(int[] array) {
-        PairList<Integer, Double> list = new PairList<>();
-        int i = 0;
-        while (i < array.length) {
-            list.add(array[i], (double) array[i + 1]);
-            i += 2;
+    fun loadPairListInteger(array: IntArray): PairList<Int, Double> {
+        val list = PairList<Int, Double>()
+        var i = 0
+        while (i < array.size) {
+            list.add(array[i], array[i + 1].toDouble())
+            i += 2
         }
-        return list;
+        return list
     }
 
-    public static PairList<Integer, Double> loadPairListDouble(int[] array, int from, int length) {
-        PairList<Integer, Double> list = new PairList<>();
-        int i = from;
+    fun loadPairListDouble(array: IntArray, from: Int, length: Int): PairList<Int, Double> {
+        val list = PairList<Int, Double>()
+        var i = from
         while (i < from + length) {
-            list.add(array[i], Double.longBitsToDouble((((long) array[i + 1]) << 32) | (array[i + 2] & 0xffffffffL)));
-            i += 3;
+            list.add(array[i], java.lang.Double.longBitsToDouble(array[i + 1].toLong() shl 32 or ((array[i + 2] and 0xffffffffL.toInt()).toLong())))
+            i += 3
         }
-        return list;
+        return list
     }
 
-    public static int[] savePairListDouble(PairList<Integer, Double> list) {
-        if (list == null)
-            return null;
-
-        int[] array = new int[list.size() * 3];
-        for (int i = 0; i < list.size(); i++) {
-            Pair<Integer, Double> pair = list.get(i);
-            array[i * 3] = pair.key;
-            long value = Double.doubleToLongBits(pair.value);
-            array[i * 3 + 1] = (int) (value >> 32);
-            array[i * 3 + 2] = (int) value;
+    fun savePairListDouble(list: PairList<Int?, Double?>?): IntArray? {
+        if (list == null) return null
+        val array = IntArray(list.size * 3)
+        for (i in list.indices) {
+            val pair = list[i]
+            array[i * 3] = pair!!.key!!
+            val value = java.lang.Double.doubleToLongBits(pair.value!!)
+            array[i * 3 + 1] = (value shr 32).toInt()
+            array[i * 3 + 2] = value.toInt()
         }
-        return array;
+        return array
     }
 
-    public static int[] savePairListInteger(PairList<Integer, Integer> list) {
-        if (list == null)
-            return null;
-
-        int[] array = new int[list.size() * 2];
-        for (int i = 0; i < list.size(); i++) {
-            Pair<Integer, Integer> pair = list.get(i);
-            array[i * 2] = pair.key;
-            array[i * 2 + 1] = pair.value;
+    fun savePairListInteger(list: PairList<Int?, Int?>?): IntArray? {
+        if (list == null) return null
+        val array = IntArray(list.size * 2)
+        for (i in list.indices) {
+            val pair = list[i]
+            array[i * 2] = pair!!.key!!
+            array[i * 2 + 1] = pair.value!!
         }
-        return array;
+        return array
     }
 }

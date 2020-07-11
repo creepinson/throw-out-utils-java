@@ -1,21 +1,12 @@
-package dev.throwouterror.util.math.interpolation;
+package dev.throwouterror.util.math.interpolation
 
+import dev.throwouterror.util.math.Tensor
 
-import dev.throwouterror.util.math.Tensor;
+class LinearInterpolation : Interpolation {
+    constructor(times: DoubleArray, points: Array<Tensor>) : super(times, points)
+    constructor(vararg points: Tensor) : super(*points)
 
-public class LinearInterpolation extends Interpolation {
-
-    public LinearInterpolation(double[] times, Tensor[] points) {
-        super(times, points);
+    override fun valueAt(mu: Double, pointIndex: Int, pointIndexNext: Int, dim: Int): Float {
+        return ((getValue(pointIndexNext, dim) - getValue(pointIndex, dim)) * mu + getValue(pointIndex, dim)).toFloat()
     }
-
-    public LinearInterpolation(Tensor... points) {
-        super(points);
-    }
-
-    @Override
-    public float valueAt(double mu, int pointIndex, int pointIndexNext, int dim) {
-        return (float) ((getValue(pointIndexNext, dim) - getValue(pointIndex, dim)) * mu + getValue(pointIndex, dim));
-    }
-
 }

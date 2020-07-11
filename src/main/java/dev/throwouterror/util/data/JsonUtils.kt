@@ -1,15 +1,14 @@
-package dev.throwouterror.util.data;
+package dev.throwouterror.util.data
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 
 /**
  * @author Creepinson https:/theoparis.com/about
- **/
-public class JsonUtils {
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();
-
-    public static Gson get() {
-        return gson;
+ */
+object JsonUtils {
+    private val gson = GsonBuilder().setPrettyPrinting().serializeNulls().disableHtmlEscaping().create()
+    fun get(): Gson {
+        return gson
     }
 }

@@ -1,45 +1,24 @@
-package dev.throwouterror.util.threading;
+package dev.throwouterror.util.worker
 
-import javax.swing.*;
+import javax.swing.JOptionPane
 
 /**
- * @author Creepinson https:/theoparis.com/about
- **/
-public class PausingConfirmationWorker extends Worker {
-    public final GuiWorker gui;
-    public final Thread previousThread;
-    private boolean isConfirmed;
-
-    public PausingConfirmationWorker(Thread previousThread, GuiWorker gui) {
-        this.previousThread = previousThread;
-        this.gui = gui;
+ * A gui worker that asks for confirmation.
+ * You can override makeGui in order to create a custom parent gui for the confirmation dialog.
+ */
+abstract class ConfirmationGuiWorker(private val confirmationMessage: String) : GuiWorker() {
+    private var isConfirmed = false
+    override fun processingIsComplete(): Boolean {
+        return isConfirmed
     }
 
-    @Override
-    protected boolean processingIsComplete() {
-        return isConfirmed;
+    override fun process() {
+        val component = this.makeGui()
+        component?.isVisible = true
+        JOptionPane.showConfirmDialog(component, confirmationMessage, "Confirmation", JOptionPane.QUESTION_MESSAGE)
+        isConfirmed = true
     }
 
-    @Override
-    public Object getLock() {
-        return previousThread;
-    }
+    override fun cleanUpResources() {}
 
-    @Override
-    protected void process() {
-        SwingUtilities.invokeLater(() -> {
-            JComponent component = this.gui.makeGui();
-            component.setVisible(true);
-            if (component instanceof JOptionPane) {
-                component.addPropertyChangeListener(b -> {
-                    // TODO: add confirm button listener
-                });
-            }
-        });
-    }
-
-    @Override
-    protected void cleanUpResources() {
-
-    }
 }

@@ -1,8 +1,5 @@
-package dev.throwouterror.util.data;
+package dev.throwouterror.util.data
 
-import java.util.Map;
-
-public interface ConfigDefaultsCallback {
-
-	void addDefaults(Map<String, Object> configMap);
+interface ConfigDefaultsCallback {
+    fun addDefaults(configMap: Map<String, Any>?)
 }

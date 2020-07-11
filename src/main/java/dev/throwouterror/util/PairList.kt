@@ -1,234 +1,186 @@
-package dev.throwouterror.util;
+package dev.throwouterror.util
 
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.*
+import java.util.function.Predicate
 
-public class PairList<K, V> extends ArrayList<Pair<K, V>> {
-    private static final long serialVersionUID = -7857974025247567866L;
-
-    public PairList() {
-        super();
+class PairList<K, V> : ArrayList<Pair<K, V>?> {
+    constructor() : super()
+    constructor(list: List<Pair<K, V>>) : super(list) {
+        updateEntireMap()
     }
 
-    public PairList(List<Pair<K, V>> list) {
-        super(list);
-        updateEntireMap();
-    }
-
-    protected HashMap<K, Integer> keyIndex = new HashMap<>();
-    protected List<V> values = new ArrayList<>();
-
-    protected void updateEntireMap() {
-        keyIndex.clear();
-        values.clear();
-
-        for (int i = 0; i < size(); i++) {
-            keyIndex.put(this.get(i).key, i);
-            values.add(this.get(i).value);
+    protected var keyIndex = HashMap<K?, Int?>()
+    protected var values: MutableList<V?> = ArrayList()
+    protected fun updateEntireMap() {
+        keyIndex.clear()
+        values.clear()
+        for (i in 0 until size) {
+            keyIndex[this[i]!!.key] = i
+            values.add(this[i]!!.value)
         }
     }
 
-    @Override
-    public boolean add(Pair<K, V> e) {
-        Objects.requireNonNull(e);
-
-        if (keyIndex.containsKey(e.key))
-            throw new IllegalArgumentException("Duplicates are not allowed key: " + e.key);
-
+    override fun add(e: Pair<K, V>?): Boolean {
+        Objects.requireNonNull(e)
+        require(!keyIndex.containsKey(e!!.key)) { "Duplicates are not allowed key: " + e.key }
         if (super.add(e)) {
-            keyIndex.put(e.key, size() - 1);
-            values.add(e.value);
-            return true;
+            keyIndex[e.key] = size - 1
+            values.add(e.value)
+            return true
         }
-        return false;
+        return false
     }
 
-    @Override
-    public void add(int index, Pair<K, V> element) {
-        Objects.requireNonNull(element);
-
-        if (keyIndex.containsKey(element.key))
-            throw new IllegalArgumentException("Duplicates are not allowed key: " + element.key);
-
-        super.add(index, element);
-        updateEntireMap();
+    override fun add(index: Int, element: Pair<K, V>?) {
+        Objects.requireNonNull(element)
+        require(!keyIndex.containsKey(element!!.key)) { "Duplicates are not allowed key: " + element.key }
+        super.add(index, element)
+        updateEntireMap()
     }
 
-    @Override
-    public boolean addAll(Collection<? extends Pair<K, V>> c) {
-        Objects.requireNonNull(c);
-
-        for (Pair<K, V> pair : c) {
-            Objects.requireNonNull(pair);
-
-            if (keyIndex.containsKey(pair.key))
-                throw new IllegalArgumentException("Duplicates are not allowed key: " + pair.key);
+    override fun addAll(c: Collection<Pair<K, V>?>): Boolean {
+        Objects.requireNonNull(c)
+        for (pair in c) {
+            Objects.requireNonNull(pair)
+            require(!keyIndex.containsKey(pair!!.key)) { "Duplicates are not allowed key: " + pair.key }
         }
-
-        int sizeBefore = size();
+        val sizeBefore = size
         if (super.addAll(c)) {
-            for (int i = 0; i < c.size(); i++) {
-                int index = sizeBefore + i;
-                keyIndex.put(this.get(index).key, index);
-                values.add(this.get(index).value);
+            for (i in c.indices) {
+                val index = sizeBefore + i
+                keyIndex[this[index]!!.key] = index
+                values.add(this[index]!!.value)
             }
-            return true;
+            return true
         }
-        return false;
+        return false
     }
 
-    @Override
-    public boolean addAll(int index, Collection<? extends Pair<K, V>> c) {
-        Objects.requireNonNull(c);
-
-        for (Pair<K, V> pair : c) {
-            Objects.requireNonNull(pair);
-
-            if (keyIndex.containsKey(pair.key))
-                throw new IllegalArgumentException("Duplicates are not allowed key: " + pair.key);
+    override fun addAll(index: Int, c: Collection<Pair<K, V>?>): Boolean {
+        Objects.requireNonNull(c)
+        for (pair in c) {
+            Objects.requireNonNull(pair)
+            require(!keyIndex.containsKey(pair!!.key)) { "Duplicates are not allowed key: " + pair.key }
         }
-
         if (super.addAll(index, c)) {
-            updateEntireMap();
-            return true;
+            updateEntireMap()
+            return true
         }
-        return false;
+        return false
     }
 
-    public boolean add(K key, V value) {
-        return add(new Pair<>(key, value));
+    fun add(key: K, value: V): Boolean {
+        return add(Pair(key, value))
     }
 
-    public void set(K key, V value) {
-        Pair<K, V> pair = getPair(key);
-        if (pair != null)
-            pair.value = value;
+    operator fun set(key: K, value: V) {
+        val pair = getPair(key)
+        if (pair != null) pair.value = value
     }
 
-    @Override
-    public Pair<K, V> remove(int index) {
-        Pair<K, V> pair;
-        if ((pair = super.remove(index)) != null) {
-            updateEntireMap();
-            return pair;
+    override fun removeAt(index: Int): Pair<K, V>? {
+        var pair: Pair<K, V>?
+        if (super.removeAt(index).also { pair = it } != null) {
+            updateEntireMap()
+            return pair
         }
-        return null;
+        return null
     }
 
-    @Override
-    public boolean remove(Object o) {
-        if (super.remove(o)) {
-            updateEntireMap();
-            return true;
+    override fun remove(element: Pair<K, V>?): Boolean {
+        if (super.remove(element)) {
+            updateEntireMap()
+            return true
         }
-        return false;
+        return false
     }
 
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        if (super.removeAll(c)) {
-            updateEntireMap();
-            return true;
+    override fun removeAll(elements: Collection<Pair<K, V>?>): Boolean {
+        if (super.removeAll(elements)) {
+            updateEntireMap()
+            return true
         }
-        return false;
+        return false
     }
 
-    @Override
-    public boolean removeIf(Predicate<? super Pair<K, V>> filter) {
+    override fun removeIf(filter: Predicate<in Pair<K, V>?>): Boolean {
         if (super.removeIf(filter)) {
-            updateEntireMap();
-            return true;
+            updateEntireMap()
+            return true
         }
-        return false;
+        return false
     }
 
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        if (super.retainAll(c)) {
-            updateEntireMap();
-            return true;
+    override fun retainAll(elements: Collection<Pair<K, V>?>): Boolean {
+        if (super.retainAll(elements)) {
+            updateEntireMap()
+            return true
         }
-        return false;
+        return false
     }
 
-    @Override
-    public void clear() {
-        super.clear();
-        keyIndex.clear();
-        values.clear();
+    override fun clear() {
+        super.clear()
+        keyIndex.clear()
+        values.clear()
     }
 
-    @Override
-    public Pair<K, V> set(int index, Pair<K, V> element) {
-        Objects.requireNonNull(element);
-
-        Integer exisiting = keyIndex.get(element.key);
-        if (exisiting != null && exisiting != index)
-            throw new IllegalArgumentException("Duplicates are not allowed key: " + element.key);
-
-        Pair<K, V> old = super.set(index, element);
+    override fun set(index: Int, element: Pair<K, V>?): Pair<K, V>? {
+        Objects.requireNonNull(element)
+        val exisiting = keyIndex[element!!.key]
+        require(!(exisiting != null && exisiting != index)) { "Duplicates are not allowed key: " + element.key }
+        val old = super.set(index, element)
         if (old != null) {
-            keyIndex.remove(old.key);
-            keyIndex.put(element.key, index);
-            values.set(index, element.value);
+            keyIndex.remove(old.key)
+            keyIndex[element.key] = index
+            values[index] = element.value
         }
-        return old;
+        return old
     }
 
-    @Override
-    public void sort(Comparator<? super Pair<K, V>> c) {
-        super.sort(c);
-        updateEntireMap();
+    override fun sort(c: Comparator<in Pair<K, V>?>) {
+        super.sort(c)
+        updateEntireMap()
     }
 
-    public boolean containsKey(K key) {
-        return keyIndex.containsKey(key);
+    fun containsKey(key: K): Boolean {
+        return keyIndex.containsKey(key)
     }
 
-    public int indexOfKey(K key) {
-        return keyIndex.getOrDefault(key, -1);
+    fun indexOfKey(key: K): Int {
+        return keyIndex.getOrDefault(key, -1)!!
     }
 
-    public boolean removeKey(K key) {
-        Integer index = keyIndex.get(key);
-        if (index != null)
-            return remove((int) index) != null;
-        return false;
+    fun removeKey(key: K): Boolean {
+        val index = keyIndex[key]
+        return if (index != null) removeAt(index) != null else false
     }
 
-    public List<V> values() {
-        return new ArrayList<>(values);
+    fun values(): List<V?> {
+        return ArrayList(values)
     }
 
-    public Set<K> keys() {
-        return keyIndex.keySet();
+    fun keys(): Set<K?> {
+        return keyIndex.keys
     }
 
-    public Pair<K, V> getFirst() {
-        if (isEmpty())
-            return null;
-        return get(0);
+    val first: Pair<K, V>?
+        get() = if (isEmpty()) null else get(0)
+
+    val last: Pair<K, V>?
+        get() = if (isEmpty()) null else get(size - 1)
+
+    fun getValue(key: K): V? {
+        val index = keyIndex[key]
+        return if (index != null) get(index)!!.value else null
     }
 
-    public Pair<K, V> getLast() {
-        if (isEmpty())
-            return null;
-        return get(size() - 1);
+    fun getPair(key: K): Pair<K, V>? {
+        val index = keyIndex[key]
+        return index?.let { get(it) }
     }
 
-
-    public V getValue(K key) {
-        Integer index = keyIndex.get(key);
-        if (index != null)
-            return get(index).value;
-        return null;
+    companion object {
+        private const val serialVersionUID = -7857974025247567866L
     }
-
-    public Pair<K, V> getPair(K key) {
-        Integer index = keyIndex.get(key);
-        if (index != null)
-            return get(index);
-        return null;
-    }
-
 }

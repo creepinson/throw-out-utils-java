@@ -1,41 +1,39 @@
-package dev.throwouterror.util.threading;
+package dev.throwouterror.util.worker
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
-public abstract class Worker extends Thread {
-    private final AtomicBoolean shouldWait = new AtomicBoolean();
+abstract class Worker : Thread() {
+    private val shouldWait = AtomicBoolean()
+    protected abstract fun processingIsComplete(): Boolean
+    protected abstract fun process()
+    protected abstract fun cleanUpResources()
+    val lock: ReentrantLock = ReentrantLock()
 
-    protected abstract boolean processingIsComplete();
-
-    protected abstract void process();
-
-    protected abstract void cleanUpResources();
-
-    public abstract Object getLock();
-
-    public void disable() {
-        shouldWait.set(false);
+    fun disable() {
+        shouldWait.set(false)
     }
 
-    public void enable() {
-        shouldWait.set(true);
+    fun enable() {
+        shouldWait.set(true)
     }
 
-    @Override
-    public void run() {
+    override fun run() {
         try {
+            val condition = lock.newCondition()
             while (!processingIsComplete()) {
                 while (!shouldWait.get()) {
-                    synchronized (getLock()) {
-                        getLock().wait();
+                    lock.withLock {
+                        condition.await()
                     }
                 }
             }
-            process();
-        } catch (InterruptedException e) {
-            System.out.println("Worker thread stopped");
+            process()
+        } catch (e: InterruptedException) {
+            println("Worker thread stopped")
         } finally {
-            cleanUpResources();
+            cleanUpResources()
         }
     }
 }

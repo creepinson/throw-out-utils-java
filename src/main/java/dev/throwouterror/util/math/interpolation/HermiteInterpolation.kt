@@ -1,72 +1,53 @@
-package dev.throwouterror.util.math.interpolation;
+package dev.throwouterror.util.math.interpolation
 
-import dev.throwouterror.util.math.Tensor;
+import dev.throwouterror.util.math.Tensor
 
-public class HermiteInterpolation<T extends Tensor> extends CubicInterpolation {
+class HermiteInterpolation : CubicInterpolation {
+    var tension: Tension
+    var bias: Double
 
-	public Tension tension;
-	public double bias;
+    constructor(times: DoubleArray, points: Array<Tensor>, bias: Double, tension: Tension) : super(times, points) {
+        this.bias = bias
+        this.tension = tension
+    }
 
-	public HermiteInterpolation(double[] times, T[] points, double bias, Tension tension) {
-		super(times, points);
-		this.bias = bias;
-		this.tension = tension;
-	}
+    @JvmOverloads
+    constructor(times: DoubleArray, points: Array<Tensor>, tension: Tension = Tension.Normal) : this(times, points, 0.0, tension)
 
-	public HermiteInterpolation(double[] times, T[] points, Tension tension) {
-		this(times, points, 0, tension);
-	}
+    constructor(bias: Double, tension: Tension, vararg points: Tensor) : super(*points) {
+        this.bias = bias
+        this.tension = tension
+    }
 
-	public HermiteInterpolation(double[] times, T[] points) {
-		this(times, points, Tension.Normal);
-	}
+    constructor(tension: Tension, vararg points: Tensor) : this(0.0, tension, *points)
+    constructor(vararg points: Tensor) : this(Tension.Normal, *points)
 
-	public HermiteInterpolation(double bias, Tension tension, T... points) {
-		super(points);
-		this.bias = bias;
-		this.tension = tension;
-	}
+    override fun valueAt(mu: Double, pointIndex: Int, pointIndexNext: Int, dim: Int): Float {
+        var m0: Double
+        var m1: Double
+        val mu3: Double
+        val a0: Double
+        val a1: Double
+        val a2: Double
+        val a3: Double
+        val v0 = getValue(pointIndex - 1, dim)
+        val v1 = getValue(pointIndex, dim)
+        val v2 = getValue(pointIndexNext, dim)
+        val v3 = getValue(pointIndexNext + 1, dim)
+        val mu2: Double = mu * mu
+        mu3 = mu2 * mu
+        m0 = (v1 - v0) * (1 + bias) * (1 - tension.value) / 2
+        m0 += (v2 - v1) * (1 - bias) * (1 - tension.value) / 2
+        m1 = (v2 - v1) * (1 + bias) * (1 - tension.value) / 2
+        m1 += (v3 - v2) * (1 - bias) * (1 - tension.value) / 2
+        a0 = 2 * mu3 - 3 * mu2 + 1
+        a1 = mu3 - 2 * mu2 + mu
+        a2 = mu3 - mu2
+        a3 = -2 * mu3 + 3 * mu2
+        return (a0 * v1 + a1 * m0 + a2 * m1 + a3 * v2).toFloat()
+    }
 
-	public HermiteInterpolation(Tension tension, T... points) {
-		this(0, tension, points);
-	}
-
-	public HermiteInterpolation(T... points) {
-		this(Tension.Normal, points);
-	}
-
-	@Override
-	public float valueAt(double mu, int pointIndex, int pointIndexNext, int dim) {
-		double m0, m1, mu2, mu3;
-		double a0, a1, a2, a3;
-
-		double v0 = getValue(pointIndex - 1, dim);
-		double v1 = getValue(pointIndex, dim);
-		double v2 = getValue(pointIndexNext, dim);
-		double v3 = getValue(pointIndexNext + 1, dim);
-
-		mu2 = mu * mu;
-		mu3 = mu2 * mu;
-		m0 = (v1 - v0) * (1 + bias) * (1 - tension.value) / 2;
-		m0 += (v2 - v1) * (1 - bias) * (1 - tension.value) / 2;
-		m1 = (v2 - v1) * (1 + bias) * (1 - tension.value) / 2;
-		m1 += (v3 - v2) * (1 - bias) * (1 - tension.value) / 2;
-		a0 = 2 * mu3 - 3 * mu2 + 1;
-		a1 = mu3 - 2 * mu2 + mu;
-		a2 = mu3 - mu2;
-		a3 = -2 * mu3 + 3 * mu2;
-
-		return (float) (a0 * v1 + a1 * m0 + a2 * m1 + a3 * v2);
-	}
-
-	public enum Tension {
-		High(1), Normal(0), Low(-1);
-
-		public final int value;
-
-		Tension(int value) {
-			this.value = value;
-		}
-	}
-
+    enum class Tension(val value: Int) {
+        High(1), Normal(0), Low(-1);
+    }
 }

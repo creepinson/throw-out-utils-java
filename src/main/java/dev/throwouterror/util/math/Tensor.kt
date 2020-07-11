@@ -1,417 +1,427 @@
-package dev.throwouterror.util.math;
+package dev.throwouterror.util.math
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import dev.throwouterror.util.ArrayUtils
+import dev.throwouterror.util.ISerializable
+import dev.throwouterror.util.math.rotation.RotationMatrix
+import org.apache.commons.collections4.ListUtils
+import java.util.*
+import java.util.function.Consumer
+import java.util.function.Function
+import java.util.stream.Collectors
+import kotlin.math.sqrt
 
-import org.apache.commons.collections4.ListUtils;
-
-import dev.throwouterror.util.ArrayUtils;
-import dev.throwouterror.util.ISerializable;
-import dev.throwouterror.util.math.Facing.Axis;
-
-// TODO: WIP
-public class Tensor implements ISerializable, Cloneable, Iterable<Double> {
-    private static final long serialVersionUID = 6106298603154164750L;
-
-    /**
-     * An empty Scalar with 1 dimension.
-     */
-    public static final Tensor ZERO = new Tensor(new int[] { 1 });
-
-    /**
-     * An empty Tensor with 3 dimensions.
-     */
-    public static final Tensor Tensor_ZERO = new Tensor(new int[] { 3 });
-
-    protected LinkedList<Double> data;
-    protected LinkedList<Integer> dimensions;
+class Tensor : ISerializable<Tensor>, Cloneable, Iterable<Double> {
+    var data: LinkedList<Double>
+        protected set
+    var dimensions: LinkedList<Int>
+        protected set
 
     /**
      * Creates an empty Tensor of n-dimensions filled with zeroes.
      */
-    public Tensor(int[] dimensions) {
-        this.dimensions = ArrayUtils.toLinkedList(dimensions);
-        this.data = new LinkedList<Double>(ArrayUtils.fillList(ArrayUtils.multiply(this.dimensions), 0D));
+    constructor(dimensions: IntArray) {
+        this.dimensions = ArrayUtils.toLinkedList(*dimensions)
+        data = LinkedList(ArrayUtils.fillList(ArrayUtils.multiply(this.dimensions), 0.0))
     }
 
     /**
      * Creates a new tensor with the specified n-dimensional data.
      */
-    public Tensor(double... data) {
-        this.data = ArrayUtils.toLinkedList(data);
+    constructor(vararg data: Double) {
+        this.data = ArrayUtils.toLinkedList(*data)
+        dimensions = ArrayUtils.toLinkedList(data.size)
+    }
 
-        this.dimensions = ArrayUtils.toLinkedList(data.length);
+    /**
+     * Creates a new tensor with the specified n-dimensional data.
+     */
+    constructor(vararg data: Float) {
+        this.data = LinkedList(data.map { it.toDouble() })
+        dimensions = ArrayUtils.toLinkedList(data.size)
     }
 
     /**
      * Creates a new tensor with the specified n-dimensional data. This constructor
      * is used for cloning.
      */
-    public Tensor(double[] data, int[] size) {
-        this.data = ArrayUtils.toLinkedList(data);
-
-        this.dimensions = ArrayUtils.toLinkedList(size);
+    constructor(data: DoubleArray, size: IntArray) {
+        this.data = ArrayUtils.toLinkedList(*data)
+        dimensions = ArrayUtils.toLinkedList(*size)
     }
 
     /**
      * Creates a new tensor with the specified n-dimensional data. This constructor
      * is used for cloning.
      */
-    public Tensor(LinkedList<Double> data, LinkedList<Integer> size) {
-        this.data = data;
-
-        this.dimensions = size;
+    constructor(data: LinkedList<Double>, size: LinkedList<Int>) {
+        this.data = data
+        dimensions = size
     }
 
-    public Tensor offset(Facing facing, int n) {
-        return n == 0 ? this : this.clone().add(facing.getDirectionVec()).mul(n);
-    }
 
-    public Tensor offset(Facing facing) {
-        return this.offset(facing, 1);
+    var x: Double
+        get() = data[0]
+        set(value) {
+            data[0] = value
+        }
+
+    var y: Double
+        get() = data[1]
+        set(value) {
+            data[1] = value
+        }
+
+    var z: Double
+        get() = data[2]
+        set(value) {
+            data[2] = value
+        }
+
+    var w: Double
+        get() = data[3]
+        set(value) {
+            data[3] = value
+        }
+
+    @JvmOverloads
+    fun offset(facing: Direction, n: Int = 1): Tensor {
+        return if (n == 0) this else clone().add(facing.directionVec).mul(n)
     }
 
     /**
      * @return This tensor's data in a form of a multidimensional list.
      */
-    public LinkedList<Object> toList() {
-        return this.go(this.data);
+    fun toList(): LinkedList<*> {
+        return go(data)
     }
 
-    public double[] toArray() {
-        return this.data.stream().mapToDouble(v -> v.doubleValue()).toArray();
+    fun toArray(): DoubleArray {
+        return data.stream().mapToDouble { v: Double? -> v!! }.toArray()
+    }
+
+
+    fun toIntArray(): IntArray {
+        return data.stream().mapToInt { v: Double? -> v!!.toInt() }.toArray()
     }
 
     /**
      * @return A string representation of the multidimensional list.
      */
-    public String toArrayString() {
-        return Arrays.deepToString(this.toList().toArray());
+    fun toArrayString(): String {
+        return Arrays.deepToString(this.toList().toTypedArray())
     }
 
-    private LinkedList<Object> go(List<Double> arr) {
-        int s = dimensions.pop();
-        List<List<Double>> result = ListUtils.partition(arr, s);
-        dimensions.push(s);
-        return result.size() > 1 ? new LinkedList(result.stream().map(this::go).collect(Collectors.toList()))
-                : new LinkedList(arr.stream().collect(Collectors.toList()));
+    private fun go(arr: List<Double>): LinkedList<*> {
+        val s = dimensions.pop()
+        val result = ListUtils.partition(arr, s)
+        dimensions.push(s)
+        return if (result.size > 1) LinkedList<Any?>(result.stream().map { arr: List<Double> -> go(arr) }.collect(Collectors.toList())) else LinkedList<Any?>(arr)
     }
 
     /**
      * Returns the length of the Tensor.
      */
-    public int length() {
-        return (int) Math.sqrt(ArrayUtils.multiplyd(data));
+    fun length(): Int {
+        return Math.sqrt(lengthSquared().toDouble()).toInt()
     }
 
     /**
-     * @return the current Tensor that has been changed (<strong>not a new
-     *         one</strong>). Normaliz()es the Tensor to length 1. Note that this
-     *         Tensor uses int values for coordinates.
+     * Returns the length of the Tensor.
      */
-    public Tensor normalize() {
-
-        int amt = this.length();
-        if (amt == 0)
-            return this;
-        this.map(v -> v * amt);
-
-        return this;
+    fun lengthSquared(): Int {
+        return ArrayUtils.multiplyd(data).toInt()
     }
 
     /**
-     * @return the current Tensor that has been changed (<strong>not a new
-     *         one</strong>). Equivalent to mul(-1).
+     * @return the current Tensor that has been changed (**not a new
+     * one**). Normaliz()es the Tensor to length 1. Note that this
+     * Tensor uses int values for coordinates.
      */
-    public Tensor reverse() {
-        mul(-1);
-        return this;
+    fun normalize(): Tensor {
+        val amt = length()
+        if (amt == 0) return this
+        this.map(Function { v: Double -> v * amt })
+        return this
     }
 
-    public double x() {
-        return data.get(0);
-    }
-
-    public double y() {
-        return data.get(1);
-    }
-
-    public double z() {
-        return data.get(2);
-    }
-
-    public double w() {
-        return data.get(3);
-    }
-
-    public int intX() {
-        return (int) this.x();
-    }
-
-    public int intY() {
-        return (int) this.y();
-    }
-
-    public int intZ() {
-        return (int) this.z();
-    }
-
-    public int intW() {
-        return (int) this.w();
-    }
-
-    public float floatX() {
-        return (float) this.x();
-    }
-
-    public float floatY() {
-        return (float) this.y();
-    }
-
-    public float floatZ() {
-        return (float) this.z();
-    }
-
-    public float floatW() {
-        return (float) this.w();
+    /**
+     * @return the current Tensor that has been changed (**not a new
+     * one**). Equivalent to mul(-1).
+     */
+    fun reverse(): Tensor {
+        mul(-1)
+        return this
     }
 
     /**
      * @param other to add
-     * @return the current Tensor that has been changed (<strong>not a new
-     *         one</strong>).
+     * @return the current Tensor that has been changed (**not a new
+     * one**).
      */
-    public Tensor add(Tensor other) {
-        for (int f = 0; f < data.size(); f++) {
-            data.set(f, f + other.data.get(f));
+    fun add(other: Tensor): Tensor {
+        for (f in data.indices) {
+            data[f] = f + other.data[f]
         }
-        return this;
+        return this
     }
 
-    public Tensor add(float factor) {
-        return this.map(v -> v + factor);
-    }
-
-    /**
-     * @param factor to multiply() with
-     * @return the current Tensor that has been changed (<strong>not a new
-     *         one</strong>).
-     */
-    public Tensor add(double factor) {
-        return add((float) factor);
+    fun add(factor: Float): Tensor {
+        return this.map(Function { v: Double -> v + factor })
     }
 
     /**
      * @param factor to multiply() with
-     * @return the current Tensor that has been changed (<strong>not a new
-     *         one</strong>).
+     * @return the current Tensor that has been changed (**not a new
+     * one**).
      */
-    public Tensor add(int factor) {
-        return add((float) factor);
+    fun add(factor: Double): Tensor {
+        return add(factor.toFloat())
+    }
+
+    /**
+     * @param factor to multiply() with
+     * @return the current Tensor that has been changed (**not a new
+     * one**).
+     */
+    fun add(factor: Int): Tensor {
+        return add(factor.toFloat())
     }
 
     /**
      * @param other to subtract
-     * @return the current Tensor that has been changed (<strong>not a new
-     *         one</strong>).
+     * @return the current Tensor that has been changed (**not a new
+     * one**).
      */
-    public Tensor sub(Tensor other) {
-        for (int f = 0; f < data.size(); f++) {
-            data.set(f, f - other.data.get(f));
+    fun sub(other: Tensor): Tensor {
+        for (f in data.indices) {
+            data[f] = f - other.data[f]
         }
-        return this;
+        return this
     }
 
-    public Tensor sub(float factor) {
-        return this.map(v -> v - factor);
-    }
-
-    /**
-     * @param factor to multiply() with
-     * @return the current Tensor that has been changed (<strong>not a new
-     *         one</strong>).
-     */
-    public Tensor sub(double factor) {
-        return sub((float) factor);
+    fun sub(factor: Float): Tensor {
+        return this.map(Function { v: Double -> v - factor })
     }
 
     /**
      * @param factor to multiply() with
-     * @return the current Tensor that has been changed (<strong>not a new
-     *         one</strong>).
+     * @return the current Tensor that has been changed (**not a new
+     * one**).
      */
-    public Tensor sub(int factor) {
-        return sub((float) factor);
+    fun sub(factor: Double): Tensor {
+        return sub(factor.toFloat())
     }
 
     /**
      * @param factor to multiply() with
-     * @return the current Tensor that has been changed (<strong>not a new
-     *         one</strong>).
+     * @return the current Tensor that has been changed (**not a new
+     * one**).
      */
-    public Tensor mul(float factor) {
-        this.map(v -> v * factor);
-        return this;
+    fun sub(factor: Int): Tensor {
+        return sub(factor.toFloat())
     }
 
     /**
      * @param factor to multiply() with
-     * @return the current Tensor that has been changed (<strong>not a new
-     *         one</strong>).
+     * @return the current Tensor that has been changed (**not a new
+     * one**).
      */
-    public Tensor mul(double factor) {
-        return mul((float) factor);
+    fun mul(factor: Float): Tensor {
+        this.map(Function { v: Double -> v * factor })
+        return this
     }
 
     /**
      * @param factor to multiply() with
-     * @return the current Tensor that has been changed (<strong>not a new
-     *         one</strong>).
+     * @return the current Tensor that has been changed (**not a new
+     * one**).
      */
-    public Tensor mul(int factor) {
-        return mul((float) factor);
+    fun mul(factor: Double): Tensor {
+        return mul(factor.toFloat())
     }
 
-    @Override
-    public String toString() {
-        return this.data.toString();
+    /**
+     * @param factor to multiply() with
+     * @return the current Tensor that has been changed (**not a new
+     * one**).
+     */
+    fun mul(factor: Int): Tensor {
+        return mul(factor.toFloat())
     }
 
-    @Override
-    public Tensor fromString(String s) {
-        this.data = new LinkedList(
-                Arrays.stream(s.split(",")).mapToDouble(Double::parseDouble).boxed().collect(Collectors.toList()));
-        return this;
+    fun mul(other: Tensor): Tensor {
+        for (f in data.indices) {
+            data[f] = f * other.data[f]
+        }
+        return this
+    }
+
+    override fun toString(): String {
+        return data.toString()
+    }
+
+    override fun fromString(s: String): Tensor {
+        data = LinkedList(
+                Arrays.stream(s.split(",").toTypedArray()).mapToDouble { s: String -> s.toDouble() }.boxed().collect(Collectors.toList()))
+        return this
     }
 
     /**
      * Calculates the cross-product of the given Tensors.
      */
-    public Tensor cross(Tensor vec2) {
-        return new Tensor(y() * vec2.z() - z() * vec2.y(), z() * vec2.x() - x() * vec2.z(),
-                x() * vec2.y() - y() * vec2.x());
+    fun cross(vec2: Tensor): Tensor {
+        return Tensor(y * vec2.z - z * vec2.y, z * vec2.x - x * vec2.z,
+                x * vec2.y - y * vec2.x)
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof Tensor) {
-            return ((Tensor) other).data.equals(this.data);
-        } else if (other instanceof Number) {
-            return this.data.stream().allMatch(v -> v == ((Number) other).doubleValue());
-        } else
-            return false;
-    }
-
-    public float distanceTo(Tensor other) {
-        float var = 0;
-
-        for (int f = 0; f < data.size(); f++) {
-            var *= (data.get(f) - other.data.get(f));
+    override fun equals(other: Any?): Boolean {
+        return when (other) {
+            is Tensor -> {
+                other.data == data
+            }
+            is Number -> {
+                data.stream().allMatch { v: Double -> v == other.toDouble() }
+            }
+            else -> false
         }
-
-        return (float) Math.sqrt(var);
     }
 
-    public Tensor map(Function<Double, Double> valueMapper) {
-        this.data = new LinkedList(data.stream().map(valueMapper).collect(Collectors.toList()));
-        return this;
-    }
-
-    @Override
-    public void forEach(Consumer<? super Double> action) {
-        data.stream().forEach(action);
-    }
-
-    public boolean contains(Tensor min, Tensor max) {
-        for (int i = 0; i < data.size(); i++) {
-            if (min.data.get(i) > this.data.get(i) || max.data.get(i) < this.data.get(i))
-                return false;
+    fun distanceTo(other: Tensor): Float {
+        var result = 0f
+        for (f in data.indices) {
+            result *= (data[f] - other.data[f]).toFloat()
         }
-
-        return true;
+        return sqrt(result.toDouble()).toFloat()
     }
 
-    public static boolean intersects(Tensor min, Tensor max) {
-        for (int i = 0; i < min.data.size(); i++) {
-            if (min.data.get(i) > max.data.get(i) || max.data.get(i) < max.data.get(i))
-                return false;
-        }
-
-        return true;
+    fun map(valueMapper: Function<Double, Double?>?): Tensor {
+        data = LinkedList(data.stream().map(valueMapper).collect(Collectors.toList()))
+        return this
     }
 
-    public Tensor setValueByAxis(Axis axis, double valueAt) {
-        switch (axis) {
-            case X:
-                data.set(0, valueAt);
-                break;
-            case Y:
-                data.set(1, valueAt);
-                break;
-            case Z:
-                data.set(2, valueAt);
-                break;
-        }
-        return this;
+    fun forEach(action: Consumer<in Double?>) {
+        data.stream().forEach(action)
     }
 
-    public double getValueByAxis(Axis axis) {
-        switch (axis) {
-            case X:
-                return data.get(0);
-            case Y:
-                return data.get(1);
-            case Z:
-                return data.get(2);
+    fun contains(min: Tensor, max: Tensor): Boolean {
+        for (i in data.indices) {
+            if (min.data[i] > data[i] || max.data[i] < data[i]) return false
         }
-        return 0;
+        return true
+    }
+
+    fun setValueByAxis(axis: Direction.Axis?, valueAt: Double): Tensor {
+        when (axis) {
+            Direction.Axis.X -> data[0] = valueAt
+            Direction.Axis.Y -> data[1] = valueAt
+            Direction.Axis.Z -> data[2] = valueAt
+        }
+        return this
+    }
+
+    fun getValueByAxis(axis: Direction.Axis?): Double {
+        when (axis) {
+            Direction.Axis.X -> return data[0]
+            Direction.Axis.Y -> return data[1]
+            Direction.Axis.Z -> return data[2]
+        }
+        return 0.0
+    }
+
+    operator fun set(index: Int, value: Double): Tensor {
+        data[index] = value
+        return this
+    }
+
+    fun setValues(vararg values: Double): Tensor {
+        for (i in values.indices) {
+            data[i] = values[i]
+        }
+        return this
+    }
+
+    operator fun get(index: Int): Double {
+        return data[index]
+    }
+
+    /**
+     * Multiply the given matrix with this Vector3f and store the result in `this`.
+     *
+     * @param mat the matrix
+     * @return this
+     */
+    fun mul(mat: RotationMatrix): Tensor {
+        this.setValues(
+                MathUtils.fma(mat.m00, x, MathUtils.fma(mat.m10, y, mat.m20 * z)),
+                MathUtils.fma(mat.m01, x, MathUtils.fma(mat.m11, y, mat.m21 * z)),
+                MathUtils.fma(mat.m02, x, MathUtils.fma(mat.m12, y, mat.m22 * z))
+        )
+        return this
+    }
+
+    fun mul(mat: RotationMatrix, dest: Tensor): Tensor {
+        dest.setValues(
+                MathUtils.fma(mat.m00, x, MathUtils.fma(mat.m10, y, mat.m20 * z)),
+                MathUtils.fma(mat.m01, x, MathUtils.fma(mat.m11, y, mat.m21 * z)),
+                MathUtils.fma(mat.m02, x, MathUtils.fma(mat.m12, y, mat.m22 * z))
+        )
+        return dest
+    }
+
+    fun getNumber(index: Int): Number {
+        return data[index]
     }
 
     /**
      * Duplicates this tensor with the same dimensions and data.
      */
-    @Override
-    public Tensor clone() {
-        return new Tensor(data, dimensions);
+    public override fun clone(): Tensor {
+        return Tensor(data, dimensions)
     }
 
-    public LinkedList<Double> getData() {
-        return this.data;
-    }
-
-    public LinkedList<Integer> getDimensions() {
-        return this.dimensions;
-    }
-
-    @Override
-    public Iterator<Double> iterator() {
-        return new Iterator<Double>() {
-
-            private int currentIndex = 0;
-
-            @Override
-            public boolean hasNext() {
-                return currentIndex < data.size();
+    override fun iterator(): MutableIterator<Double> {
+        return object : MutableIterator<Double> {
+            private var currentIndex = 0
+            override fun hasNext(): Boolean {
+                return currentIndex < data.size
             }
 
-            @Override
-            public Double next() {
-                return data.get(currentIndex++);
+            override fun next(): Double {
+                return data[currentIndex++]
             }
 
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
+            override fun remove() {
+                throw UnsupportedOperationException()
             }
-        };
+        }
     }
 
-    public boolean isEmpty() {
-        return this.data.stream().allMatch(v -> v == 0);
+    override fun hashCode(): Int {
+        var result = data.hashCode()
+        result = 31 * result + dimensions.hashCode()
+        return result
+    }
+
+    val isEmpty: Boolean
+        get() = data.stream().allMatch { v: Double -> v == 0.0 }
+
+    companion object {
+        private const val serialVersionUID = 6106298603154164750L
+        /**
+         * An empty Scalar with 1 dimension.
+         */
+        val ZERO = Tensor(intArrayOf(1))
+        /**
+         * An empty Tensor with 3 dimensions.
+         */
+        val ZERO_VECTOR = Tensor(intArrayOf(3))
+
+        @JvmStatic
+        fun intersects(min: Tensor, max: Tensor): Boolean {
+            for (i in min.data.indices) {
+                if (min.data[i] > max.data[i] || max.data[i] < max.data[i]) return false
+            }
+            return true
+        }
     }
 }

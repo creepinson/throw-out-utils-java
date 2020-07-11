@@ -1,26 +1,16 @@
-package dev.throwouterror.util.threading;
+package dev.throwouterror.util.worker
 
-import javax.swing.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
+import javax.swing.JComponent
 
 /**
  * @author Creepinson https:/theoparis.com/about
- **/
-public abstract class GuiWorker {
-    public final Set<Object> parameters;
-
+ */
+abstract class GuiWorker : Worker() {
     /**
      * Creates the gui for use in a PausingConfirmationWorker
      *
      * @return a swing gui component
-     * @see PausingConfirmationWorker
+     * @see ConfirmationGuiWorker
      */
-    public abstract JComponent makeGui();
-
-    public GuiWorker(Object... parameters) {
-        this.parameters = Collections.unmodifiableSet(Arrays.stream(parameters).collect(Collectors.toSet()));
-    }
+    abstract fun makeGui(): JComponent?
 }

@@ -1,16 +1,11 @@
-package dev.throwouterror.util.math.interpolation;
+package dev.throwouterror.util.math.interpolation
 
-import dev.throwouterror.util.math.Tensor;
+import dev.throwouterror.util.math.Tensor
+import kotlin.math.cos
 
-public class CosineInterpolation extends Interpolation {
-
-	public CosineInterpolation(Tensor... points) {
-		super(points);
-	}
-
-	@Override
-	public float valueAt(double mu, int pointIndex, int pointIndexNext, int dim) {
-		double mu2 = (1 - Math.cos(mu * Math.PI)) / 2;
-		return (float) (getValue(pointIndex, dim) * (1 - mu2) + getValue(pointIndexNext, dim) * mu2);
-	}
+class CosineInterpolation(vararg points: Tensor) : Interpolation(*points) {
+    override fun valueAt(mu: Double, pointIndex: Int, pointIndexNext: Int, dim: Int): Float {
+        val mu2 = (1 - cos(mu * Math.PI)) / 2
+        return (getValue(pointIndex, dim) * (1 - mu2) + getValue(pointIndexNext, dim) * mu2).toFloat()
+    }
 }

@@ -1,53 +1,42 @@
-package dev.throwouterror.util.math;
+package dev.throwouterror.util.math
 
-public class SmoothValue {
-
-    protected double aimed;
-    protected double current;
-    protected double before;
-    protected long timestamp;
-
-    public final long time;
-
-    public SmoothValue(long time, double initalValue) {
-        this.time = time;
-        setStart(initalValue);
+class SmoothValue @JvmOverloads constructor(val time: Long, initalValue: Double = 0.0) {
+    protected var aimed = 0.0
+    protected var current = 0.0
+    protected var before = 0.0
+    protected var timestamp: Long = 0
+    fun setStart(value: Double) {
+        aimed = value
+        current = value
+        before = value
+        timestamp = 0
     }
 
-    public SmoothValue(long time) {
-        this(time, 0);
+    fun set(value: Double) {
+        timestamp = System.currentTimeMillis()
+        aimed = value
+        before = current
     }
 
-    public void setStart(double value) {
-        this.aimed = value;
-        this.current = value;
-        this.before = value;
-        this.timestamp = 0;
-    }
-
-    public void set(double value) {
-        timestamp = System.currentTimeMillis();
-        this.aimed = value;
-        before = this.current;
-    }
-
-    public void tick() {
-        if (timestamp != 0) {
+    fun tick() {
+        if (timestamp != 0L) {
             if (timestamp + time <= System.currentTimeMillis()) {
-                current = aimed;
-                before = current;
-                timestamp = 0;
-            } else
-                current = before + (aimed - before) * ((System.currentTimeMillis() - timestamp) / (double) time);
+                current = aimed
+                before = current
+                timestamp = 0
+            } else current = before + (aimed - before) * ((System.currentTimeMillis() - timestamp) / time.toDouble())
         }
     }
 
-    public double current() {
-        return current;
+    fun current(): Double {
+        return current
     }
 
-    public double aimed() {
-        return aimed;
+    fun aimed(): Double {
+        return aimed
     }
 
+    init {
+        setStart(initalValue)
+    }
 }

@@ -1,27 +1,23 @@
-package dev.throwouterror.util;
+package dev.throwouterror.util
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.*
+import java.util.function.Consumer
+import java.util.function.Supplier
 
 /**
  * @author Creepinson https:/theoparis.com/about
- **/
-public class TransformUtil {
-    public static <T> Set<T> asSet(T[] array) {
-        Set<T> set = new HashSet<>(Arrays.asList(array));
-        return set;
+ */
+object TransformUtil {
+    fun <T> asSet(array: Array<T>): Set<T> {
+        return HashSet(Arrays.asList(*array))
     }
 
-    public static <T> T make(Supplier<T> supplier) {
-        return supplier.get();
+    fun <T> make(supplier: Supplier<T>): T {
+        return supplier.get()
     }
 
-    public static <T> T make(T object, Consumer<T> consumer) {
-        consumer.accept(object);
-        return object;
+    fun <T> make(`object`: T, consumer: Consumer<T>): T {
+        consumer.accept(`object`)
+        return `object`
     }
-
 }

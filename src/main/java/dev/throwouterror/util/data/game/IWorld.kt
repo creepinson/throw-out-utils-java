@@ -1,16 +1,12 @@
-package dev.throwouterror.util.data.game;
+package dev.throwouterror.util.data.game
 
-import java.util.Collection;
-
-import dev.throwouterror.util.ISerializable;
+import dev.throwouterror.util.ISerializable
 
 /**
  * @author Creepinson https:/theoparis.com/about
- **/
-public interface IWorld extends ISerializable {
-    Collection<IChunk> getLoadedChunks();
-
-    IChunk getChunk(int x, int z);
-
-    int getDimension();
+ */
+interface IWorld : ISerializable<Any?> {
+    val loadedChunks: Collection<IChunk?>?
+    fun getChunk(x: Int, z: Int): IChunk?
+    val dimension: Int
 }

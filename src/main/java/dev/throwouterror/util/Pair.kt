@@ -1,53 +1,26 @@
-package dev.throwouterror.util;
+package dev.throwouterror.util
 
-import java.util.Map.Entry;
+class Pair<K, V>(override val key: K, override var value: V) : MutableMap.MutableEntry<K, V> {
 
-public class Pair<K, V> implements Entry<K, V> {
-
-    public final K key;
-    public V value;
-
-    public Pair(K key, V value) {
-        this.key = key;
-        this.value = value;
+    override fun setValue(value: V): V {
+        this.value = value
+        return value
     }
 
-    @Override
-    public K getKey() {
-        return key;
+    override fun hashCode(): Int {
+        return key.hashCode()
     }
 
-    @Override
-    public V getValue() {
-        return value;
+    fun `is`(key: K): Boolean {
+        return if (this.key != null) this.key == key else this.key === key
     }
 
-    @Override
-    public V setValue(V value) {
-        this.value = value;
-        return value;
+    override fun equals(obj: Any?): Boolean {
+        return if (obj is Pair<*, *>) key == obj.key else false
     }
 
-    @Override
-    public int hashCode() {
-        return key.hashCode();
+    override fun toString(): String {
+        return "[$key=$value]"
     }
 
-    public boolean is(K key) {
-        if (this.key != null)
-            return this.key.equals(key);
-        return this.key == key;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Pair)
-            return key.equals(((Pair) obj).key);
-        return false;
-    }
-
-    @Override
-    public String toString() {
-        return "[" + key + "=" + value + "]";
-    }
 }

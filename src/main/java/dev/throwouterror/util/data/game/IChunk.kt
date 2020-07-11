@@ -1,20 +1,15 @@
-package dev.throwouterror.util.data.game;
+package dev.throwouterror.util.data.game
 
-import java.io.Serializable;
-
-import dev.throwouterror.util.math.Tensor;
+import dev.throwouterror.util.math.Tensor
+import java.io.Serializable
 
 /**
  * @author Creepinson https:/theoparis.com/about
- **/
-public interface IChunk extends Serializable {
-	IWorld getWorld();
-
-	int getX();
-
-	int getZ();
-
-	void setTile(ITile tile, Tensor position);
-
-	ITile getTile(Tensor position);
+ */
+interface IChunk : Serializable {
+    val world: IWorld?
+    val x: Int
+    val z: Int
+    fun setTile(tile: ITile?, position: Tensor?)
+    fun getTile(position: Tensor?): ITile?
 }

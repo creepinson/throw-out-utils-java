@@ -1,81 +1,76 @@
-package dev.throwouterror.util;
+package dev.throwouterror.util
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*
+import java.util.stream.Collectors
 
 /**
  * @author Creepinson https:/theoparis.com/about
- **/
-public class ArrayUtils {
-
-    public static LinkedList<Integer> toLinkedList(int... array) {
-        LinkedList<Integer> list = new LinkedList<Integer>();
-        for (int i : array) {
-            list.add(i);
+ */
+object ArrayUtils {
+    fun toLinkedList(vararg array: Int): LinkedList<Int> {
+        val list = LinkedList<Int>()
+        for (i in array) {
+            list.add(i)
         }
-        return list;
+        return list
     }
 
-    public static ArrayList<Integer> toList(int... array) {
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        for (int i : array) {
-            list.add(i);
+    fun toList(vararg array: Int): ArrayList<Int> {
+        val list = ArrayList<Int>()
+        for (i in array) {
+            list.add(i)
         }
-        return list;
+        return list
     }
 
-    public static LinkedList<Float> toLinkedList(float... array) {
-        LinkedList<Float> list = new LinkedList<Float>();
-        for (float i : array) {
-            list.add(i);
+    fun toLinkedList(vararg array: Float): LinkedList<Float> {
+        val list = LinkedList<Float>()
+        for (i in array) {
+            list.add(i)
         }
-        return list;
+        return list
     }
 
-    public static ArrayList<Float> toList(float... array) {
-        ArrayList<Float> list = new ArrayList<Float>();
-        for (float i : array) {
-            list.add(i);
+    fun toList(vararg array: Float): ArrayList<Float> {
+        val list = ArrayList<Float>()
+        for (i in array) {
+            list.add(i)
         }
-        return list;
+        return list
     }
 
-    public static LinkedList<Double> toLinkedList(double... array) {
-        LinkedList<Double> list = new LinkedList<Double>();
-        for (double i : array) {
-            list.add(i);
+    fun toLinkedList(vararg array: Double): LinkedList<Double> {
+        val list = LinkedList<Double>()
+        for (i in array) {
+            list.add(i)
         }
-        return list;
+        return list
     }
 
-    public static ArrayList<Double> toList(double... array) {
-        ArrayList<Double> list = new ArrayList<Double>();
-        for (double i : array) {
-            list.add(i);
+    fun toList(vararg array: Double): ArrayList<Double> {
+        val list = ArrayList<Double>()
+        for (i in array) {
+            list.add(i)
         }
-        return list;
+        return list
     }
 
-    public static boolean isArray(Object obj) {
-        return obj != null && obj.getClass().isArray();
+    fun isArray(obj: Any?): Boolean {
+        return obj != null && obj.javaClass.isArray
     }
 
-    public static <T> Iterator<T> forArray(T[] arr) {
-        return Arrays.asList(arr).iterator();
+    fun <T> forArray(arr: Array<T>): MutableIterator<T> {
+        return Arrays.asList(*arr).iterator()
     }
 
     /**
-     * Simple helper function to <strong>create</strong> and fill an array with the
+     * Simple helper function to **create** and fill an array with the
      * specified value.
      *
      * @return the array being filled
      */
-    public static <T> T[] fill(int size, T value) {
-        return fill(getArray(size), value);
+    fun <T> fill(size: Int, value: T): Array<T> {
+        return fill(getArray(size), value)
     }
 
     /**
@@ -83,18 +78,18 @@ public class ArrayUtils {
      *
      * @return the array being filled
      */
-    public static <T> ArrayList<T> fillList(ArrayList<T> a, T val) {
-        return (ArrayList<T>) a.stream().map(v -> val).collect(Collectors.toList());
+    fun <T> fillList(a: ArrayList<T>, `val`: T): ArrayList<T> {
+        return a.stream().map { v: T -> `val` }.collect(Collectors.toList()) as ArrayList<T>
     }
 
     /**
-     * Simple helper function to <strong>create</strong> and fill an array with the
+     * Simple helper function to **create** and fill an array with the
      * specified value.
      *
      * @return the array being filled
      */
-    public static <T> ArrayList<T> fillList(int size, T value) {
-        return fillList(new ArrayList<>(), value);
+    fun <T> fillList(size: Int, value: T): ArrayList<T> {
+        return fillList(ArrayList(), value)
     }
 
     /**
@@ -102,72 +97,70 @@ public class ArrayUtils {
      *
      * @return the array being filled
      */
-    public static <T> T[] fill(T[] a, T val) {
-        Arrays.fill(a, val);
-        return a;
+    fun <T> fill(a: Array<T>, `val`: T): Array<T> {
+        Arrays.fill(a, `val`)
+        return a
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T[] getArray(int size) {
-        Object[] arr = new Object[size];
-
-        return (T[]) arr;
+    fun <T> getArray(size: Int): Array<T> {
+        val arr = arrayOfNulls<Any>(size)
+        return arr as Array<T>
     }
 
-    public static float[] toFloatArray(double[] data) {
-        float[] result = new float[data.length];
-        for (int i = 0; i < data.length; i++) {
-            result[i] = (float) data[i];
+    fun toFloatArray(data: DoubleArray): FloatArray {
+        val result = FloatArray(data.size)
+        for (i in data.indices) {
+            result[i] = data[i].toFloat()
         }
-        return result;
+        return result
     }
 
-    public static float[] toFloatArray(int[] data) {
-        float[] result = new float[data.length];
-        for (int i = 0; i < data.length; i++) {
-            result[i] = (float) data[i];
+    fun toFloatArray(data: IntArray): FloatArray {
+        val result = FloatArray(data.size)
+        for (i in data.indices) {
+            result[i] = data[i].toFloat()
         }
-        return result;
+        return result
     }
 
-    public static double[] toDoubleArray(float[] data) {
-        double[] result = new double[data.length];
-        for (int i = 0; i < data.length; i++) {
-            result[i] = data[i];
+    fun toDoubleArray(data: FloatArray): DoubleArray {
+        val result = DoubleArray(data.size)
+        for (i in data.indices) {
+            result[i] = data[i].toDouble()
         }
-        return result;
+        return result
     }
 
     /**
      * Helper function to multiply the values in a list.
      */
-    public static int multiply(List<Integer> data) {
-        int result = 1;
-        for (Integer i : data) {
-            result *= i.intValue();
+    fun multiply(data: List<Int>): Int {
+        var result = 1
+        for (i in data) {
+            result *= i
         }
-        return result;
+        return result
     }
 
     /**
      * Helper function to multiply the values in a list.
      */
-    public static float multiplyf(List<Float> data) {
-        float result = 1;
-        for (Float i : data) {
-            result *= i.floatValue();
+    fun multiplyf(data: List<Float>): Float {
+        var result = 1f
+        for (i in data) {
+            result *= i
         }
-        return result;
+        return result
     }
 
     /**
      * Helper function to multiply the values in a list.
      */
-    public static double multiplyd(List<Double> data) {
-        double result = 1;
-        for (Double i : data) {
-            result *= i.doubleValue();
+    fun multiplyd(data: List<Double>): Double {
+        var result = 1.0
+        for (i in data) {
+            result *= i
         }
-        return result;
+        return result
     }
 }

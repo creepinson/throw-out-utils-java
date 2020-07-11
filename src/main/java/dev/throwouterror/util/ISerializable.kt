@@ -1,14 +1,11 @@
-package dev.throwouterror.util;
+package dev.throwouterror.util
 
-import java.io.Serializable;
-
-import com.google.gson.JsonObject;
+import java.io.Serializable
 
 /**
  * @author Creepinson https:/theoparis.com/about
- **/
-public interface ISerializable<T> extends Serializable {
-	String toString();
-
-	T fromString(String s);
+ */
+interface ISerializable<T> : Serializable {
+    override fun toString(): String
+    fun fromString(s: String): T
 }
