@@ -17,6 +17,6 @@ fun Any.toJsonString(): String {
     return JsonUtils.get().toJson(this)
 }
 
-fun String.fromJsonString(type: Class<*>): Any {
+fun <T> String.fromJsonString(type: Class<T>): T {
     return JsonUtils.get().fromJson(this, type)
 }
