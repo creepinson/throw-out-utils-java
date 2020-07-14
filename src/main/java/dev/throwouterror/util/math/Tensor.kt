@@ -3,7 +3,6 @@ package dev.throwouterror.util.math
 import dev.throwouterror.util.ArrayUtils
 import dev.throwouterror.util.ISerializable
 import dev.throwouterror.util.math.rotation.RotationMatrix
-import org.apache.commons.collections4.ListUtils
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
@@ -91,29 +90,33 @@ class Tensor : ISerializable<Tensor>, Cloneable, Iterable<Double> {
     /**
      * @return This tensor's data in a form of a multidimensional list.
      */
-    fun toList(): LinkedList<*> {
-        return go(data)
-    }
-
-    fun toArray(): DoubleArray {
-        return data.stream().mapToDouble { v: Double? -> v!! }.toArray()
-    }
-
-
-    fun toIntArray(): IntArray {
-        return data.stream().mapToInt { v: Double? -> v!!.toInt() }.toArray()
-    }
+    fun toChunkedList(): LinkedList<*> =
+            go(data)
 
     /**
      * @return A string representation of the multidimensional list.
      */
-    fun toArrayString(): String {
-        return Arrays.deepToString(this.toList().toTypedArray())
-    }
+    fun toChunkedString(): String =
+            this.toList().toTypedArray().contentDeepToString()
+
+    /**
+     * @return This tensor's data in a form of a multidimensional array.
+     */
+    fun toChunkedArray(): Array<*> =
+            go(data).toArray()
+
+    fun toDoubleArray(): DoubleArray =
+            data.toDoubleArray()
+
+    fun toFloatArray(): FloatArray =
+            data.map { it.toFloat() }.toFloatArray()
+
+    fun toIntArray(): IntArray =
+            data.map { it.toInt() }.toIntArray()
 
     private fun go(arr: List<Double>): LinkedList<*> {
         val s = dimensions.pop()
-        val result = ListUtils.partition(arr, s)
+        val result = arr.chunked(s)
         dimensions.push(s)
         return if (result.size > 1) LinkedList<Any?>(result.stream().map { arr: List<Double> -> go(arr) }.collect(Collectors.toList())) else LinkedList<Any?>(arr)
     }
@@ -425,3 +428,5 @@ class Tensor : ISerializable<Tensor>, Cloneable, Iterable<Double> {
         }
     }
 }
+
+fun List<Number>.toTensor(): Tensor = Tensor(*this.map { it.toDouble() }.toDoubleArray())
