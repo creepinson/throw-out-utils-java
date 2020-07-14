@@ -109,10 +109,10 @@ class Tensor : ISerializable<Tensor>, Cloneable, Iterable<Double> {
             data.toDoubleArray()
 
     fun toFloatArray(): FloatArray =
-            data.map { it.toFloat() }.toFloatArray()
+            data.map(Double::toFloat).toFloatArray()
 
     fun toIntArray(): IntArray =
-            data.map { it.toInt() }.toIntArray()
+            data.map(Double::toInt).toIntArray()
 
     private fun go(arr: List<Double>): LinkedList<*> {
         val s = dimensions.pop()
@@ -429,4 +429,4 @@ class Tensor : ISerializable<Tensor>, Cloneable, Iterable<Double> {
     }
 }
 
-fun List<Number>.toTensor(): Tensor = Tensor(*this.map { it.toDouble() }.toDoubleArray())
+fun <T> List<T>.toTensor(): Tensor where T : Number = Tensor(*this.map(Number::toDouble).toDoubleArray())
