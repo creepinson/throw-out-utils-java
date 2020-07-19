@@ -1,6 +1,3 @@
-/*
- * Copyright (c) Creepinson
- */
 package dev.throwouterror.util.math.rotation
 
 import dev.throwouterror.util.math.Direction
