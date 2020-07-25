@@ -1,4 +1,4 @@
-package dev.throwouterror.util
+package dev.throwouterror.util.module
 
 interface Module {
     fun onEnable()

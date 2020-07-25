@@ -8,41 +8,52 @@ import dev.throwouterror.util.math.Tensor
 import dev.throwouterror.util.math.Tensor.Companion.intersects
 import java.io.Serializable
 import java.lang.reflect.Type
+import kotlin.math.max
+import kotlin.math.min
 
 class Cuboid : Cloneable, Serializable {
-    fun minX(): Double {
-        return minPoint.x
-    }
+    var minX: Double
+        get() = minPoint.x
+        set(value) {
+            minPoint.x = value
+        }
+    var minY: Double
+        get() = minPoint.y
+        set(value) {
+            minPoint.y = value
+        }
+    var minZ: Double
+        get() = minPoint.z
+        set(value) {
+            minPoint.z = value
+        }
 
-    fun minY(): Double {
-        return minPoint.y
-    }
+    var maxX: Double
+        get() = maxPoint.x
+        set(value) {
+            maxPoint.x = value
+        }
+    var maxY: Double
+        get() = maxPoint.y
+        set(value) {
+            maxPoint.y = value
+        }
+    var maxZ: Double
+        get() = maxPoint.z
+        set(value) {
+            maxPoint.z = value
+        }
 
-    fun minZ(): Double {
-        return minPoint.z
-    }
-
-    fun maxX(): Double {
-        return maxPoint.x
-    }
-
-    fun maxY(): Double {
-        return maxPoint.y
-    }
-
-    fun maxZ(): Double {
-        return maxPoint.z
-    }
 
     class Serializer : JsonSerializer<Cuboid> {
         override fun serialize(src: Cuboid, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
             val `object` = JsonObject()
-            `object`.addProperty("minX", src.minX())
-            `object`.addProperty("minY", src.minY())
-            `object`.addProperty("minZ", src.minZ())
-            `object`.addProperty("maxX", src.maxX())
-            `object`.addProperty("maxY", src.maxY())
-            `object`.addProperty("maxZ", src.maxZ())
+            `object`.addProperty("minX", src.minX)
+            `object`.addProperty("minY", src.minY)
+            `object`.addProperty("minZ", src.minZ)
+            `object`.addProperty("maxX", src.maxX)
+            `object`.addProperty("maxY", src.maxY)
+            `object`.addProperty("maxZ", src.maxZ)
             `object`.addProperty("size", src.type.toString())
             val centerObj = JsonObject()
             centerObj.addProperty("x", src.center.x)
@@ -76,6 +87,7 @@ class Cuboid : Cloneable, Serializable {
      * @return the Tensor containing the minimum point of this cuboid
      */
     val minPoint: Tensor
+
     /**
      * '
      *
@@ -128,83 +140,7 @@ class Cuboid : Cloneable, Serializable {
      * with positive changes decreasing max values and negative changes increasing
      * min values. <br></br>
      * If the amount to contract by is larger than the length of a side, then the
-     * side will wrap (still creating a valid AABB - see last sample).
-     *
-     * <h3>Samples:</h3>
-     * <table>
-     * <tr>
-     * <th>Input</th>
-     * <th>Result</th>
-    </tr> *
-     * <tr>
-     * <td>
-     *
-     * <pre>
-     * `new AxisAlignedBB(0, 0, 0, 4, 4, 4).contract(2, 2, 2)`
-    </pre> *
-     *
-    </td> *
-     * <td>
-     *
-     * <pre>
-     * <samp>box[0.0,
-     * 0.0, 0.0 -> 2.0, 2.0, 2.0]</samp>
-    </pre> *
-     *
-    </td> *
-    </tr> *
-     * <tr>
-     * <td>
-     *
-     * <pre>
-     * `new AxisAlignedBB(0, 0, 0, 4, 4, 4).contract(-2, -2, -
-     * 2)`
-    </pre> *
-     *
-    </td> *
-     * <td>
-     *
-     * <pre>
-     * <samp>box[2.0, 2.0, 2.0 -> 4.0, 4.0, 4.0]</samp>
-    </pre> *
-     *
-    </td> *
-    </tr> *
-     * <tr>
-     * <td>
-     *
-     * <pre>
-     * `new AxisAlignedBB(5, 5, 5, 7, 7, 7).contract(0, 1, -
-     * 1)`
-    </pre> *
-     *
-    </td> *
-     * <td>
-     *
-     * <pre>
-     * <samp>box[5.0, 5.0, 6.0 -> 7.0, 6.0, 7.0]</samp>
-    </pre> *
-     *
-    </td> *
-    </tr> *
-     * <tr>
-     * <td>
-     *
-     * <pre>
-     * `new AxisAlignedBB(-2, -2, -2, 2, 2, 2).contract(4, -4,
-     * 0)`
-    </pre> *
-     *
-    </td> *
-     * <td>
-     *
-     * <pre>
-     * <samp>box[-8.0, 2.0, -2.0 -> -2.0, 8.0, 2.0]</samp>
-    </pre> *
-     *
-    </td> *
-    </tr> *
-    </table> *
+     * side will wrap (still creating a valid Cuboid - see last sample).
      *
      * <h3>See Also:</h3>
      *
@@ -219,12 +155,12 @@ class Cuboid : Cloneable, Serializable {
      * @return A new modified bounding box.
      */
     fun contract(x: Float, y: Float, z: Float): Cuboid {
-        var d0 = minX().toFloat()
-        var d1 = minY().toFloat()
-        var d2 = minZ().toFloat()
-        var d3 = maxX().toFloat()
-        var d4 = maxY().toFloat()
-        var d5 = maxZ().toFloat()
+        var d0 = minX.toFloat()
+        var d1 = minY.toFloat()
+        var d2 = minZ.toFloat()
+        var d3 = maxX.toFloat()
+        var d4 = maxY.toFloat()
+        var d5 = maxZ.toFloat()
         if (x < 0.0) {
             d0 -= x
         } else if (x > 0.0) {
@@ -248,65 +184,6 @@ class Cuboid : Cloneable, Serializable {
      * positive changes increasing max values and negative changes decreasing min
      * values.
      *
-     * <h3>Samples:</h3>
-     * <table>
-     * <tr>
-     * <th>Input</th>
-     * <th>Result</th>
-    </tr> *
-     * <tr>
-     * <td>
-     *
-     * <pre>
-     * `new AxisAlignedBB(0, 0, 0, 1, 1, 1).expand(2, 2, 2)`
-    </pre> *
-     *
-    </td> *
-     * <td>
-     *
-     * <pre>
-     * <samp>box[0, 0,
-     * 0 -> 3, 3, 3]</samp>
-    </pre> *
-     *
-    </td> *
-     * <td>
-    </td></tr> * <tr>
-     * <td>
-     *
-     * <pre>
-     * `new AxisAlignedBB(0, 0, 0, 1, 1, 1).expand(-2, -2, -2)`
-    </pre> *
-     *
-    </td> *
-     * <td>
-     *
-     * <pre>
-     * <samp>box[-2,
-     * -2, -2 -> 1, 1, 1]</samp>
-    </pre> *
-     *
-    </td> *
-     * <td>
-    </td></tr> * <tr>
-     * <td>
-     *
-     * <pre>
-     * `new AxisAlignedBB(5, 5, 5, 7, 7, 7).expand(0, 1, -1)`
-    </pre> *
-     *
-    </td> *
-     * <td>
-     *
-     * <pre>
-     * <samp>box[5, 5,
-     * 4, 7, 8, 7]</samp>
-    </pre> *
-     *
-    </td> *
-     * <td>
-    </td></tr></table> *
-     *
      * <h3>See Also:</h3>
      *
      *  * [.contract] - like this, except for
@@ -321,12 +198,12 @@ class Cuboid : Cloneable, Serializable {
      * volume to this bounding box.
      */
     fun expand(x: Float, y: Float, z: Float): Cuboid {
-        var d0 = minX().toFloat()
-        var d1 = minY().toFloat()
-        var d2 = minZ().toFloat()
-        var d3 = maxX().toFloat()
-        var d4 = maxY().toFloat()
-        var d5 = maxZ().toFloat()
+        var d0 = minX.toFloat()
+        var d1 = minY.toFloat()
+        var d2 = minZ.toFloat()
+        var d3 = maxX.toFloat()
+        var d4 = maxY.toFloat()
+        var d5 = maxZ.toFloat()
         if (x < 0.0) {
             d0 += x
         } else if (x > 0.0) {
@@ -347,88 +224,12 @@ class Cuboid : Cloneable, Serializable {
 
     /**
      * Creates a new [Cuboid] that has been contracted by the given amount in
-     * both directions. Negative values will shrink the AABB instead of expanding
+     * both directions. Negative values will shrink the Cuboid instead of expanding
      * it. <br></br>
      * Side lengths will be increased by 2 times the value of the parameters, since
      * both min and max are changed. <br></br>
      * If contracting and the amount to contract by is larger than the length of a
-     * side, then the side will wrap (still creating a valid AABB - see last ample).
-     *
-     * <h3>Samples:</h3>
-     * <table>
-     * <tr>
-     * <th>Input</th>
-     * <th>Result</th>
-    </tr> *
-     * <tr>
-     * <td>
-     *
-     * <pre>
-     * `new AxisAlignedBB(0, 0, 0, 1, 1, 1).grow(2, 2, 2)`
-    </pre> *
-     *
-    </td> *
-     * <td>
-     *
-     * <pre>
-     * <samp>box[-2.0, -
-     * 2.0, -2.0 -> 3.0, 3.0, 3.0]</samp>
-    </pre> *
-     *
-    </td> *
-    </tr> *
-     * <tr>
-     * <td>
-     *
-     * <pre>
-     * `new AxisAlignedBB(0, 0, 0, 6, 6, 6).grow(-2, -2, -2)`
-    </pre> *
-     *
-    </td> *
-     * <td>
-     *
-     * <pre>
-     * <samp>box[2.0,
-     * 2.0, 2.0 -> 4.0, 4.0, 4.0]</samp>
-    </pre> *
-     *
-    </td> *
-    </tr> *
-     * <tr>
-     * <td>
-     *
-     * <pre>
-     * `new AxisAlignedBB(5, 5, 5, 7, 7, 7).grow(0, 1, -1)`
-    </pre> *
-     *
-    </td> *
-     * <td>
-     *
-     * <pre>
-     * <samp>box[5.0,
-     * 4.0, 6.0 -> 7.0, 8.0, 6.0]</samp>
-    </pre> *
-     *
-    </td> *
-    </tr> *
-     * <tr>
-     * <td>
-     *
-     * <pre>
-     * `new AxisAlignedBB(1, 1, 1, 3, 3, 3).grow(-4, -2, -3)`
-    </pre> *
-     *
-    </td> *
-     * <td>
-     *
-     * <pre>
-     * <samp>box[-1.0,
-     * 1.0, 0.0 -> 5.0, 3.0, 4.0]</samp>
-    </pre> *
-     *
-    </td> *
-    </tr> *
-    </table> *
+     * side, then the side will wrap (still creating a valid Cuboid - see last ample)
      *
      * <h3>See Also:</h3>
      *
@@ -443,48 +244,48 @@ class Cuboid : Cloneable, Serializable {
      * @return A modified bounding box.
      */
     fun grow(x: Float, y: Float, z: Float): Cuboid {
-        val d0 = minX() - x
-        val d1 = minY() - y
-        val d2 = minZ() - z
-        val d3 = maxX() + x
-        val d4 = maxY() + y
-        val d5 = maxZ() + z
+        val d0 = minX - x
+        val d1 = minY - y
+        val d2 = minZ - z
+        val d3 = maxX + x
+        val d4 = maxY + y
+        val d5 = maxZ + z
         return Cuboid(d0, d1, d2, d3, d4, d5)
     }
 
     /**
      * Creates a new [Cuboid] that is expanded by the given value in all
      * directions. Equivalent to [.grow] with the given
-     * value for all 3 params. Negative values will shrink the AABB. <br></br>
+     * value for all 3 params. Negative values will shrink the Cuboid. <br></br>
      * Side lengths will be increased by 2 times the value of the parameter, since
      * both min and max are changed. <br></br>
      * If contracting and the amount to contract by is larger than the length of a
-     * side, then the side will wrap (still creating a valid AABB - see samples on
+     * side, then the side will wrap (still creating a valid Cuboid - see samples on
      * [.grow]).
      *
-     * @return A modified AABB.
+     * @return A modified Cuboid.
      */
     fun grow(value: Float): Cuboid {
         return this.grow(value, value, value)
     }
 
     fun intersect(other: Cuboid): Cuboid {
-        val d0 = Math.max(minX(), other.minX()).toFloat()
-        val d1 = Math.max(minY(), other.minY()).toFloat()
-        val d2 = Math.max(minZ(), other.minZ()).toFloat()
-        val d3 = Math.min(maxX(), other.maxX()).toFloat()
-        val d4 = Math.min(maxY(), other.maxY()).toFloat()
-        val d5 = Math.min(maxZ(), other.maxZ()).toFloat()
+        val d0 = max(minX, other.minX).toFloat()
+        val d1 = max(minY, other.minY).toFloat()
+        val d2 = max(minZ, other.minZ).toFloat()
+        val d3 = min(maxX, other.maxX).toFloat()
+        val d4 = min(maxY, other.maxY).toFloat()
+        val d5 = min(maxZ, other.maxZ).toFloat()
         return Cuboid(d0, d1, d2, d3, d4, d5)
     }
 
     fun union(other: Cuboid): Cuboid {
-        val d0 = Math.min(minX(), other.minX()).toFloat()
-        val d1 = Math.min(minY(), other.minY()).toFloat()
-        val d2 = Math.min(minZ(), other.minZ()).toFloat()
-        val d3 = Math.max(maxX(), other.maxX()).toFloat()
-        val d4 = Math.max(maxY(), other.maxY()).toFloat()
-        val d5 = Math.max(maxZ(), other.maxZ()).toFloat()
+        val d0 = min(minX, other.minX).toFloat()
+        val d1 = min(minY, other.minY).toFloat()
+        val d2 = min(minZ, other.minZ).toFloat()
+        val d3 = max(maxX, other.maxX).toFloat()
+        val d4 = max(maxY, other.maxY).toFloat()
+        val d5 = max(maxZ, other.maxZ).toFloat()
         return Cuboid(d0, d1, d2, d3, d4, d5)
     }
 
@@ -492,8 +293,8 @@ class Cuboid : Cloneable, Serializable {
      * Offsets the current bounding box by the specified amount.
      */
     fun offset(x: Float, y: Float, z: Float): Cuboid {
-        return Cuboid(minX() + x, minY() + y, minZ() + z, maxX() + x, maxY() + y,
-                maxZ() + z)
+        return Cuboid(minX + x, minY + y, minZ + z, maxX + x, maxY + y,
+                maxZ + z)
     }
 
     fun offset(vec: Tensor?): Cuboid {
@@ -506,16 +307,16 @@ class Cuboid : Cloneable, Serializable {
      * if the bounding boxes do not overlap or if var2 is closer to 0 then the
      * calculated offset. Otherwise return the calculated offset.
      */
-    fun calculateXOffset(other: Cuboid, offsetX: Double): Double {
-        var offsetX = offsetX
-        return if (other.maxY() > minY() && other.minY() < maxY() && other.maxZ() > minZ() && other.minZ() < maxZ()) {
-            if (offsetX > 0.0 && other.maxX() <= minX()) {
-                val d1 = minX() - other.maxX().toFloat()
+    fun calculateXOffset(other: Cuboid, xOffset: Double): Double {
+        var offsetX = xOffset
+        return if (other.maxY > minY && other.minY < maxY && other.maxZ > minZ && other.minZ < maxZ) {
+            if (offsetX > 0.0 && other.maxX <= minX) {
+                val d1 = minX - other.maxX.toFloat()
                 if (d1 < offsetX) {
                     offsetX = d1
                 }
-            } else if (offsetX < 0.0 && other.minX() >= maxX()) {
-                val d0 = maxX() - other.minX().toFloat()
+            } else if (offsetX < 0.0 && other.minX >= maxX) {
+                val d0 = maxX - other.minX.toFloat()
                 if (d0 > offsetX) {
                     offsetX = d0
                 }
@@ -532,16 +333,16 @@ class Cuboid : Cloneable, Serializable {
      * if the bounding boxes do not overlap or if var2 is closer to 0 then the
      * calculated offset. Otherwise return the calculated offset.
      */
-    fun calculateYOffset(other: Cuboid, offsetY: Double): Double {
-        var offsetY = offsetY
-        return if (other.maxX() > minX() && other.minX() < maxX() && other.maxZ() > minZ() && other.minZ() < maxZ()) {
-            if (offsetY > 0.0 && other.maxY() <= minY()) {
-                val d1 = minY() - other.maxY().toFloat()
+    fun calculateYOffset(other: Cuboid, yOffset: Double): Double {
+        var offsetY = yOffset
+        return if (other.maxX > minX && other.minX < maxX && other.maxZ > minZ && other.minZ < maxZ) {
+            if (offsetY > 0.0 && other.maxY <= minY) {
+                val d1 = minY - other.maxY.toFloat()
                 if (d1 < offsetY) {
                     offsetY = d1
                 }
-            } else if (offsetY < 0.0 && other.minY() >= maxY()) {
-                val d0 = maxY() - other.minY().toFloat()
+            } else if (offsetY < 0.0 && other.minY >= maxY) {
+                val d0 = maxY - other.minY.toFloat()
                 if (d0 > offsetY) {
                     offsetY = d0
                 }
@@ -558,16 +359,16 @@ class Cuboid : Cloneable, Serializable {
      * if the bounding boxes do not overlap or if var2 is closer to 0 then the
      * calculated offset. Otherwise return the calculated offset.
      */
-    fun calculateZOffset(other: Cuboid, offsetZ: Double): Double {
-        var offsetZ = offsetZ
-        return if (other.maxX() > minX() && other.minX() < maxX() && other.maxY() > minY() && other.minY() < maxY()) {
-            if (offsetZ > 0.0 && other.maxZ() <= minZ()) {
-                val d1 = minZ() - other.maxZ().toFloat()
+    fun calculateZOffset(other: Cuboid, zOffset: Double): Double {
+        var offsetZ = zOffset
+        return if (other.maxX > minX && other.minX < maxX && other.maxY > minY && other.minY < maxY) {
+            if (offsetZ > 0.0 && other.maxZ <= minZ) {
+                val d1 = minZ - other.maxZ.toFloat()
                 if (d1 < offsetZ) {
                     offsetZ = d1
                 }
-            } else if (offsetZ < 0.0 && other.minZ() >= maxZ()) {
-                val d0 = maxZ() - other.minZ().toFloat()
+            } else if (offsetZ < 0.0 && other.minZ >= maxZ) {
+                val d0 = maxZ - other.minZ.toFloat()
                 if (d0 > offsetZ) {
                     offsetZ = d0
                 }
@@ -588,8 +389,8 @@ class Cuboid : Cloneable, Serializable {
     /**
      * Returns if the supplied Tensor is completely inside the bounding box
      */
-    operator fun contains(Tensor: Tensor?): Boolean {
-        return Tensor != null && Tensor.contains(minPoint, maxPoint)
+    operator fun contains(t: Tensor): Boolean {
+        return t.contains(minPoint, maxPoint)
     }
 
     fun contains(vararg data: Double): Boolean {
@@ -601,51 +402,51 @@ class Cuboid : Cloneable, Serializable {
      */
     val averageEdgeLength: Double
         get() {
-            val d0 = maxX() - minX().toFloat()
-            val d1 = maxY() - minY().toFloat()
-            val d2 = maxZ() - minZ().toFloat()
+            val d0 = maxX - minX.toFloat()
+            val d1 = maxY - minY.toFloat()
+            val d2 = maxZ - minZ.toFloat()
             return (d0 + d1 + d2) / 3.0
         }
 
     val xSize: Float
-        get() = (maxX() - minX()).toFloat()
+        get() = (maxX - minX).toFloat()
 
     val ySize: Float
-        get() = (maxY() - minY()).toFloat()
+        get() = (maxY - minY).toFloat()
 
     val zSize: Float
-        get() = (maxZ() - minZ()).toFloat()
+        get() = (maxZ - minZ).toFloat()
 
     /**
      * Creates a new [Cuboid] that is expanded by the given value in all
      * directions. Equivalent to [.grow] with value set to the negative
      * of the value provided here. Passing a negative value to this method values
-     * will grow the AABB. <br></br>
+     * will grow the Cuboid. <br></br>
      * Side lengths will be decreased by 2 times the value of the parameter, since
      * both min and max are changed. <br></br>
      * If contracting and the amount to contract by is larger than the length of a
-     * side, then the side will wrap (still creating a valid AABB - see samples on
+     * side, then the side will wrap (still creating a valid Cuboid - see samples on
      * [.grow]).
      *
-     * @return A modified AABB.
+     * @return A modified Cuboid.
      */
     fun shrink(value: Float): Cuboid {
         return this.grow(-value)
     }
 
     override fun toString(): String {
-        return ("" + minX() + "," + minY() + "," + minZ() + ":" + maxX() + "," + maxY() + ","
-                + maxZ() + "")
+        return ("" + minX + "," + minY + "," + minZ + ":" + maxX + "," + maxY + ","
+                + maxZ + "")
     }
 
     fun hasNaN(): Boolean {
-        return (java.lang.Double.isNaN(minX().toDouble()) || java.lang.Double.isNaN(minY().toDouble()) || java.lang.Double.isNaN(minZ().toDouble())
-                || java.lang.Double.isNaN(maxX().toDouble()) || java.lang.Double.isNaN(maxY().toDouble()) || java.lang.Double.isNaN(maxZ().toDouble()))
+        return (java.lang.Double.isNaN(minX.toDouble()) || java.lang.Double.isNaN(minY.toDouble()) || java.lang.Double.isNaN(minZ.toDouble())
+                || java.lang.Double.isNaN(maxX.toDouble()) || java.lang.Double.isNaN(maxY.toDouble()) || java.lang.Double.isNaN(maxZ.toDouble()))
     }
 
     val center: Tensor
-        get() = Tensor((minX() + (maxX() - minX()) * 0.5f).toDouble(),
-                (minY() + (maxY() - minY()) * 0.5f).toDouble(), (minZ() + (maxZ() - minZ()) * 0.5f).toDouble())
+        get() = Tensor((minX + (maxX - minX) * 0.5f).toDouble(),
+                (minY + (maxY - minY) * 0.5f).toDouble(), (minZ + (maxZ - minZ) * 0.5f).toDouble())
 
     enum class SizeType {
         FULL, AIR, OTHER;
@@ -656,7 +457,7 @@ class Cuboid : Cloneable, Serializable {
     }
 
     companion object {
-        val AIR = Cuboid(0, 0, 0, 0, 0, 0)
+        val ZERO = Cuboid(0, 0, 0, 0, 0, 0)
         val FULL_CUBE = Cuboid(0, 0, 0, 1, 1, 1)
     }
 }

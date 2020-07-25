@@ -1,5 +1,10 @@
 .gradle
 build
-.idea
 bin
+.vscode
+.idea
 .settings
+.classpath
+.project
+*.log
+*.iml

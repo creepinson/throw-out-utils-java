@@ -11,9 +11,9 @@ import kotlin.math.sqrt
 
 class Tensor : ISerializable<Tensor>, Cloneable, Iterable<Double> {
     var data: LinkedList<Double>
-        protected set
+        private set
     var dimensions: LinkedList<Int>
-        protected set
+        private set
 
     /**
      * Creates an empty Tensor of n-dimensions filled with zeroes.
