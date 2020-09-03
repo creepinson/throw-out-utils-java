@@ -2,9 +2,9 @@ package dev.throwouterror.util
 
 class Pair<K, V>(override val key: K, override var value: V) : MutableMap.MutableEntry<K, V> {
 
-    override fun setValue(value: V): V {
-        this.value = value
-        return value
+    override fun setValue(newValue: V): V {
+        this.value = newValue
+        return newValue
     }
 
     override fun hashCode(): Int {
@@ -15,8 +15,8 @@ class Pair<K, V>(override val key: K, override var value: V) : MutableMap.Mutabl
         return if (this.key != null) this.key == key else this.key === key
     }
 
-    override fun equals(obj: Any?): Boolean {
-        return if (obj is Pair<*, *>) key == obj.key else false
+    override fun equals(other: Any?): Boolean {
+        return if (other is Pair<*, *>) key == other.key else false
     }
 
     override fun toString(): String {

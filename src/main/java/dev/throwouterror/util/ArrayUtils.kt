@@ -60,7 +60,7 @@ object ArrayUtils {
     }
 
     fun <T> forArray(arr: Array<T>): MutableIterator<T> {
-        return Arrays.asList(*arr).iterator()
+        return mutableListOf(*arr).iterator()
     }
 
     /**
@@ -79,7 +79,7 @@ object ArrayUtils {
      * @return the array being filled
      */
     fun <T> fillList(a: ArrayList<T>, `val`: T): ArrayList<T> {
-        return a.stream().map { v: T -> `val` }.collect(Collectors.toList()) as ArrayList<T>
+        return a.stream().map { `val` }.collect(Collectors.toList()) as ArrayList<T>
     }
 
     /**
@@ -89,7 +89,7 @@ object ArrayUtils {
      * @return the array being filled
      */
     fun <T> fillList(size: Int, value: T): ArrayList<T> {
-        return fillList(ArrayList(), value)
+        return fillList(ArrayList(size), value)
     }
 
     /**

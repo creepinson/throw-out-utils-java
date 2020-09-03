@@ -11,7 +11,7 @@ import java.lang.reflect.Type
 import kotlin.math.max
 import kotlin.math.min
 
-class Cuboid : Cloneable, Serializable {
+open class Cuboid : Cloneable, Serializable {
     var minX: Double
         get() = minPoint.x
         set(value) {
